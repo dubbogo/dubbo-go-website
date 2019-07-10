@@ -1,5 +1,5 @@
-baseURL = "/"
-title = "Dubbo-go"
+baseURL = "https://dubbogo.github.io/dubbo-go-website"
+title = "dubbo-go docs"
 themesDir = "themes"
 theme = "dot-hugo-documentation-theme"
 

@@ -3,183 +3,183 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>/overview/</loc>
+    <loc>https://dubbogo.github.io/dubbo-go-website/overview/</loc>
     <lastmod>2019-07-10T13:08:56+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="cn"
-                href="/cn/overview/"
+                href="https://dubbogo.github.io/dubbo-go-website/cn/overview/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="/overview/"
+                href="https://dubbogo.github.io/dubbo-go-website/overview/"
                 />
   </url>
   
   <url>
-    <loc>/user_guide/preparation/</loc>
+    <loc>https://dubbogo.github.io/dubbo-go-website/user_guide/preparation/</loc>
     <lastmod>2019-07-10T11:53:18+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="cn"
-                href="/cn/user_guide/preparation/"
+                href="https://dubbogo.github.io/dubbo-go-website/cn/user_guide/preparation/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="/user_guide/preparation/"
+                href="https://dubbogo.github.io/dubbo-go-website/user_guide/preparation/"
                 />
   </url>
   
   <url>
-    <loc>/overview/introduce/</loc>
+    <loc>https://dubbogo.github.io/dubbo-go-website/overview/introduce/</loc>
     <lastmod>2019-07-09T20:42:47+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="cn"
-                href="/cn/overview/introduce/"
+                href="https://dubbogo.github.io/dubbo-go-website/cn/overview/introduce/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="/overview/introduce/"
+                href="https://dubbogo.github.io/dubbo-go-website/overview/introduce/"
                 />
   </url>
   
   <url>
-    <loc>/user_guide/quick_start/</loc>
+    <loc>https://dubbogo.github.io/dubbo-go-website/user_guide/quick_start/</loc>
     <lastmod>2019-07-10T14:39:26+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="cn"
-                href="/cn/user_guide/quick_start/"
+                href="https://dubbogo.github.io/dubbo-go-website/cn/user_guide/quick_start/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="/user_guide/quick_start/"
+                href="https://dubbogo.github.io/dubbo-go-website/user_guide/quick_start/"
                 />
   </url>
   
   <url>
-    <loc>/user_guide/</loc>
+    <loc>https://dubbogo.github.io/dubbo-go-website/user_guide/</loc>
     <lastmod>2019-07-10T13:03:43+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="cn"
-                href="/cn/user_guide/"
+                href="https://dubbogo.github.io/dubbo-go-website/cn/user_guide/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="/user_guide/"
+                href="https://dubbogo.github.io/dubbo-go-website/user_guide/"
                 />
   </url>
   
   <url>
-    <loc>/user_guide/package/</loc>
+    <loc>https://dubbogo.github.io/dubbo-go-website/user_guide/package/</loc>
     <lastmod>2019-07-10T14:46:03+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="cn"
-                href="/cn/user_guide/package/"
+                href="https://dubbogo.github.io/dubbo-go-website/cn/user_guide/package/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="/user_guide/package/"
+                href="https://dubbogo.github.io/dubbo-go-website/user_guide/package/"
                 />
   </url>
   
   <url>
-    <loc>/</loc>
+    <loc>https://dubbogo.github.io/dubbo-go-website/</loc>
     <lastmod>2019-07-10T14:46:03+08:00</lastmod>
     <priority>0</priority>
     <xhtml:link
                 rel="alternate"
                 hreflang="cn"
-                href="/cn/"
+                href="https://dubbogo.github.io/dubbo-go-website/cn/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="/"
+                href="https://dubbogo.github.io/dubbo-go-website/"
                 />
   </url>
   
   <url>
-    <loc>/configuration/</loc>
+    <loc>https://dubbogo.github.io/dubbo-go-website/configuration/</loc>
     <lastmod>2019-07-10T13:33:09+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="cn"
-                href="/cn/configuration/"
+                href="https://dubbogo.github.io/dubbo-go-website/cn/configuration/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="/configuration/"
+                href="https://dubbogo.github.io/dubbo-go-website/configuration/"
                 />
   </url>
   
   <url>
-    <loc>/configuration/consumer/</loc>
+    <loc>https://dubbogo.github.io/dubbo-go-website/configuration/consumer/</loc>
     <lastmod>2019-07-10T11:52:01+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="cn"
-                href="/cn/configuration/consumer/"
+                href="https://dubbogo.github.io/dubbo-go-website/cn/configuration/consumer/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="/configuration/consumer/"
+                href="https://dubbogo.github.io/dubbo-go-website/configuration/consumer/"
                 />
   </url>
   
   <url>
-    <loc>/configuration/provider/</loc>
+    <loc>https://dubbogo.github.io/dubbo-go-website/configuration/provider/</loc>
     <lastmod>2019-07-09T21:36:56+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="cn"
-                href="/cn/configuration/provider/"
+                href="https://dubbogo.github.io/dubbo-go-website/cn/configuration/provider/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="/configuration/provider/"
+                href="https://dubbogo.github.io/dubbo-go-website/configuration/provider/"
                 />
   </url>
   
   <url>
-    <loc>/categories/</loc>
+    <loc>https://dubbogo.github.io/dubbo-go-website/categories/</loc>
     <priority>0</priority>
     <xhtml:link
                 rel="alternate"
                 hreflang="cn"
-                href="/cn/categories/"
+                href="https://dubbogo.github.io/dubbo-go-website/cn/categories/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="/categories/"
+                href="https://dubbogo.github.io/dubbo-go-website/categories/"
                 />
   </url>
   
   <url>
-    <loc>/tags/</loc>
+    <loc>https://dubbogo.github.io/dubbo-go-website/tags/</loc>
     <priority>0</priority>
     <xhtml:link
                 rel="alternate"
                 hreflang="cn"
-                href="/cn/tags/"
+                href="https://dubbogo.github.io/dubbo-go-website/cn/tags/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="/tags/"
+                href="https://dubbogo.github.io/dubbo-go-website/tags/"
                 />
   </url>
   

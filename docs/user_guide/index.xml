@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>User Guide on Doc List</title>
-    <link>/user_guide/</link>
+    <link>https://dubbogo.github.io/dubbo-go-website/user_guide/</link>
     <description>Recent content in User Guide on Doc List</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Apache 2.0</copyright>
     <lastBuildDate>Wed, 10 Jul 2019 13:03:43 +0800</lastBuildDate>
     
-	<atom:link href="/user_guide/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://dubbogo.github.io/dubbo-go-website/user_guide/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Preparation</title>
-      <link>/user_guide/preparation/</link>
+      <link>https://dubbogo.github.io/dubbo-go-website/user_guide/preparation/</link>
       <pubDate>Wed, 10 Jul 2019 11:53:18 +0800</pubDate>
       
-      <guid>/user_guide/preparation/</guid>
+      <guid>https://dubbogo.github.io/dubbo-go-website/user_guide/preparation/</guid>
       <description> Environment  Git
  Go
   Get Code go get github.com/apache/dubbo-go@develop  </description>
@@ -25,20 +25,20 @@
     
     <item>
       <title>Quick_start</title>
-      <link>/user_guide/quick_start/</link>
+      <link>https://dubbogo.github.io/dubbo-go-website/user_guide/quick_start/</link>
       <pubDate>Wed, 10 Jul 2019 14:39:26 +0800</pubDate>
       
-      <guid>/user_guide/quick_start/</guid>
+      <guid>https://dubbogo.github.io/dubbo-go-website/user_guide/quick_start/</guid>
       <description>STEP 1: Define struct and provider  dubbo-go/examples/dubbo/go-client/app/user.go dubbo-go/examples/dubbo/go-server/app/user.go
  // all structs must implements hessian.POJO type User struct {} func (User) JavaClassName string { return &amp;quot;com.Xxx.User&amp;quot; // same to the java class name } // for server func init() { config.SetProviderService(new(UserProvider)) } UserProvider struct {} func (u *UserProvider) YourMethod() (*User, error) { // do your any things } func (u *UserProvider) Reference() string { return &amp;quot;UserProvider&amp;quot; } // for client func init() { config.</description>
     </item>
     
     <item>
       <title>Package</title>
-      <link>/user_guide/package/</link>
+      <link>https://dubbogo.github.io/dubbo-go-website/user_guide/package/</link>
       <pubDate>Wed, 10 Jul 2019 14:46:03 +0800</pubDate>
       
-      <guid>/user_guide/package/</guid>
+      <guid>https://dubbogo.github.io/dubbo-go-website/user_guide/package/</guid>
       <description> Because of extension, we need to import some package when using dubbo-go.
 must import _ &amp;quot;github.com/apache/dubbo-go/common/proxy/proxy_factory&amp;quot; _ &amp;quot;github.com/apache/dubbo-go/registry/protocol&amp;quot; _ &amp;quot;github.com/apache/dubbo-go/filter/impl&amp;quot; _ &amp;quot;github.com/apache/dubbo-go/cluster/cluster_impl&amp;quot; _ &amp;quot;github.com/apache/dubbo-go/cluster/loadbalance&amp;quot;  when necessary  If you use other extension, you must import package which you need.  _ &amp;quot;github.com/apache/dubbo-go/protocol/dubbo&amp;quot; // when using dubbo protocol _ &amp;quot;github.com/apache/dubbo-go/protocol/jsonrpc&amp;quot; // when using dubbo protocol _ &amp;quot;github.com/apache/dubbo-go/registry/zookeeper&amp;quot; // when using zookeeper registry  </description>
     </item>
