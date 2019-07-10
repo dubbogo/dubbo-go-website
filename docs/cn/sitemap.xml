@@ -138,6 +138,21 @@
   </url>
   
   <url>
+    <loc>https://dubbogo.github.io/dubbo-go-website/cn/develop/design/</loc>
+    <lastmod>2019-07-10T21:16:50+08:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://dubbogo.github.io/dubbo-go-website/develop/design/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="cn"
+                href="https://dubbogo.github.io/dubbo-go-website/cn/develop/design/"
+                />
+  </url>
+  
+  <url>
     <loc>https://dubbogo.github.io/dubbo-go-website/cn/docs/protocol/</loc>
     <lastmod>2019-07-10T20:41:17+08:00</lastmod>
     <xhtml:link
@@ -255,6 +270,21 @@
                 rel="alternate"
                 hreflang="cn"
                 href="https://dubbogo.github.io/dubbo-go-website/cn/categories/"
+                />
+  </url>
+  
+  <url>
+    <loc>https://dubbogo.github.io/dubbo-go-website/cn/develop/</loc>
+    <priority>0</priority>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://dubbogo.github.io/dubbo-go-website/develop/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="cn"
+                href="https://dubbogo.github.io/dubbo-go-website/cn/develop/"
                 />
   </url>
   

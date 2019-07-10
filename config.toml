@@ -71,12 +71,24 @@ whiteColor = "#ffffff"
 
       [[Languages.en.menu.main]]
         weight = 3
+        name = "develop"
+        url = "/develop"
+        hasChildren = true
+
+          [[Languages.en.menu.main]]
+          parent = "develop"
+          name = "design"
+          url = "/develop/design"
+          weight = 1
+
+      [[Languages.en.menu.main]]
+        weight = 4
         name = "blog"
         url = "/blog"
         hasChildren = true
 
       [[Languages.en.menu.main]]
-        weight = 4
+        weight = 5
         name = "contribution"
         url = "/contribution"
 
@@ -159,12 +171,24 @@ whiteColor = "#ffffff"
 
       [[Languages.cn.menu.main]]
         weight = 3
+        name = "开发"
+        url = "/cn/develop"
+        hasChildren = true
+
+          [[Languages.cn.menu.main]]
+          parent = "开发"
+          name = "设计"
+          url = "/cn/develop/design"
+          weight = 6
+
+      [[Languages.cn.menu.main]]
+        weight = 4
         name = "博客"
         url = "/cn/blog"
         hasChildren = true
 
       [[Languages.cn.menu.main]]
-        weight = 4
+        weight = 5
         name = "贡献"
         url = "/cn/contribution"
 
