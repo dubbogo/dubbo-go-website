@@ -56,7 +56,7 @@ whiteColor = "#ffffff"
     [Languages.en.params.banner]
       title = "Dubbo-go"
       description = "you can search advice and answers here"
-      image = "images/banner.jpg"
+      image = "https://dubbogo.github.io/dubbo-go-website/images/banner.jpg"
       placeholder = "Have a question? Just ask here or enter terms"
 
     # Topics
