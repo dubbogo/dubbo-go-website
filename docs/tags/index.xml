@@ -2,13 +2,13 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on Doc List</title>
-    <link>https://dubbogo.github.io/dubbo-go-website/tags/</link>
+    <link>./tags/</link>
     <description>Recent content in Tags on Doc List</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Apache 2.0</copyright>
     
-	<atom:link href="https://dubbogo.github.io/dubbo-go-website/tags/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="./tags/index.xml" rel="self" type="application/rss+xml" />
     
     
   </channel>

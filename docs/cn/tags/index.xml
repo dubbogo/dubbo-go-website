@@ -2,13 +2,13 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on 文档</title>
-    <link>https://dubbogo.github.io/dubbo-go-website/cn/tags/</link>
+    <link>./cn/tags/</link>
     <description>Recent content in Tags on 文档</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>cn-zh</language>
     <copyright>Apache 2.0</copyright>
     
-	<atom:link href="https://dubbogo.github.io/dubbo-go-website/cn/tags/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="./cn/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
   </channel>
