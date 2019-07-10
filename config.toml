@@ -1,0 +1,129 @@
+baseURL = "/"
+title = "Dubbo-go"
+themesDir = "themes"
+theme = "dot-hugo-documentation-theme"
+
+
+[params]
+primaryColor = "#02007e"
+secondaryColor = "#f9f9f9"
+textColor = "#636363"
+textColorDark = "#242738"
+whiteColor = "#ffffff"
+
+[Languages]
+
+  # English Language
+  [Languages.en]
+  languageName = "En"
+  weight = 1
+  languageCode = "en-us"
+  title = "Doc List"
+  dateFormat = "2 January 2006"
+  home = "Home"
+  logo = "Dubbo-go"
+  copyright = "Apache 2.0"
+
+    # navigation
+    [Languages.en.menu]
+
+      [[Languages.en.menu.main]]
+        weight = 2
+        name = "docs"
+        url = "/"
+        hasChildren = true
+
+          [[Languages.en.menu.main]]
+          parent = "docs"
+          name = "Overview"
+          url = "/overview"
+          weight = 1
+
+          [[Languages.en.menu.main]]
+          parent = "docs"
+          name = "User Guide"
+          url = "/user_guide"
+          weight = 2
+
+          [[Languages.en.menu.main]]
+          parent = "docs"
+          name = "Configuration"
+          url = "/configuration"
+          weight = 3
+
+
+    # banner
+    [Languages.en.params.banner]
+      title = "Dubbo-go"
+      description = "you can search advice and answers here"
+      image = "images/banner.jpg"
+      placeholder = "Have a question? Just ask here or enter terms"
+
+    # Topics
+    [Languages.en.params.topics]
+      title = "Convenient Access"
+
+    # footer social icon
+    [[Languages.en.socialIcon]]
+      icon = "ti-github"
+      linkURL = "https://github.com/apache/dubbo-go"
+
+
+
+
+
+
+  # Chinese Language
+  [Languages.cn]
+  languageName = "Cn"
+  weight = 2
+  languageCode = "cn-zh"
+  title = "文档"
+  dateFormat = "2 January 2006"
+  home = "Home"
+  logo = "Dubbo-go"
+  copyright = "Apache 2.0"
+
+    # navigation
+    [Languages.cn.menu]
+
+      [[Languages.cn.menu.main]]
+        weight = 2
+        name = "文档"
+        url = "/cn"
+        hasChildren = true
+
+          [[Languages.cn.menu.main]]
+          parent = "文档"
+          name = "概览"
+          url = "/cn/overview"
+          weight = 1
+
+          [[Languages.cn.menu.main]]
+          parent = "文档"
+          name = "用户指南"
+          url = "/cn/user_guide"
+          weight = 2
+
+          [[Languages.cn.menu.main]]
+          parent = "文档"
+          name = "配置"
+          url = "/cn/configuration"
+          weight = 3
+
+
+    # banner
+    [Languages.cn.params.banner]
+      title = "Dubbo-go"
+      description = "你可以在这里搜索建议和答案"
+      image = "images/banner.jpg"
+      placeholder = "有问题? 只需在此处询问或输入条件"
+
+    # Topics
+    [Languages.cn.params.topics]
+      title = "快速访问"
+
+    # footer social icon
+    [[Languages.cn.socialIcon]]
+      icon = "ti-github"
+      linkURL = "https://github.com/apache/dubbo-go"

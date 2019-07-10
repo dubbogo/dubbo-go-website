@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Configuration on Doc List</title>
+    <link>/configuration/</link>
+    <description>Recent content in Configuration on Doc List</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Apache 2.0</copyright>
+    <lastBuildDate>Wed, 10 Jul 2019 13:33:09 +0800</lastBuildDate>
+    
+	<atom:link href="/configuration/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>ConsumerConfig</title>
+      <link>/configuration/consumer/</link>
+      <pubDate>Wed, 10 Jul 2019 11:52:01 +0800</pubDate>
+      
+      <guid>/configuration/consumer/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>ProviderConfig</title>
+      <link>/configuration/provider/</link>
+      <pubDate>Tue, 09 Jul 2019 21:36:56 +0800</pubDate>
+      
+      <guid>/configuration/provider/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>
