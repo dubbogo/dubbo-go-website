@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>文档</title>
-    <link>./cn/</link>
+    <link>https://dubbogo.github.io/dubbo-go-website/cn/</link>
     <description>Recent content on 文档</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>cn-zh</language>
     <copyright>Apache 2.0</copyright>
     <lastBuildDate>Wed, 10 Jul 2019 14:46:06 +0800</lastBuildDate>
     
-	<atom:link href="./cn/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://dubbogo.github.io/dubbo-go-website/cn/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>准备</title>
-      <link>./cn/user_guide/preparation/</link>
+      <link>https://dubbogo.github.io/dubbo-go-website/cn/user_guide/preparation/</link>
       <pubDate>Wed, 10 Jul 2019 13:31:06 +0800</pubDate>
       
-      <guid>./cn/user_guide/preparation/</guid>
+      <guid>https://dubbogo.github.io/dubbo-go-website/cn/user_guide/preparation/</guid>
       <description> 环境  Git
  Go
   获取代码 go get github.com/apache/dubbo-go@develop  </description>
@@ -25,48 +25,48 @@
     
     <item>
       <title>介绍</title>
-      <link>./cn/overview/introduce/</link>
+      <link>https://dubbogo.github.io/dubbo-go-website/cn/overview/introduce/</link>
       <pubDate>Wed, 10 Jul 2019 13:28:49 +0800</pubDate>
       
-      <guid>./cn/overview/introduce/</guid>
+      <guid>https://dubbogo.github.io/dubbo-go-website/cn/overview/introduce/</guid>
       <description>Apache Dubbo Go 语言实现</description>
     </item>
     
     <item>
       <title>快速开始</title>
-      <link>./cn/user_guide/quick_start/</link>
+      <link>https://dubbogo.github.io/dubbo-go-website/cn/user_guide/quick_start/</link>
       <pubDate>Wed, 10 Jul 2019 14:39:30 +0800</pubDate>
       
-      <guid>./cn/user_guide/quick_start/</guid>
+      <guid>https://dubbogo.github.io/dubbo-go-website/cn/user_guide/quick_start/</guid>
       <description>第一步: 定义 struct 和 provider  dubbo-go/examples/dubbo/go-client/app/user.go dubbo-go/examples/dubbo/go-server/app/user.go
  // 所有的struct都必须实现hessian.POJO type User struct {} func (User) JavaClassName string { return &amp;quot;com.Xxx.User&amp;quot; // same to the java class name } // server部分 func init() { config.SetProviderService(new(UserProvider)) } UserProvider struct {} func (u *UserProvider) YourMethod() (*User, error) { // do your any things } func (u *UserProvider) Reference() string { return &amp;quot;UserProvider&amp;quot; } // client部分 func init() { config.SetConsumerService(new(UserProvider)) } type UserProvider struct { YourMethod func(*User, error) } func (u *UserProvider) Reference() string { return &amp;quot;UserProvider&amp;quot; }  第二步: 编写 server.</description>
     </item>
     
     <item>
       <title>包</title>
-      <link>./cn/user_guide/package/</link>
+      <link>https://dubbogo.github.io/dubbo-go-website/cn/user_guide/package/</link>
       <pubDate>Wed, 10 Jul 2019 14:46:06 +0800</pubDate>
       
-      <guid>./cn/user_guide/package/</guid>
+      <guid>https://dubbogo.github.io/dubbo-go-website/cn/user_guide/package/</guid>
       <description> 由于 extension 机制，使用dubbo-go时我们需要导入一些包。
 必须导入 _ &amp;quot;github.com/apache/dubbo-go/common/proxy/proxy_factory&amp;quot; _ &amp;quot;github.com/apache/dubbo-go/registry/protocol&amp;quot; _ &amp;quot;github.com/apache/dubbo-go/filter/impl&amp;quot; _ &amp;quot;github.com/apache/dubbo-go/cluster/cluster_impl&amp;quot; _ &amp;quot;github.com/apache/dubbo-go/cluster/loadbalance&amp;quot;  必要时导入  如果你使用了其他的 extension ，你必须导入你需要的包  _ &amp;quot;github.com/apache/dubbo-go/protocol/dubbo&amp;quot; // when using dubbo protocol _ &amp;quot;github.com/apache/dubbo-go/protocol/jsonrpc&amp;quot; // when using dubbo protocol _ &amp;quot;github.com/apache/dubbo-go/registry/zookeeper&amp;quot; // when using zookeeper registry  </description>
     </item>
     
     <item>
       <title>消费端配置</title>
-      <link>./cn/configuration/consumer/</link>
+      <link>https://dubbogo.github.io/dubbo-go-website/cn/configuration/consumer/</link>
       <pubDate>Wed, 10 Jul 2019 13:31:45 +0800</pubDate>
       
-      <guid>./cn/configuration/consumer/</guid>
+      <guid>https://dubbogo.github.io/dubbo-go-website/cn/configuration/consumer/</guid>
       <description></description>
     </item>
     
     <item>
       <title>服务端配置</title>
-      <link>./cn/configuration/provider/</link>
+      <link>https://dubbogo.github.io/dubbo-go-website/cn/configuration/provider/</link>
       <pubDate>Wed, 10 Jul 2019 13:31:40 +0800</pubDate>
       
-      <guid>./cn/configuration/provider/</guid>
+      <guid>https://dubbogo.github.io/dubbo-go-website/cn/configuration/provider/</guid>
       <description></description>
     </item>
     
