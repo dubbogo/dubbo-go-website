@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Config_center on dubbo-go docs</title>
+    <link>https://dubbogo.github.io/dubbo-go-website/docs/config_center/</link>
+    <description>Recent content in Config_center on dubbo-go docs</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Apache 2.0</copyright>
+    <lastBuildDate>Wed, 10 Jul 2019 20:30:33 +0800</lastBuildDate>
+    
+	<atom:link href="https://dubbogo.github.io/dubbo-go-website/docs/config_center/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+  </channel>
+</rss>

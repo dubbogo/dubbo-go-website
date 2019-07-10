@@ -18,7 +18,7 @@ whiteColor = "#ffffff"
   languageName = "En"
   weight = 1
   languageCode = "en-us"
-  title = "Doc List"
+  title = "dubbo-go docs"
   dateFormat = "2 January 2006"
   home = "Home"
   logo = "Dubbo-go"
@@ -30,27 +30,55 @@ whiteColor = "#ffffff"
       [[Languages.en.menu.main]]
         weight = 2
         name = "docs"
-        url = "/"
+        url = "/docs"
         hasChildren = true
 
           [[Languages.en.menu.main]]
           parent = "docs"
           name = "Overview"
-          url = "/overview"
+          url = "/docs/overview"
           weight = 1
 
           [[Languages.en.menu.main]]
           parent = "docs"
           name = "User Guide"
-          url = "/user_guide"
+          url = "/docs/user_guide"
           weight = 2
 
           [[Languages.en.menu.main]]
           parent = "docs"
           name = "Configuration"
-          url = "/configuration"
+          url = "/docs/configuration"
           weight = 3
 
+          [[Languages.en.menu.main]]
+          parent = "docs"
+          name = "Registry"
+          url = "/docs/registry"
+          weight = 4
+
+          [[Languages.en.menu.main]]
+          parent = "docs"
+          name = "Config Center"
+          url = "/docs/config_center"
+          weight = 5
+
+          [[Languages.en.menu.main]]
+          parent = "docs"
+          name = "Protocol"
+          url = "/docs/protocol"
+          weight = 6
+
+      [[Languages.en.menu.main]]
+        weight = 3
+        name = "blog"
+        url = "/blog"
+        hasChildren = true
+
+      [[Languages.en.menu.main]]
+        weight = 4
+        name = "contribution"
+        url = "/contribution"
 
     # banner
     [Languages.en.params.banner]
@@ -90,27 +118,55 @@ whiteColor = "#ffffff"
       [[Languages.cn.menu.main]]
         weight = 2
         name = "文档"
-        url = "/cn"
+        url = "/cn/docs"
         hasChildren = true
 
           [[Languages.cn.menu.main]]
           parent = "文档"
           name = "概览"
-          url = "/cn/overview"
+          url = "/cn/docs/overview"
           weight = 1
 
           [[Languages.cn.menu.main]]
           parent = "文档"
           name = "用户指南"
-          url = "/cn/user_guide"
+          url = "/cn/docs/user_guide"
           weight = 2
 
           [[Languages.cn.menu.main]]
           parent = "文档"
           name = "配置"
-          url = "/cn/configuration"
+          url = "/cn/docs/configuration"
           weight = 3
 
+          [[Languages.cn.menu.main]]
+          parent = "文档"
+          name = "注册中心"
+          url = "/cn/docs/registry"
+          weight = 4
+
+          [[Languages.cn.menu.main]]
+          parent = "文档"
+          name = "配置中心"
+          url = "/cn/docs/config_center"
+          weight = 5
+
+          [[Languages.cn.menu.main]]
+          parent = "文档"
+          name = "协议"
+          url = "/cn/docs/protocol"
+          weight = 6
+
+      [[Languages.cn.menu.main]]
+        weight = 3
+        name = "博客"
+        url = "/cn/blog"
+        hasChildren = true
+
+      [[Languages.cn.menu.main]]
+        weight = 4
+        name = "贡献"
+        url = "/cn/contribution"
 
     # banner
     [Languages.cn.params.banner]
