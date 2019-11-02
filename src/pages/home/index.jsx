@@ -69,8 +69,8 @@ class Home extends Language {
             </div>
             <p className="product-desc">{dataSource.brand.briefIntroduction}</p>
             <div className="button-area">
-              <Button type="primary" link={getLink(dataSource.brand.getStartedButton.link)}>{dataSource.brand.getStartedButton.text}</Button>
-              <Button type="normal" link={getLink(dataSource.brand.viewOnGithubButton.link)}>{dataSource.brand.viewOnGithubButton.text}</Button>
+              <Button type="primary" link={dataSource.brand.getStartedButton.link}>{dataSource.brand.getStartedButton.text}</Button>
+              <Button type="normal" link={dataSource.brand.viewOnGithubButton.link}>{dataSource.brand.viewOnGithubButton.text}</Button>
             </div>
             <div className="github-buttons">
                 <a href="https://github.com/apache/dubbo-go" target="_blank" rel="noopener noreferrer">
