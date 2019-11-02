@@ -20,6 +20,10 @@ export default {
                     {
                         title: 'Configuration',
                         children: [
+                            {
+                                title: 'Provider',
+                                link: '/en-us/docs/user/configuration/provider.html'
+                            }
                         ],
                     },
                     {
@@ -91,6 +95,10 @@ export default {
                     {
                         title: '配置',
                         children: [
+                            {
+                                title: '提供者',
+                                link: '/zh-cn/docs/user/configuration/provider.html'
+                            }
                         ],
                     },
                     {

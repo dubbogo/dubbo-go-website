@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { getLink } from '../../../utils';
 import classnames from 'classnames';
 import { autobind } from 'core-decorators';
 import siteConfig from '../../../site_config/site';
@@ -189,7 +190,7 @@ class Header extends React.Component {
                   })}
                   key={item.key}
                 >
-                  <a href={`${window.rootPath}${item.link}`}>{item.text}</a>
+                  <a href={getLink(item.link)}>{item.text}</a>
                 </li>))}
             </ul>
           </div>
