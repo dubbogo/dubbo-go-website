@@ -1,0 +1,34 @@
+language: node_js
+
+node_js:
+  - "8"
+
+# 依赖安装
+install:
+  - npm install docsite -g
+  - npm install
+
+# 构建脚本
+script:
+  - docsite build
+  - mkdir ./temporary
+  - cp -r build/ index.html 404.html img/ zh-cn/ en-us/ ./temporary/
+
+# 分支白名单
+branches:
+  only:
+    - master # 只对 master 分支进行构建
+
+# GitHub Pages 部署
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN
+  keep_history: true
+  # 将 temporary 目录下的内容推送到默认的 gh-pages 分支上，并不会连带 temporary 目录一起
+  local_dir: temporary
+  #fqdn: $CUSTOM_DOMAIN
+  name: $GIT_NAME
+  email: $GIT_EMAIL
+  on:
+    branch: master
