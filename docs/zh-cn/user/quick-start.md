@@ -23,7 +23,7 @@ description: 快速上手dubbo-go，编写一个简单的hellowworld应用
 
 > https://github.com/dubbogo/dubbogo-samples/blob/master/helloworld/dubbo/go-server/app/user.go
 
-1. 编写需要被编码的结构体，`User` 由于使用 `Hessian2` 作为编码协议，`User` 需要实现 `JavaClassName` 方法，它的返回值在dubbo中是对应User类的类名。
+1. 编写需要被编码的结构体，由于使用 `Hessian2` 作为编码协议，`User` 需要实现 `JavaClassName` 方法，它的返回值在dubbo中对应User类的类名。
 
 ```go
 type User struct {
@@ -38,7 +38,7 @@ func (u User) JavaClassName() string {
 }
 ```
 
-2. 编写业务逻辑，`UserProvider` 相当于dubbo中的一个服务实现。需要实现 `Reference` 方法，返回值是这个服务的唯一标识，对应dubbo的 `beans` 和 `path` 字段
+2. 编写业务逻辑，`UserProvider` 相当于dubbo中的一个服务实现。需要实现 `Reference` 方法，返回值是这个服务的唯一标识，对应dubbo的 `beans` 和 `path` 字段。
 
 ```go
 type UserProvider struct {
@@ -106,7 +106,7 @@ func main() {
 
 * `services` 结点下配置服务的具体信息，需要配置 `interface` 配置，修改为对应服务的接口名，服务的key对应第一步中 `Provider` 的 `Reference` 返回值
 
-2. 把上面的两个配置文件费别配置为环境变量
+2. 把上面的两个配置文件分别配置为环境变量
 
 ```shell
 export CONF_PROVIDER_FILE_PATH="xxx"
@@ -121,7 +121,7 @@ export APP_LOG_CONF_FILE="xxx"
 
 1. 参考服务端第一步的第一点。
 
-2. 与服务端不同的是，对应的方法作为结构体的参数，不需要编写具体业务逻辑。另外，Provider不对呀dubbo中的接口，而是对应一个实现。
+2. 与服务端不同的是，提供服务的方法作为结构体的参数，不需要编写具体业务逻辑。另外，`Provider` 不对应dubbo中的接口，而是对应一个实现。
 
 ```go
 type UserProvider struct {
