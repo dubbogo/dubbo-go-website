@@ -28,7 +28,7 @@
 <p><a href="https://github.com/dubbogo/dubbogo-samples/blob/master/helloworld/dubbo/go-server/app/user.go">https://github.com/dubbogo/dubbogo-samples/blob/master/helloworld/dubbo/go-server/app/user.go</a></p>
 </blockquote>
 <ol>
-<li>编写需要被编码的结构体，<code>User</code> 由于使用 <code>Hessian2</code> 作为编码协议，<code>User</code> 需要实现 <code>JavaClassName</code> 方法，它的返回值在dubbo中是对应User类的类名。</li>
+<li>编写需要被编码的结构体，由于使用 <code>Hessian2</code> 作为编码协议，<code>User</code> 需要实现 <code>JavaClassName</code> 方法，它的返回值在dubbo中对应User类的类名。</li>
 </ol>
 <pre><code class="language-go"><span class="hljs-keyword">type</span> User <span class="hljs-keyword">struct</span> {
 	Id   <span class="hljs-keyword">string</span>
@@ -42,7 +42,7 @@
 }
 </code></pre>
 <ol start="2">
-<li>编写业务逻辑，<code>UserProvider</code> 相当于dubbo中的一个服务实现。需要实现 <code>Reference</code> 方法，返回值是这个服务的唯一标识，对应dubbo的 <code>beans</code> 和 <code>path</code> 字段</li>
+<li>编写业务逻辑，<code>UserProvider</code> 相当于dubbo中的一个服务实现。需要实现 <code>Reference</code> 方法，返回值是这个服务的唯一标识，对应dubbo的 <code>beans</code> 和 <code>path</code> 字段。</li>
 </ol>
 <pre><code class="language-go"><span class="hljs-keyword">type</span> UserProvider <span class="hljs-keyword">struct</span> {
 }
@@ -109,7 +109,7 @@
 </li>
 </ul>
 <ol start="2">
-<li>把上面的两个配置文件费别配置为环境变量</li>
+<li>把上面的两个配置文件分别配置为环境变量</li>
 </ol>
 <pre><code class="language-shell">export CONF_PROVIDER_FILE_PATH="xxx"
 export APP_LOG_CONF_FILE="xxx"
@@ -124,7 +124,7 @@ export APP_LOG_CONF_FILE="xxx"
 <p>参考服务端第一步的第一点。</p>
 </li>
 <li>
-<p>与服务端不同的是，对应的方法作为结构体的参数，不需要编写具体业务逻辑。另外，Provider不对呀dubbo中的接口，而是对应一个实现。</p>
+<p>与服务端不同的是，提供服务的方法作为结构体的参数，不需要编写具体业务逻辑。另外，<code>Provider</code> 不对应dubbo中的接口，而是对应一个实现。</p>
 </li>
 </ol>
 <pre><code class="language-go"><span class="hljs-keyword">type</span> UserProvider <span class="hljs-keyword">struct</span> {
