@@ -20,8 +20,8 @@ export default {
                 title: 'dubbogo中的TPS Limit设计与实现',
                 author: '@flycash',
                 dateStr: 'Nov 10th, 2019',
-                desc: '在dubbogo中的TPS limit的设计与实现。讨论了目前已有的实现，以及可以扩展的接口。目前在',
-                link: '/blog/zh-cn/dubbogo-tps-limit-design-implementation.html',
+                desc: '在dubbogo中的TPS limit的设计与实现。讨论了目前已有的实现，以及可以扩展的接口。',
+                link: '/zh-cn/blog/dubbogo-tps-limit-design-implementation.html',
             }
         ]
     },
