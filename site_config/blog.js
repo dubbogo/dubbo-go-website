@@ -16,13 +16,13 @@ export default {
         barText: '博客',
         postsTitle: '所有文章',
         list: [
-            // {
-            //     title: '研究 Dubbo 网卡地址注册时的一点思考',
-            //     author: '@lexburner',
-            //     dateStr: 'Apr 30th, 2019',
-            //     desc: '研究 Dubbo 网卡地址注册时的一点思考',
-            //     link: '/zh-cn/blog/dubbo-network-interfaces.html',
-            // }
+            {
+                title: 'dubbogo中的TPS Limit设计与实现',
+                author: '@flycash',
+                dateStr: 'Nov 10th, 2019',
+                desc: '在dubbogo中的TPS limit的设计与实现。讨论了目前已有的实现，以及可以扩展的接口。',
+                link: '/zh-cn/blog/dubbogo-tps-limit-design-implementation.html',
+            }
         ]
     },
 };
