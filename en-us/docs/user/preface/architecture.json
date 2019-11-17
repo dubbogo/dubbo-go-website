@@ -1,6 +1,10 @@
 {
   "filename": "architecture.md",
-  "__html": "",
+  "__html": "<h1>Architecture</h1>\n<p><img src=\"../../../../img/dubbo-go-architecture.png\" alt=\"architecture\"></p>\n<h4>Explain for node</h4>\n<ul>\n<li><code>Registry</code> : the registry is responsible for service registration and discovery in Dubbo-go</li>\n<li><code>Consumer</code> : the consumer calls remote service</li>\n<li><code>Provider</code> : the provider exposes remote services</li>\n</ul>\n<h4>Explain for process</h4>\n<ul>\n<li><code>0. register</code> : the provider automatically registers its services to the registry while starting</li>\n<li><code>1. subscribe</code> : the consumer subscribes to the services it need from the registration center while starting</li>\n<li><code>2. notify</code> : the registration center returns the service registration information to the consumer, and when the subscribed service changes, it will push the changed data to the consumer</li>\n<li><code>3. invoke</code> : according to the service address obtained from the registry, the consumer selects a suitable service address through the load balancing algorithm to initiate the request</li>\n</ul>\n",
   "link": "/en-us/docs/user/preface/architecture.html",
-  "meta": {}
+  "meta": {
+    "title": "architecture",
+    "keywords": "architecture",
+    "description": "a brief description of Dubbo-go's overall architecture"
+  }
 }
