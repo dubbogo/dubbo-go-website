@@ -1,7 +1,7 @@
 ---
-title: "dubbogo中的TPS Limit设计与实现"
-keywords: "tps limit", "fixed window", "sliding window", "扩展接口"         
-description: "在dubbogo中的TPS limit的设计与实现。讨论了目前已有的实现，以及可以扩展的接口。"
+title: dubbogo中的TPS Limit设计与实现
+keywords: "tps limit", "fixed window", "sliding window", "扩展接口"
+description: 在dubbogo中的TPS limit的设计与实现。讨论了目前已有的实现，以及可以扩展的接口。
 ---
 # dubbogo中的TPS Limit设计与实现
 [Apache Dubbo](http://dubbo.apache.org/en-us/)是由阿里开源的一个RPC框架，除了基本的RPC功能以外，还提供了一整套的服务治理相关功能。目前它已经是Apache基金会下的顶级项目。
