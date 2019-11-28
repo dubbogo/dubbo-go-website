@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta name="keywords" content="&#34;graceful shutdown&#34;, &#34;registry&#34;, &#34;protocol&#34;" />
+	<meta name="description" content="在dubbogo中的优雅退出的设计与实现。讨论了直接退出的存在问题，因此得出优雅退出所需的步骤。" />
+	<!-- 网页标签标题 -->
+	<title>要优雅退出吗？dubbogo给你</title>
+	<link rel="shortcut icon" href="/dubbo-go-website/img/dubbo.ico"/>
+	<link rel="stylesheet" href="/dubbo-go-website/build/blogDetail.css" />
+</head>
+<body>
+	<div id="root"><div class="blog-detail-page" data-reactroot=""><header class="header-container header-container-normal"><div class="header-body"><a href="/dubbo-go-website/zh-cn/index.html"><img class="logo" src="/dubbo-go-website/img/dubbo_colorful.png"/></a><div class="search search-normal"><span class="icon-search"></span></div><span class="language-switch language-switch-normal">En</span><div class="header-menu"><img class="header-menu-toggle" src="/dubbo-go-website/img/menu_gray.png"/><ul><li class="menu-item menu-item-normal"><a href="/dubbo-go-website/zh-cn/index.html">首页</a></li><li class="menu-item menu-item-normal"><a href="/dubbo-go-website/zh-cn/docs/user/quick-start.html">文档</a></li><li class="menu-item menu-item-normal menu-item-normal-active"><a href="/dubbo-go-website/zh-cn/blog/index.html">博客</a></li><li class="menu-item menu-item-normal"><a href="https://dubbo.apache.org/zh-cn/index.html">Java</a></li></ul></div></div></header><section class="blog-content markdown-body"><h1>要优雅退出吗？dubbogo给你</h1>
+<h2>dubbogo</h2>
+<p><a href="http://dubbo.apache.org/en-us/">Apache Dubbo</a>是由阿里开源的一个<code>RPC</code>框架，而<a href="https://github.com/apache/dubbo-go">dubbogo</a>则是相对应的<code>go</code>语言版本：</p>
+<p><img src="../../img/blog/graceful-shutdown.resources/gaitubao_C81D8722-BD05-49D5-9795-7CF97F4B1DE1.png" alt="c0b35d2e10290a6644d38dae971234f0"></p>
+<p>今天我们来讨论一下<code>dubbogo</code>里面实现的优雅退出。该功能的<code>PR</code>是<code>https://github.com/apache/dubbo-go/pull/255</code>。</p>
+<p>当我们讨论优雅退出的时候，最基本的要求是自动无损停机。它同时强调了自动和无损两个方面。</p>
+<p><img src="../../img/blog/graceful-shutdown.resources/1788C3AD-30A8-48BD-986E-1BA169EBD712.png" alt="03212580d94dcefb8a39d286b9f056d2"></p>
+<p>首先是自动，而与自动对应的则是手动了。手工介入的缺陷是显而易见的，它要求我们在应用下线的时候手动摘掉流量。这一步可以通过网关、负载均衡或者注册中心来实现。它还容易忘和出错，如果这个东西还要求到运维身上，那就真的是下个线都得求爷爷告奶奶，开发体验十分不好。</p>
+<p>而无损，关键则是，正在执行的事情要能执行完。这个“事情”含义会非常广泛，比如说发出去的请求我要能收回响应；收到的请求要执行完毕并且给人家返回响应……如果更加严格的来说，那么本地启动的定时任务，或者分布式事务，都应该在完成之后才能关机。</p>
+<h2>设计</h2>
+<p>我们先来看一下，一般情况下关机会发生什么：</p>
+<p><img src="../../img/blog/graceful-shutdown.resources/C51595FC-BD64-49D2-8B13-253CD72BD2F1.png" alt="ee7f55600f5b0f6a239e04963f86d3ad"></p>
+<p><img src="../../img/blog/graceful-shutdown.resources/82381102-B9A2-48B4-92AD-03B5601E4E7F.png" alt="bf5e85657bf5a38a66ddcca538f13cd9"></p>
+<p><img src="../../img/blog/graceful-shutdown.resources/F94B1BF6-C09E-41EB-A7E9-636915CC539E.png" alt="ba77ae084eda768e6e3bd4f48a7054bf"></p>
+<p><img src="../../img/blog/graceful-shutdown.resources/F04254AA-EDF9-4677-81FE-3952910BDF36.png" alt="b3f40056454cfe0afd706355f6852ec4"></p>
+<p>这里面可以看出来，如果没有优雅退出机制的话，服务器是很任性的，谁都不说咔嚓一下关了。</p>
+<p>然后注册中心隔了一小会之后，通过心跳检测或者监听到服务器跪了，心里卧槽一句之后，就赶紧通知客户端。这个过程，客户端这个傻白甜还是使劲发请求。</p>
+<p><img src="../../img/blog/graceful-shutdown.resources/0BB9995C-4E20-444D-BAC8-525F9A13C0C4.png" alt="2aeec9337592f4ccc0d33d8f2f8f7525"></p>
+<p>它收到注册中心的通知之后，就懵逼了，心里一万句MMP飘过之后，终于接受了自己刚才发出去的一些请求，收不到响应了的事实。</p>
+<p><img src="../../img/blog/graceful-shutdown.resources/BFC7D79A-E97B-41D5-B622-698E4D90D25C.png" alt="99d5b137c340c13a7eebf33ae33dd52f"></p>
+<p>如果要是客户端咔嚓一下关机呢？</p>
+<p><img src="../../img/blog/graceful-shutdown.resources/0B9BD927-0DCF-4439-8800-B725D219DD64.png" alt="8508e2f64d1f42d56eddc57db1854fe5"></p>
+<p>所以我们可以看到，不论是客户端突然关机还是服务端突然关机，都会造成问题。</p>
+<p>于是我们的优雅关机，就是要解决这么一个问题。从前面的那些图也可以看到，如果要优雅退出，那就得好好商量：</p>
+<p><img src="../../img/blog/graceful-shutdown.resources/520B03F6-01F6-4A55-B92B-D78DE8CE29E3.png" alt="f09ee7a8c1bab90557e12f64cc5d0b27"></p>
+<p><img src="../../img/blog/graceful-shutdown.resources/41CD44F6-278A-4298-8E65-AF075B40DD09.png" alt="0864d2a71ad1e28d3111e9ccd386ae03"></p>
+<p><img src="../../img/blog/graceful-shutdown.resources/95858C87-82F5-40EA-A705-8074A0125DCC.png" alt="702558b2132e77c1576ca9f844a75776"></p>
+<p><img src="../../img/blog/graceful-shutdown.resources/855E8ED8-0447-4A95-B0CC-8D67FAFF980D.png" alt="9fcb329b91747ca2b2cbb46302ee1d51"></p>
+<p>如果客户端关机呢？那就更加简单了，稍微停一下，把发出去的请求的响应收完再关机。</p>
+<p>现实的情况是，一个节点，往往既是服务端，也是客户端。这种情况下该怎么搞？首先在发出关机的信号后，它肯定不能关掉，至少要等到已接受的请求处理完成，才能关掉。往往是，处理一个请求会导致它作为客户端发起一个调用。于是我们可以看到，在该节点既是服务端，又是客户端的情况下，要先关闭作为服务端的功能，这样才能防止因为要处理新的请求而不得不作为客户端向别的服务器发起请求。</p>
+<p>所以最终步骤就是：</p>
+<ol>
+<li>告知注册中心，即将关闭，此时等待并处理请求；</li>
+<li>注册中心通知别的客户端，别的客户端停止发送新请求，等待已发请求的响应；</li>
+<li>节点处理完所有接收到的请求并且返回响应后，释放作为服务端相关的组件和资源；</li>
+<li>节点释放作为客户端的组件和资源；</li>
+</ol>
+<h2>实现</h2>
+<h3>如何知道关机？</h3>
+<p>不管我们如何实现优雅关机，第一个要解决的就是，我怎么知道这个节点要关机了？在Java虚拟机里面，有<code>Runtime</code>提供了<code>addShutdownHook</code>的方法：</p>
+<p><img src="../../img/blog/graceful-shutdown.resources/D48DE29E-042A-46D7-B699-90D0D5CE6EB9.png" alt="49ab992bf05bacad211101bf4abd0bcd"></p>
+<p>golang就没这个便利。好在<code>golang</code>提供了信号(Signal)机制。在golang里有一个<code>os/signal</code>的包，它是一个对操作系统信号的封装——所以这是一个操作系统相关的东西，不过我这里只考虑<code>Unix-Like</code>系统，毕竟我还是不怎么听说有人在<code>Windows</code>上部署<code>golang</code>微服务的[手动狗头]。</p>
+<p><img src="../../img/blog/graceful-shutdown.resources/58B1A48E-358F-45A0-9210-1BD06647EB6F.jpg" alt="5fa60922e0b40543be4b5580cb33a53e"></p>
+<p><code>golang</code>的文档(<a href="https://golang.org/pkg/os/signal/">https://golang.org/pkg/os/signal/</a>)里面有很详细的描述。我大概总结一下：</p>
+<ol>
+<li><code>SIGKILL</code>和<code>SIGSTOP</code>可能捕捉不到；</li>
+<li><code>SIGHUP</code>，<code>SIGINT</code>和<code>SIGTERM</code>会导致系统退出；</li>
+<li><code>SIGQUIT</code>，<code>SIGILL</code>，<code>SIGTRAP</code>，<code>SIGABRT</code>，<code>SIGSTKFLT</code>，<code>SIGEMT</code>，<code>SIGSYS</code>会导致系统退出，并且打印此时的栈；</li>
+</ol>
+<p>所以我们只需要监听这些信号的处理就可以了。</p>
+<p><img src="../../img/blog/graceful-shutdown.resources/8D32BFA6-4C61-466B-A877-3F278529557C.png" alt="4447f523b590a16ab97e73f695ffb062"></p>
+<h3>释放资源步骤</h3>
+<p>前面我们讨论了关机释放资源所需要按序执行的步骤，那么落地到<code>dubbogo</code>里面该如何实现呢？</p>
+<p>从<code>dubbogo</code>的源码能够发现，关键的组件就是<code>Registry</code>和<code>Protocol</code>。</p>
+<p>其中<code>Protocol</code>从逻辑上来说，可以分成供<code>Provider</code>使用的<code>Protocol</code>和供<code>Consumer</code>使用的<code>Protocol</code>。当然，<code>Protocol</code>也可能同时提供两者使用。因此我们考虑到这种情况，在销毁<code>Provider</code>的<code>Protocol</code>的时候，要把共用的那些<code>Protocol</code>剔除出来。</p>
+<p>按照我们的预先分析的步骤，释放资源的步骤应该是：</p>
+<ol>
+<li>销毁所有的<code>Registry</code>实例，这也就是从注册中心里面注销。这个过程，客户端因为有监听注册中心的事件，所以很快就能知道某个服务器已经不可用；</li>
+</ol>
+<p><img src="../../img/blog/graceful-shutdown.resources/2801B5B0-D743-48E5-AA9C-02BFD7E7A2E1.png" alt="a9d35b4f8e0cfe9cb27eda34ff30ae62"></p>
+<ol start="2">
+<li>在步骤1之后，理论上来说所有的客户端都不会再发请求过来了。但是还有很多时候，一个是注册中心通知客户端的延时，二是不同的客户端可能有一些奇怪的缓存机制，再一个就是此时正在发送的请求。这几种情况下，还会有部分请求到达服务器，所以服务器还需要接收这部分请求然后处理掉，因而要等待一段时间；</li>
+</ol>
+<p><img src="../../img/blog/graceful-shutdown.resources/4969FC2A-29E1-4AF2-8F55-FA078AD8AD2B.png" alt="a6b0f7952a67641e1e2e6aa41a643230"></p>
+<ol start="3">
+<li>在步骤2之后，绝大部分情况下，服务端就可以直接销毁掉扮演<code>Provider</code>的<code>Protocol</code>了。然而，如果步骤2等待时间过短，或者说客户端和注册中心就服务器下线这个事情达成一致的时间太长，那么这个阶段还会收到请求。这个时候我们就只能拒绝请求了。此时，我们还要判断一下，当前正在处理的请求处理完了没有，如果处理完了，或者等了一段时间之后都还没处理完，就进入下一个阶段；</li>
+</ol>
+<p><img src="../../img/blog/graceful-shutdown.resources/DE9BB73F-D08E-44BC-A186-87A14B88FEBF.png" alt="2a0a83159c1575f52f3b76cff19b74bb"></p>
+<ol start="4">
+<li>
+<p>在这个步骤，服务器才真的摧毁作为<code>Provider</code>的<code>Protocol</code>。</p>
+</li>
+<li>
+<p>经过步骤4，服务器还可能处在一种“虽然我无法响应别人，但是我还在处理点事情，我要等别人的响应”的状态中，所以这个时候我们再稍微停下来等一下，如果所有的响应都收到请求了，或者超时，进入下一个阶段；</p>
+</li>
+</ol>
+<p><img src="../../img/blog/graceful-shutdown.resources/2135B11B-7FF7-4EB2-BEB5-4516FD8003BF.png" alt="7355cb3f6f672ef8cec6b1b1e007f66f"></p>
+<ol start="6">
+<li>摧毁掉剩下的<code>Protocol</code>。</li>
+<li>理论上来说，经过步骤6，在框架层面上，所有的资源都释放了。但是这个时候我们要考虑到开发者可能在此时需要释放他创建的资源，因此我们要提供一个回调机制，允许他们在这个时间节点回收资源；</li>
+</ol>
+<p><img src="../../img/blog/graceful-shutdown.resources/984096FE-8A3D-4455-9C52-10D4BCE76D6D.png" alt="3ea3856a44952c90984506eb07605495"></p>
+<p>我们的源码里面很容易看出来这些步骤：</p>
+<p><img src="../../img/blog/graceful-shutdown.resources/02181BEF-03D7-4987-BC39-9831C07944BD.png" alt="102df28d64312fd410b3b82cf85f2009"></p>
+<h3>如何确定每一步的超时时间</h3>
+<p>在实现这个优雅退出的时候，有一个参数非常关键，就是每一步的退出时间<code>step_timeout</code>，它代表的是，在前面提及的每一个步骤，如果需要停下来等待，那么会在多久以后超时，结束等待。</p>
+<p>在大大大大大多数情况下，设置这个时间只需要考虑第一个停下来等待的步骤，即服务端在宣称了自己要停机，并且销毁了<code>Registry</code>之后停下来等待新请求的时长。也就是执行方法<code>waitAndAcceptNewRequests</code>的超时时间。</p>
+<p>有一个简单的式子可以描述这个时间：客户端收到注册中心通知的时长+请求响应时长。</p>
+<p>第一个“客户端收到注册中心通知的时长”很好理解，但是也比较难估算。这主要取决于注册中心和客户端缓存机制。我个人经验是使用<code>ZK</code>的情况下，一般不会超过1秒。</p>
+<p>第二个“请求响应时长”最复杂了。首先，这是一个从客户端观察的值。也就是说，它不是我们监控到的服务端的服务响应时间，而是从客户端发出一个请求到它收到完全响应的时长。于服务端而言，大概是“请求传输时长+服务响应时长+响应传输时长”。</p>
+<p><img src="../../img/blog/graceful-shutdown.resources/DA86E6E3-9A89-4352-AEB2-9B1730739F93.png" alt="8f3791f8a040055261d9140ffe76d7f0"></p>
+<p>然后我们又会面临一个问题，一个服务端往往提供多个服务，我该取哪个服务的请求响应时长？答案是取决于你具体的业务和你的期望。开发者可以基于自己的服务的重要性，取比较重要的服务的999线；又或者全部服务一起考虑，取999线。这里我比较不建议使用平均线，因为平均线意味着有很多的请求无法再这个时间内返回响应。</p>
+<p>另外一种比较罕见的选择是，使用定时任务的执行时间，或者事务——尤其是分布式事务——的完成时间。</p>
+<p>核心就是，你觉得哪个东西最重要，你就用那个东西的执行时间。</p>
+<p>上面的逻辑也适用于单纯是<code>Consumer</code>的应用。</p>
+<p>大多数情况下，<code>step_timeout</code>默认值10秒足以应付了。</p>
+<h2>未实现部分</h2>
+<h3>特殊回调</h3>
+<p>这个小标题有点不太准确。大家注意到的是，我只在所有框架资源都被销毁之后才会回调开发者注册的回调。这个时候就有这么一些问题：</p>
+<ol>
+<li>如果开发者在自定义的回调里面希望用到<code>dubbogo</code>的功能，特别是发起远程调用，那么显然是不可能的——虽然我也觉得不会有人会这么干；</li>
+<li>如果开发者的回调希望按照顺序来执行，那么也是不支持的。我们只会按照注册回调的顺序来依次调用。当然开发者可以通过将多个回调按序调用组成一个更复杂的回调来实现这个目标。不支持它主要是一个取舍问题。我相信有这种需求的人是少数以至于几乎没有的……</li>
+</ol>
+<h3>底层支持的优雅停机</h3>
+<p>前面所有的步骤，都是直接建立在应用层面上。实际上，还有一些业界的做法，是在底层协议上就直接提供了支持。比如说，通过<code>TCP</code>连接发送一个只读事件，那么客户端后续就自然不会再把请求发过来。</p>
+<p>我们的优雅停机并没有使用到这一种机制，因为在应用层面上就能够解决。<code>dubbogo</code>里面的<code>Registry</code>和<code>Protocol</code>的<code>Destroy</code>都没采用这种机制。</p>
+<p>但是这的确是一个很不错的实现思路。<code>dubbo</code>就是采用了这种方式。</p>
+</section><footer class="footer-container"><div class="footer-body"><img src="/dubbo-go-website/img/dubbo_gray.png"/><img class="apache" src="/dubbo-go-website/img/apache_logo.png"/><div class="cols-container"><div class="col col-12"><h3></h3><p></p></div><div class="col col-4"><dl><dt>ASF</dt><dd><a href="http://www.apache.org" target="_self">基金会</a></dd><dd><a href="http://www.apache.org/licenses/" target="_self">证书</a></dd><dd><a href="http://www.apache.org/events/current-event" target="_self">事件</a></dd><dd><a href="http://www.apache.org/foundation/sponsorship.html" target="_self">赞助</a></dd><dd><a href="http://www.apache.org/foundation/thanks.html" target="_self">致谢</a></dd></dl></div><div class="col col-4"><dl><dt>文档</dt><dd><a href="/dubbo-go-website/zh-cn/docs/user/quick-start.html" target="_self">快速开始</a></dd><dd><a href="/dubbo-go-website/zh-cn/docs/dev/build.html" target="_self">开发者指南</a></dd><dd><a href="/dubbo-go-website/zh-cn/docs/admin/ops/dubbo-ops.html" target="_self">运维管理</a></dd><dd><a href="https://github.com/dubbogo/dubbo-go-website/issues/new" target="_self">报告文档问题</a></dd><dd><a href="https://github.com/dubbogo/dubbo-go-website" target="_self">编辑此文档</a></dd></dl></div><div class="col col-4"><dl><dt>资源</dt><dd><a href="/dubbo-go-website/zh-cn/blog/index.html" target="_self">博客</a></dd><dd><a href="/dubbo-go-website/zh-cn/community/index.html" target="_self">社区</a></dd><dd><a href="https://www.apache.org/security" target="_self">安全</a></dd></dl></div></div><div class="copyright"><span>Copyright © 2018-2019 The Apache Software Foundation. Apache and the Apache feather logo are trademarks of The Apache Software Foundation.</span></div></div></footer></div></div>
+	<script src="https://f.alicdn.com/react/15.4.1/react-with-addons.min.js"></script>
+	<script src="https://f.alicdn.com/react/15.4.1/react-dom.min.js"></script>
+	<script>
+		window.rootPath = '/dubbo-go-website';
+  </script>
+  <script src="/dubbo-go-website/build/blogDetail.js"></script>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-112489517-1"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+
+		gtag('config', 'UA-112489517-1');
+	</script>
+</body>
+</html>
