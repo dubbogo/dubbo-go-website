@@ -30,6 +30,20 @@ export default {
                 desc: '在dubbogo中的优雅退出的设计与实现。讨论了直接退出的存在问题，因此得出优雅退出所需的步骤。',
                 link: '/zh-cn/blog/graceful-shutdown.html',
             },
+            {
+                title: 'dubbo-go中metrics的设计',
+                author: '@flycash',
+                dateStr: 'Jan 18th, 2020',
+                desc: 'metrics是可观测性的核心部分。该文讨论了在dubbo-go中metrics的顶级抽象，通过Prometheus为例子揭示了如何采集和上报数据',
+                link: '/zh-cn/blog/dubbogo-metrics-design-implementation.html',
+            },
+            {
+                title: '无缝连接dubbo-go与gRPC',
+                author: '@flycash',
+                dateStr: 'Jan 18th, 2020',
+                desc: '在dubbo-go中接入gRPC的设计与实现。核心在于实现gRPC protocol，作为一个适配器将dubbo-go和gRPC连接起来',
+                link: '/zh-cn/blog/grpc-dubbo.html',
+            },
         ]
     },
 };
