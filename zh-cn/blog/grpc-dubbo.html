@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta name="keywords" content="&#34;gRPC&#34;, &#34;protocol&#34;" />
+	<meta name="description" content="在dubbo-go中接入gRPC的设计与实现。核心在于实现gRPC protocol，作为一个适配器将dubbo-go和gRPC连接起来。" />
+	<!-- 网页标签标题 -->
+	<title>无缝连接dubbo-go与gRPC</title>
+	<link rel="shortcut icon" href="/dubbo-go-website/img/dubbo.ico"/>
+	<link rel="stylesheet" href="/dubbo-go-website/build/blogDetail.css" />
+</head>
+<body>
+	<div id="root"><div class="blog-detail-page" data-reactroot=""><header class="header-container header-container-normal"><div class="header-body"><a href="/dubbo-go-website/zh-cn/index.html"><img class="logo" src="/dubbo-go-website/img/dubbo_colorful.png"/></a><div class="search search-normal"><span class="icon-search"></span></div><span class="language-switch language-switch-normal">En</span><div class="header-menu"><img class="header-menu-toggle" src="/dubbo-go-website/img/menu_gray.png"/><ul><li class="menu-item menu-item-normal"><a href="/dubbo-go-website/zh-cn/index.html">首页</a></li><li class="menu-item menu-item-normal"><a href="/dubbo-go-website/zh-cn/docs/user/quick-start.html">文档</a></li><li class="menu-item menu-item-normal menu-item-normal-active"><a href="/dubbo-go-website/zh-cn/blog/index.html">博客</a></li><li class="menu-item menu-item-normal"><a href="https://dubbo.apache.org/zh-cn/index.html">Java</a></li></ul></div></div></header><section class="blog-content markdown-body"><h1>无缝连接dubbo-go与gRPC</h1>
+<p>最近我们<code>dubbogo</code>社区里面，呼声很大的一个<code>feature</code>就是对<code>grpc</code>的支持。在某位大佬的不懈努力之下，终于弄出来了。</p>
+<p>今天我就给大家分析一下大佬是怎么连接<code>dubbogo</code>和<code>grpc</code>。</p>
+<h2>grpc</h2>
+<p>先来简单介绍一下<code>grpc</code>。它是<code>google</code>推出来的一个<code>RPC</code>框架。<code>grpc</code>是通过<code>IDL(Interface Definition Language)</code>——接口定义语言——编译成不同语言的客户端来实现的。可以说是<code>RPC</code>理论的一个非常非常标准的实现。</p>
+<p>因而<code>grpc</code>天然就支持多语言。这几年，它几乎成为了跨语言<code>RPC</code>框架的标准实现方式了，很多优秀的<code>rpc</code>框架，如<code>Spring Cloud</code>和<code>dubbo</code>，都支持<code>grpc</code>。</p>
+<h3>server端</h3>
+<p>在<code>go</code>里面，<code>server</code>端的用法是：</p>
+<p><img src="../../img/blog/dubbogo-grpc/1.png" alt="6359d47153533919368ba084e4c1e8db"></p>
+<p>它的关键部分是：<code>s := grpc.NewServer()</code>和<code>pb.RegisterGreeterServer(s, &amp;server{})</code>两个步骤。第一个步骤很容易，唯独第二个步骤<code>RegisterGreeterServer</code>有点麻烦。为什么呢？</p>
+<p>因为<code>pb.RegisterGreeterServer(s, &amp;server{})</code>这个方法是通过用户定义的<code>protobuf</code>编译出来的。</p>
+<p>好在，这个编译出来的方法，本质上是：</p>
+<p><img src="../../img/blog/dubbogo-grpc/2.png" alt="3124a69ad94741617673e6db366b9235"></p>
+<p>也就是说，如果我们在<code>dubbogo</code>里面拿到这个<code>_Greeter_serviceDesc</code>，就可以实现这个<code>server</code>的注册。因此，可以看到，在<code>dubbogo</code>里面，要解决的一个关键问题就是如何拿到这个<code>serviceDesc</code>。</p>
+<h3>client端</h3>
+<p><code>client</code>端的用法是：
+<img src="../../img/blog/dubbogo-grpc/3.png" alt="0185e6a53ac2aad323260ea6f4fd8f79"></p>
+<p>这个东西要复杂一点：</p>
+<ol>
+<li>创建连接：<code>conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())</code></li>
+<li>创建<code>client</code>：<code>c := pb.NewGreeterClient(conn)</code></li>
+<li>调用方法：<code>r, err := c.SayHello(ctx, &amp;pb.HelloRequest{Name: name})</code></li>
+</ol>
+<p>第一个问题其实挺好解决的，毕竟我们可以从用户的配置里面读出<code>address</code>；</p>
+<p>第二个问题就是最难的地方了。如同<code>RegisterGreeterServer</code>是被编译出来的那样，这个<code>NewGreeterClient</code>也是被编译出来的。</p>
+<p>而第三个问题，乍一看是用反射就能解决，但是我们打开<code>SayHello</code>就能看到：</p>
+<p><img src="../../img/blog/dubbogo-grpc/4.png" alt="92f4e0d75b865fd40004d1fa59720ff8"></p>
+<p>结合<code>greetClient</code>的定义，很容易看到，我们的关键就在于<code>err := c.cc.Invoke(ctx, &quot;/helloworld.Greeter/SayHello&quot;, in, out, opts...)</code>。换言之，我们只需要创建出来连接，并且拿到方法、参数就能通过类似的调用来模拟出<code>c.SayHello</code>。</p>
+<p>通过对<code>grpc</code>的简单分析，我们大概知道要怎么弄了。还剩下一个问题，就是我们的解决方案怎么和<code>dubbogo</code>结合起来呢？</p>
+<h2>设计</h2>
+<p>我们先来看一下<code>dubbogo</code>的整体设计，思考一下，如果我们要做<code>grpc</code>的适配，应该是在哪个层次上做适配。</p>
+<p><img src="../../img/blog/dubbogo-grpc/5.png" alt="7beb1e841086b56b696c3852f629edba"></p>
+<p>我们根据前面介绍的<code>grpc</code>的相关特性可以看出来，<code>grpc</code>已经解决了<code>codec</code>和<code>transport</code>两层的问题。</p>
+<p>而从<code>cluster</code>往上，显然<code>grpc</code>没有涉及。于是，从这个图里面我们就可以看出来，要做这种适配，那么<code>protocol</code>这一层是最合适的。即，我们可以如同<code>dubbo protocol</code>那般，扩展出来一个<code>grpc protocol</code>。</p>
+<p>这个<code>grpc protocol</code>大体上相当于一个<strong>适配器</strong>，将底层的<code>grpc</code>的实现和我们自身的<code>dubbogo</code>连接在一起。</p>
+<p><img src="../../img/blog/dubbogo-grpc/6.png" alt="1499f43e5c8c924fe8568ae27e6debca"></p>
+<h2>实现</h2>
+<p>在<code>dubbogo</code>里面，和<code>grpc</code>相关的主要是：</p>
+<p><img src="../../img/blog/dubbogo-grpc/7.png" alt="427d7b90b96b400128f31b60eb1efcee"></p>
+<p>我们直接进去看看在<code>grpc</code>小节里面提到的要点是如何实现的。</p>
+<h3>server端</h3>
+<p><img src="../../img/blog/dubbogo-grpc/8.png" alt="c3b28d649200b795f2cb1595b1b24ec4"></p>
+<p>这样看起来，还是很清晰的。如同<code>dubbogo</code>其它的<code>protoco</code>一样，先拿到<code>service</code>，而后通过<code>service</code>来拿到<code>serviceDesc</code>，完成服务的注册。</p>
+<p>注意一下上图我红线标准的<code>ds, ok := service.(DubboGrpcService)</code>这一句。</p>
+<p>为什么我说这个地方有点奇怪呢？是因为理论上来说，我们这里注册的这个<code>service</code>实际上就是<code>protobuf</code>编译之后生成的<code>grpc</code>服务端的那个<code>service</code>——很显然，单纯的编译一个<code>protobuf</code>接口，它肯定不会实现<code>DubboGrpcService</code>接口：</p>
+<p><img src="../../img/blog/dubbogo-grpc/9.png" alt="23adece883da8178e6890ada03691d80"></p>
+<p>那么<code>ds, ok := service.(DubboGrpcService)</code>这一句，究竟怎么才能让它能够执行成功呢？</p>
+<p>我会在后面给大家揭晓这个谜底。</p>
+<h3>client端</h3>
+<p><code>dubbogo</code>设计了自身的<code>Client</code>，作为对<code>grpc</code>里面<code>client</code>的一种模拟与封装：
+<img src="../../img/blog/dubbogo-grpc/10.png" alt="766984e439a7bfe1925720f081f30249"></p>
+<p>注意看，这个<code>Client</code>的定义与前面<code>greetClient</code>的定义及其相似。再看下面的<code>NewClient</code>方法，里面也无非就是创建了连接<code>conn</code>，而后利用<code>conn</code>里创建了一个<code>Client</code>实例。</p>
+<p>注意的是，这里面维护的<code>invoker</code>实际上是一个<code>stub</code>。</p>
+<p>当真正发起调用的时候：</p>
+<p><img src="../../img/blog/dubbogo-grpc/11.png" alt="59ce727711c907ae5609e7f7e9985f58"></p>
+<p>红色框框框住的就是关键步骤。利用反射从<code>invoker</code>——也就是<code>stub</code>——里面拿到调用的方法，而后通过反射调用。</p>
+<h3>代码生成</h3>
+<p>前面提到过<code>ds, ok := service.(DubboGrpcService)</code>这一句，面临的问题是如何让<code>protobuf</code>编译生成的代码能够实现<code>DubboGrpcService</code>接口呢？</p>
+<p>有些小伙伴可能也注意到，在我贴出来的一些代码里面，反射操作会根据名字来获取<code>method</code>实例，比如<code>NewClint</code>方法里面的<code>method := reflect.ValueOf(impl).MethodByName(&quot;GetDubboStub&quot;)</code>这一句。这一句的<code>impl</code>，即指服务的实现，也是<code>protobuf</code>里面编译出来的，怎么让<code>protobuf</code>编译出来的代码里面含有这个<code>GetDubboStub</code>方法呢？</p>
+<p>到这里，答案已经呼之欲出了：修改<code>protobuf</code>编译生成代码的逻辑！</p>
+<p>庆幸的是，在<code>protobuf</code>里面允许我们通过插件的形式扩展我们自己的代码生成的逻辑。</p>
+<p>所以我们只需要注册一个我们自己的插件：</p>
+<p><img src="../../img/blog/dubbogo-grpc/12.png" alt="4ff106d587a317ecc02e2362a92f3e79"></p>
+<p>然后这个插件会把我们所需要的代码给嵌入进去。比如说嵌入<code>GetDubboStub</code>方法：
+<img src="../../img/blog/dubbogo-grpc/13.png" alt="def7f288c859586ca866e57bff0ae9bb"></p>
+<p>还有<code>DubboGrpcService</code>接口：</p>
+<p><img src="../../img/blog/dubbogo-grpc/14.png" alt="87eb9e0c79af6d89f16ca566ee7d4f3b"></p>
+<p>这个东西，属于难者不会会者不难。就是如果你不知道可以通过<code>plugin</code>的形式来修改生成的代码，那就是真难；但是如果知道了，这个东西就很简单了——无非就是水磨工夫罢了。</p>
+</section><footer class="footer-container"><div class="footer-body"><img src="/dubbo-go-website/img/dubbo_gray.png"/><img class="apache" src="/dubbo-go-website/img/apache_logo.png"/><div class="cols-container"><div class="col col-12"><h3></h3><p></p></div><div class="col col-4"><dl><dt>ASF</dt><dd><a href="http://www.apache.org" target="_self">基金会</a></dd><dd><a href="http://www.apache.org/licenses/" target="_self">证书</a></dd><dd><a href="http://www.apache.org/events/current-event" target="_self">事件</a></dd><dd><a href="http://www.apache.org/foundation/sponsorship.html" target="_self">赞助</a></dd><dd><a href="http://www.apache.org/foundation/thanks.html" target="_self">致谢</a></dd></dl></div><div class="col col-4"><dl><dt>文档</dt><dd><a href="/dubbo-go-website/zh-cn/docs/user/quick-start.html" target="_self">快速开始</a></dd><dd><a href="/dubbo-go-website/zh-cn/docs/dev/build.html" target="_self">开发者指南</a></dd><dd><a href="/dubbo-go-website/zh-cn/docs/admin/ops/dubbo-ops.html" target="_self">运维管理</a></dd><dd><a href="https://github.com/dubbogo/dubbo-go-website/issues/new" target="_self">报告文档问题</a></dd><dd><a href="https://github.com/dubbogo/dubbo-go-website" target="_self">编辑此文档</a></dd></dl></div><div class="col col-4"><dl><dt>资源</dt><dd><a href="/dubbo-go-website/zh-cn/blog/index.html" target="_self">博客</a></dd><dd><a href="/dubbo-go-website/zh-cn/community/index.html" target="_self">社区</a></dd><dd><a href="https://www.apache.org/security" target="_self">安全</a></dd></dl></div></div><div class="copyright"><span>Copyright © 2018-2019 The Apache Software Foundation. Apache and the Apache feather logo are trademarks of The Apache Software Foundation.</span></div></div></footer></div></div>
+	<script src="https://f.alicdn.com/react/15.4.1/react-with-addons.min.js"></script>
+	<script src="https://f.alicdn.com/react/15.4.1/react-dom.min.js"></script>
+	<script>
+		window.rootPath = '/dubbo-go-website';
+  </script>
+  <script src="/dubbo-go-website/build/blogDetail.js"></script>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-112489517-1"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+
+		gtag('config', 'UA-112489517-1');
+	</script>
+</body>
+</html>

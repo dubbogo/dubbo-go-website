@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta name="keywords" content="&#34;metrics&#34;, &#34;prometheus&#34;, &#34;可观测性&#34;" />
+	<meta name="description" content="metrics是可观测性的核心部分。该文讨论了在dubbo-go中metrics的顶级抽象，通过Prometheus为例子揭示了如何采集和上报数据。" />
+	<!-- 网页标签标题 -->
+	<title>dubbogo中metrics的设计</title>
+	<link rel="shortcut icon" href="/dubbo-go-website/img/dubbo.ico"/>
+	<link rel="stylesheet" href="/dubbo-go-website/build/blogDetail.css" />
+</head>
+<body>
+	<div id="root"><div class="blog-detail-page" data-reactroot=""><header class="header-container header-container-normal"><div class="header-body"><a href="/dubbo-go-website/zh-cn/index.html"><img class="logo" src="/dubbo-go-website/img/dubbo_colorful.png"/></a><div class="search search-normal"><span class="icon-search"></span></div><span class="language-switch language-switch-normal">En</span><div class="header-menu"><img class="header-menu-toggle" src="/dubbo-go-website/img/menu_gray.png"/><ul><li class="menu-item menu-item-normal"><a href="/dubbo-go-website/zh-cn/index.html">首页</a></li><li class="menu-item menu-item-normal"><a href="/dubbo-go-website/zh-cn/docs/user/quick-start.html">文档</a></li><li class="menu-item menu-item-normal menu-item-normal-active"><a href="/dubbo-go-website/zh-cn/blog/index.html">博客</a></li><li class="menu-item menu-item-normal"><a href="https://dubbo.apache.org/zh-cn/index.html">Java</a></li></ul></div></div></header><section class="blog-content markdown-body"><h1>dubbogo中metrics的设计</h1>
+<p>最近因为要在<a href="https://github.com/apache/dubbo-go/">dubbo-go</a>里面实现类似的这个<code>metrics</code>功能，于是花了很多时间去了解现在<code>dubbo</code>里面的<code>metrics</code>是怎么实现的。该部分，实际上是被放在一个独立的项目里面，即<a href="https://github.com/alibaba/metrics.git">metrics</a>。</p>
+<p>总体上来说，<code>dubbo</code>的<code>metrics</code>是一个从设计到实现都非常优秀的模块，理论上来说，大部分的<code>java</code>项目是可以直接使用<code>metrics</code>的。但也因为兼顾性能、扩展性等各种非功能特性，所以初看代码会有种无从下手的感觉。</p>
+<p>今天这篇文章将会从比较大的概念和抽象上讨论一下<code>dubbogo</code>中的<code>metrics</code>模块的设计——实际上也就是<code>dubbo</code>中的<code>metrics</code>的设计。因为我仅仅是将<code>dubbo</code>里面的相关内容在<code>dubbogo</code>中复制一份。</p>
+<p>目前<code>dubbogo</code>的<code>metrics</code>刚刚开始起步，第一个PR是<code>https://github.com/apache/dubbo-go/pull/278</code>。</p>
+<h2>总体设计</h2>
+<h3>Metric</h3>
+<p>要想理解<code>metrics</code>的设计，首先要理解，我们需要收集一些什么数据。我们可以轻易列举出来在<code>RPC</code>领域里面我们所关心的各种指标，诸如每个服务的调用次数，响应时间；如果更加细致一点，还有各种响应时间的分布，平均响应时间，999线……</p>
+<p>但是上面列举的是从数据的内容上划分的。<code>metrics</code>在抽象上，则是摒弃了这种划分方式，而是<strong>结合了数据的特性和表现形式</strong>综合划分的。</p>
+<p>从源码里面很容易找到这种划分的抽象。</p>
+<p><code>metrics</code>设计了<code>Metric</code>接口作为所有数据的顶级抽象：</p>
+<p><img src="../../img/blog/dubbogo-metrics-design-implementation.resources/88BFAACF-DF73-43EE-A2A2-2B2B29E774DF.png" alt="6dae190da9527bf9000e1d2c82b0020d"></p>
+<p>在<code>dubbo</code>里面，其比较关键的子接口是：</p>
+<p><img src="../../img/blog/dubbogo-metrics-design-implementation.resources/5005C490-06DE-4591-AC0A-2CB7AF5B7B16.png" alt="9d44e49f63a43f00a08b9b5b001fa18e"></p>
+<p>为了大家理解，这里我抄一下这些接口的用途：</p>
+<ul>
+<li><code>Gauge</code>: 一种实时数据的度量，反映的是瞬态的数据，不具有累加性，例如当前<code>JVM</code>的线程数；</li>
+<li><code>Counter</code>: 计数器型指标，适用于记录调用总量等类型的数据；</li>
+<li><code>Histogram</code>: 直方分布指标，例如，可以用于统计某个接口的响应时间，可以展示50%, 70%, 90%的请求响应时间落在哪个区间内；</li>
+<li><code>Meter</code>: 一种用于度量一段时间内吞吐率的计量器。例如，一分钟内，五分钟内，十五分钟内的qps指标；</li>
+<li><code>Timer</code>: Timer相当于Meter+Histogram的组合，同时统计一段代码，一个方法的qps，以及执行时间的分布情况；</li>
+</ul>
+<p>目前<code>dubbogo</code>只实现了<code>FastCompass</code>，它也是<code>Metric</code>的子类：</p>
+<p><img src="../../img/blog/dubbogo-metrics-design-implementation.resources/29B3D035-5E7C-4255-AD3F-2AC708613E2E.png" alt="9efb3dcbcd85fc297c64498d1441fcf2"></p>
+<p>这个接口功能很简单，就是用于收集一段时间之内的<code>subCategory</code>执行的次数和响应时间。<code>subCategory</code>是一个比较宽泛的概念，无论是在<code>dubbo</code>还是在<code>dubbogo</code>里面，一个典型的<code>subCategory</code>就会是某个服务。</p>
+<p>这里的设计要点在于，它是从什么角度上去做这些数据的抽象的。</p>
+<p>很多人在开发这种采集数据的相关系统或者功能的时候，最容易陷入的就是从数据内容上做抽象，例如抽象一个接口，里面的方法就是获得服务的调用次数或者平均响应时间等。</p>
+<p>这种抽象并非不可以，尤其是在简单系统里面，还非常好用。唯独在通用性和扩展性上要差很多。</p>
+<h3>MetricManager</h3>
+<p>在我们定义了<code>Metric</code>之后，很容易就想到，我要有一个东西来管理这些<code>Metric</code>。这就是<code>MetricManager</code>——对应到<code>dubbo</code>里面的<code>IMetricManager</code>接口。</p>
+<p><code>MetricManager</code>接口目前在<code>dubbogo</code>里面还很简单：</p>
+<p><img src="../../img/blog/dubbogo-metrics-design-implementation.resources/C86E3808-33CC-4E8C-9C6C-76028DFD9F02.png" alt="0a7c0bb19836c6ee485a53a1374a4a63"></p>
+<p>本质上来说，<strong>我在前面提到的那些<code>Metric</code>的子类，都可以从这个<code>MetricManager</code>里面拿到</strong>。它是对外的唯一入口。</p>
+<p>因此无论是上报采集的数据，还是某些功能要用这些采集的数据，最重要的就是获得一个<code>MetricManager</code>的实例。例如我们最近正在开发的接入<code>Prometheus</code>就是拿到这个<code>MetriManger</code>实例，而后从里面拿到<code>FastCompass</code>的实例，而后采集这些数据：</p>
+<p><img src="../../img/blog/dubbogo-metrics-design-implementation.resources/6E9950E9-2660-4320-85C9-AC37F3FC91A2.png" alt="6020a2720fe234939e9e33822e363b22"></p>
+<h3>MetricRegistry</h3>
+<p><code>MetricRegistry</code>是一个对<code>Metric</code>集合的抽象。<code>MetricManager</code>的默认实现里面，就是使用<code>MetricRegistry</code>来管理<code>Metric</code>的:</p>
+<p><img src="../../img/blog/dubbogo-metrics-design-implementation.resources/A3407C69-FC94-468A-90AC-440671C8CED9.png" alt="d161a02a2139d2cdc8320ee2f0f1bd20"></p>
+<p>所以，本质上它就是提供了一些注册<code>Metric</code>然后再从里面捞出来的方法。</p>
+<p>于是，这就有一个问题了：<strong>为什么我在有了<code>MetricManager</code>之后，还有有一个<code>MetricRegistry</code>？似乎这两个功能有些重叠？</strong></p>
+<p>答案大概是两个方面：</p>
+<ol>
+<li><code>MetricManager</code>除了管理所有的<code>Metric</code>之外，还承担着额外的功能，这些功能典型的就是<code>IsEnabled</code>。而实际上，在未来我们会赋予它管理生命周期的责任，比如说在<code>dubbo</code>里面，该接口就还有一个<code>clear</code>方法；</li>
+<li><code>metrics</code>里面还有一个<code>group</code>的概念，而这只能由<code>MetricManager</code>来进行管理，至少交给<code>MetricRegistry</code>是不合适的。</li>
+</ol>
+<p><code>metrics</code>的<code>group</code>说起来也很简单。比如在<code>dubbo</code>框架里面采集的数据，都会归属于<code>dubbo</code>这个<code>group</code>。也就是说，如果我想将非框架层面采集的数据——比如纯粹的业务数据——分隔出来，就可以借用一个<code>business group</code>。又或者我采集到的机器自身的数据，可以将其归类到<code>system</code>这个<code>group</code>下。</p>
+<p>所以<code>MetricManger</code>和<code>MetricRegistry</code>的关系是：</p>
+<p><img src="../../img/blog/dubbogo-metrics-design-implementation.resources/F2BB669C-E80F-4111-830B-A1550ECA05A4.png" alt="31c5315418d23cb5ccdbf8221d3adf73"></p>
+<h3>Clock</h3>
+<p><code>Clock</code>抽象是一个初看没什么用，再看又会觉得太机智了的抽象。<code>Clock</code>里面就两个方法：</p>
+<p><img src="../../img/blog/dubbogo-metrics-design-implementation.resources/0458EEEC-3D3A-48DD-AF6D-FBEECB12BAAB.png" alt="c82039a24971f891eb8f7fd0e9902de2"></p>
+<p>一个是获得时间戳，另外一个则是获得时间周期(Tick)。比如通常采集数据可能是每一分钟采集一次，所以你得知道现在处在哪个时间周期里面。<code>Clock</code>就提供了这种抽象。</p>
+<p>很多人在实现自己的这种<code>metrics</code>的框架的时候，大多数都是直接使用系统的时钟，也就是系统的时间戳。于是所有的<code>Metic</code>在采集数据或者上报数据的时候，不得不自己去处理这种时钟方面的问题。</p>
+<p>这样不同的<code>Metric</code>之间就很难做到时钟的同步。比如说可能在某个<code>Metric1</code>里面，采集周期是当前这一分钟，而<code>Metric2</code>是当前这一分钟的第三十秒到下一分钟的第三十秒。虽然它们都是一分钟采集一次，但是这个周期就对不上了。</p>
+<p>另外一个有意思的地方在于，<code>Clock</code>提供的这种抽象，允许我们不必真的按照现实时间的时间戳来处理。比如说，可以考虑按照<code>CPU</code>的运行时间来设计<code>Clock</code>的实现。</p>
+<h2>例子</h2>
+<p>就用这一次PR的内容来展示一下这个设计。</p>
+<p>在<code>dubbogo</code>里面这次实现了<code>metricsFilter</code>，它主要就是收集调用次数和响应时间，其核心是：</p>
+<p><img src="../../img/blog/dubbogo-metrics-design-implementation.resources/CA2B8545-71EA-4BC1-BD0F-2576E194641A.png" alt="1e9a3a60dbddaeb20f8c7da7278c9703"></p>
+<p><code>report</code>其实就是把<code>metrics</code> <code>reports</code>给<code>MetricManager</code>：</p>
+<p><img src="../../img/blog/dubbogo-metrics-design-implementation.resources/FDB62C61-4010-4731-9F71-214E9A822647.png" alt="34ac7e839dca05cf554343928896fdfe"></p>
+<p>所以，这里面可以看出来，如果我们要收集什么数据，也是要先获得<code>MetricManager</code>的实例。</p>
+<p><code>FastCompass</code>的实现里面会将这一次调用的服务及其响应时间保存下来。而后在需要的时候再取出来。</p>
+<p>所谓的需要的时候，通常就是上报给监控系统的时候。比如前面的提到的上报给<code>Prometheus</code>。</p>
+<p>所以这个流程可以抽象表达为：</p>
+<p><img src="../../img/blog/dubbogo-metrics-design-implementation.resources/06C23FEB-1175-4515-979A-35BC1083EEA2.png" alt="d80c427a270fd3c6ae3e19042c5251b6"></p>
+<p>这是一个更加宽泛的抽象。也就是意味着，我们除了可以从这个<code>metricFilter</code>里面收集数据，也可以从自身的业务里面去收集数据。比如说统计某段代码的执行时间，一样可以使用<code>FastCompass</code>。</p>
+<p>而除了<code>Prometheus</code>，如果用户自己的公司里面有监控框架，那么他们可以自己实现自己的上报逻辑。而上报的数据则只需要拿到<code>MetricManager</code>实例就能拿到。</p>
+<h2>总结</h2>
+<p>本质上来说，整个<code>metrics</code>可以看做是一个巨大无比的<code>provider-conumer</code>模型。</p>
+<p>不同的数据会在不同的地方和不同时间点上被采集。有些人在读这些源码的时候会有点困惑，<strong>就是这些数据什么时间点会被采集呢？</strong></p>
+<p>它们只会在两类时间点采集：</p>
+<ol>
+<li>实时采集。如我上面举例的<code>metricsFilter</code>，一次调用过来，它的数据就被采集了；</li>
+<li>另外一个则是如同<code>Prometheus</code>。每次<code>Prometheus</code>触发了<code>collect</code>方法，那么它就会把每种（如<code>Meter</code>, <code>Gauge</code>）里面的数据收集过来，然后上报，可以称为是定时采集；</li>
+</ol>
+<p><code>dubbo</code>里面采集了非常多的数据：</p>
+<p><img src="../../img/blog/dubbogo-metrics-design-implementation.resources/E388EA3B-9C62-4202-9AAD-7C2D95FAD08A.png" alt="f0ade34fc26bf7d561d32010ba69fe30"></p>
+<p>这些具体的实现，我就不一一讨论了，大家有兴趣可以去看看源码。这些数据，也是我们<code>dubbogo</code>后面要陆续实现的东西，欢迎大家持续关注，或者来贡献代码。</p>
+</section><footer class="footer-container"><div class="footer-body"><img src="/dubbo-go-website/img/dubbo_gray.png"/><img class="apache" src="/dubbo-go-website/img/apache_logo.png"/><div class="cols-container"><div class="col col-12"><h3></h3><p></p></div><div class="col col-4"><dl><dt>ASF</dt><dd><a href="http://www.apache.org" target="_self">基金会</a></dd><dd><a href="http://www.apache.org/licenses/" target="_self">证书</a></dd><dd><a href="http://www.apache.org/events/current-event" target="_self">事件</a></dd><dd><a href="http://www.apache.org/foundation/sponsorship.html" target="_self">赞助</a></dd><dd><a href="http://www.apache.org/foundation/thanks.html" target="_self">致谢</a></dd></dl></div><div class="col col-4"><dl><dt>文档</dt><dd><a href="/dubbo-go-website/zh-cn/docs/user/quick-start.html" target="_self">快速开始</a></dd><dd><a href="/dubbo-go-website/zh-cn/docs/dev/build.html" target="_self">开发者指南</a></dd><dd><a href="/dubbo-go-website/zh-cn/docs/admin/ops/dubbo-ops.html" target="_self">运维管理</a></dd><dd><a href="https://github.com/dubbogo/dubbo-go-website/issues/new" target="_self">报告文档问题</a></dd><dd><a href="https://github.com/dubbogo/dubbo-go-website" target="_self">编辑此文档</a></dd></dl></div><div class="col col-4"><dl><dt>资源</dt><dd><a href="/dubbo-go-website/zh-cn/blog/index.html" target="_self">博客</a></dd><dd><a href="/dubbo-go-website/zh-cn/community/index.html" target="_self">社区</a></dd><dd><a href="https://www.apache.org/security" target="_self">安全</a></dd></dl></div></div><div class="copyright"><span>Copyright © 2018-2019 The Apache Software Foundation. Apache and the Apache feather logo are trademarks of The Apache Software Foundation.</span></div></div></footer></div></div>
+	<script src="https://f.alicdn.com/react/15.4.1/react-with-addons.min.js"></script>
+	<script src="https://f.alicdn.com/react/15.4.1/react-dom.min.js"></script>
+	<script>
+		window.rootPath = '/dubbo-go-website';
+  </script>
+  <script src="/dubbo-go-website/build/blogDetail.js"></script>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-112489517-1"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+
+		gtag('config', 'UA-112489517-1');
+	</script>
+</body>
+</html>
