@@ -1,3 +1,9 @@
+---
+title: dubbogo中metrics的设计
+keywords: "metrics", "prometheus", "可观测性"
+description: metrics是可观测性的核心部分。该文讨论了在dubbo-go中metrics的顶级抽象，通过Prometheus为例子揭示了如何采集和上报数据。
+---
+
 # dubbogo中metrics的设计
 最近因为要在[dubbo-go](https://github.com/apache/dubbo-go/)里面实现类似的这个`metrics`功能，于是花了很多时间去了解现在`dubbo`里面的`metrics`是怎么实现的。该部分，实际上是被放在一个独立的项目里面，即[metrics](https://github.com/alibaba/metrics.git)。
 
