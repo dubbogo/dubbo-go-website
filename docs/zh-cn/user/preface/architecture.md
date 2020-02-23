@@ -18,3 +18,13 @@ description: 对dubbo-go整体架构的概要描述
 * `1. subscribe` : 服务消费方会在启动的时候，向注册中心订阅自己所需要的服务
 * `2. notify` : 注册中心返回服务注册的信息给到服务消费方，当订阅的服务发生变更，会推送变更的数据给到消费方
 * `3. invoke` : 服务消费者根据从注册中心获得的服务地址，经过负载均衡算法选出一个合适的服务地址发起请求
+
+# 初始化流程
+
+### 消费端
+
+![dubbo-go-client](../../../../img/dubbo-go-client.png)
+
+### 服务端
+
+![dubbo-go-server](../../../../img/dubbo-go-server.png)

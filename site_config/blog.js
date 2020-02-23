@@ -44,6 +44,13 @@ export default {
                 desc: '在dubbo-go中接入gRPC的设计与实现。核心在于实现gRPC protocol，作为一个适配器将dubbo-go和gRPC连接起来',
                 link: '/zh-cn/blog/grpc-dubbo.html',
             },
+            {
+                title: 'dubbo-go 踩坑记',
+                author: '@扶苏',
+                dateStr: 'Feb 23th, 2020',
+                desc: '使用dubbo-go的前因后果与踩坑过程',
+                link: '/zh-cn/blog/dubbo-go-experience.html',
+            },
         ]
     },
 };
