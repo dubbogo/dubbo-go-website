@@ -1,6 +1,6 @@
 {
   "filename": "architecture.md",
-  "__html": "<h1>架构</h1>\n<p><img src=\"../../../../img/dubbo-go-architecture.png\" alt=\"architecture\"></p>\n<h4>节点说明</h4>\n<ul>\n<li><code>Registry</code> : dubbo-go中负责服务注册与发现的注册中心</li>\n<li><code>Consumer</code> : 调用远程服务的服务消费方</li>\n<li><code>Provider</code> : 暴露服务的服务提供方</li>\n</ul>\n<h4>过程说明</h4>\n<ul>\n<li><code>0. register</code> : 当服务提供方在启动的时候，会自动将自己的服务注册到注册中心</li>\n<li><code>1. subscribe</code> : 服务消费方会在启动的时候，向注册中心订阅自己所需要的服务</li>\n<li><code>2. notify</code> : 注册中心返回服务注册的信息给到服务消费方，当订阅的服务发生变更，会推送变更的数据给到消费方</li>\n<li><code>3. invoke</code> : 服务消费者根据从注册中心获得的服务地址，经过负载均衡算法选出一个合适的服务地址发起请求</li>\n</ul>\n",
+  "__html": "<h1>架构</h1>\n<p><img src=\"../../../../img/dubbo-go-architecture.png\" alt=\"architecture\"></p>\n<h4>节点说明</h4>\n<ul>\n<li><code>Registry</code> : dubbo-go中负责服务注册与发现的注册中心</li>\n<li><code>Consumer</code> : 调用远程服务的服务消费方</li>\n<li><code>Provider</code> : 暴露服务的服务提供方</li>\n</ul>\n<h4>过程说明</h4>\n<ul>\n<li><code>0. register</code> : 当服务提供方在启动的时候，会自动将自己的服务注册到注册中心</li>\n<li><code>1. subscribe</code> : 服务消费方会在启动的时候，向注册中心订阅自己所需要的服务</li>\n<li><code>2. notify</code> : 注册中心返回服务注册的信息给到服务消费方，当订阅的服务发生变更，会推送变更的数据给到消费方</li>\n<li><code>3. invoke</code> : 服务消费者根据从注册中心获得的服务地址，经过负载均衡算法选出一个合适的服务地址发起请求</li>\n</ul>\n<h1>初始化流程</h1>\n<h3>消费端</h3>\n<p><img src=\"../../../../img/dubbo-go-client.png\" alt=\"dubbo-go-client\"></p>\n<h3>服务端</h3>\n<p><img src=\"../../../../img/dubbo-go-server.png\" alt=\"dubbo-go-server\"></p>\n",
   "link": "/zh-cn/docs/user/preface/architecture.html",
   "meta": {
     "title": "架构",
