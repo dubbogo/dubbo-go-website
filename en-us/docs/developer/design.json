@@ -1,6 +1,10 @@
 {
   "filename": "design.md",
-  "__html": "",
+  "__html": "<p>resource file: <a href=\"../../../resource/dubbo-go-arch.pptx\">dubbo-go-arch.pptx</a>\n<img src=\"../../../img/doc/dubbo-go-arch.png\" alt=\"dubbo-go-arch\"></p>\n",
   "link": "/en-us/docs/developer/design.html",
-  "meta": {}
+  "meta": {
+    "title": "design",
+    "keywords": "design, 架构设计",
+    "description": "detailed architecture design for dubbo-go"
+  }
 }
