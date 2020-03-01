@@ -17,6 +17,13 @@ export default {
         postsTitle: '所有文章',
         list: [
             {
+                title: '在dubbo-go 中使用sentinel',
+                author: '@panty',
+                dateStr: 'Mar 1st, 2020',
+                desc: '如何在dubbo-go中使用sentinel。讨论了adapter如何实现',
+                link: '/zh-cn/blog/dubbo-go-sentinel.html',
+            },
+            {
                 title: 'dubbo-go 中如何实现远程配置管理',
                 author: '@zouyx',
                 dateStr: 'Mar 1st, 2020',

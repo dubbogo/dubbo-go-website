@@ -1,5 +1,5 @@
 ---
-title: 在dubbo-go中使用sentinel
+title: 在dubbo-go 中使用sentinel
 keywords: "dubbo-go", "sentinel-golang","limit filter"
 description: 如何在dubbo-go中使用sentinel
 ---
