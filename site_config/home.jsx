@@ -4,7 +4,7 @@ export default {
   'zh-cn': {
     brand: {
       brandName: 'Apache Dubbo-go',
-      briefIntroduction: 'Apache Dubbo-go 是Apache Dubbo™的Go语言实现。',
+      briefIntroduction: '一款基于 Apache Dubbo™ 的高性能 Go RPC 框架。',
       getStartedButton: {
         text: '快速开始',
         link: '/zh-cn/docs/user/quick-start.html',
@@ -15,8 +15,8 @@ export default {
       }
     },
     introduction: {
-      title: '高性能Go RPC框架',
-      desc: '',
+      title: '高性能 Go RPC 框架',
+      desc: '提供了三大核心能力：面向接口的远程方法调用，智能容错和负载均衡，以及服务自动注册和发现。',
       img: '/img/architecture.png',
     },
     // features: {
@@ -31,7 +31,7 @@ export default {
     // },
     start: {
       title: '快速开始',
-      desc: '只需通过几行代码即可快速构建一个Dubbo-go应用。',
+      desc: '只需通过几行代码即可快速构建一个 Dubbo-go 应用。',
       img: '/img/quick_start.png',
       button: {
         text: '阅读更多',
@@ -39,8 +39,8 @@ export default {
       },
     },
     users: {
-      title: '谁在使用Dubbo-go',
-      desc: <span>请在 <a rel="noopener noreferrer" target="_blank" href="https://github.com/apache/dubbo-go/issues/2">dubbo-go 用户列表</a> 上提供信息来帮助Dubbo做的更好。</span>,
+      title: '谁在使用 Dubbo-go',
+      desc: <span>请在 <a rel="noopener noreferrer" target="_blank" href="https://github.com/apache/dubbo-go/issues/2">Dubbo-go 用户列表</a> 上提供信息来帮助 Dubbo 做的更好。</span>,
       list: [
         '/img/users_ctrip.png',
         '/img/users_haozhuo.png',
@@ -51,7 +51,7 @@ export default {
   'en-us': {
     brand: {
       brandName: 'Apache Dubbo-go',
-      briefIntroduction: 'Apache Dubbo-go is Apache Dubbo™ Go Implementation.',
+      briefIntroduction: 'A high-performance, Go based open source RPC framework base on Apache Dubbo™.',
       getStartedButton: {
         text: 'GET STARTED',
         link: '/en-us/docs/user/quick-start.html',
@@ -63,7 +63,7 @@ export default {
     },
     introduction: {
       title: 'A high performance Go RPC framework',
-      desc: '',
+      desc: 'Offers three key functionalities, which include interface based remote call, fault tolerance & load balancing, and automatic service registration & discovery.',
       img: '/img/architecture.png',
     },
     // features: {
