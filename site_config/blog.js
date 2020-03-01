@@ -17,6 +17,13 @@ export default {
         postsTitle: '所有文章',
         list: [
             {
+                title: 'dubbo-go 中如何实现远程配置管理',
+                author: '@zouyx',
+                dateStr: 'Mar 1st, 2020',
+                desc: '在 dubbo-go 中如何实现远程配置管理。讨论了目前已有的实现，以及如何扩展新的配置中心。',
+                link: '/zh-cn/blog/dubbogo-configcenter.html',
+            },
+            {
                 title: 'dubbogo中的TPS Limit设计与实现',
                 author: '@flycash',
                 dateStr: 'Nov 10th, 2019',
