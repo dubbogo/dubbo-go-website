@@ -4,7 +4,7 @@ export default {
   'zh-cn': {
     brand: {
       brandName: 'Apache Dubbo-go',
-      briefIntroduction: '一款基于 Apache Dubbo™ 的高性能 Go RPC 框架。',
+      briefIntroduction: '一款兼容 Apache Dubbo™ 的高性能 Go RPC 框架。',
       getStartedButton: {
         text: '快速开始',
         link: '/zh-cn/docs/user/quick-start.html',
@@ -51,7 +51,7 @@ export default {
   'en-us': {
     brand: {
       brandName: 'Apache Dubbo-go',
-      briefIntroduction: 'A high-performance, Go based open source RPC framework base on Apache Dubbo™.',
+      briefIntroduction: 'A high-performance, Compatible Apache Dubbo™, Go based open source RPC framework.',
       getStartedButton: {
         text: 'GET STARTED',
         link: '/en-us/docs/user/quick-start.html',
