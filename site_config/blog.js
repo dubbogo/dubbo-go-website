@@ -3,13 +3,13 @@ export default {
         barText: 'Blog',
         postsTitle: 'All posts',
         list: [
-            // {
-            //     title: 'Your First Dubbo Demo',
-            //     author: '@Yang Xinru',
-            //     dateStr: 'August 7th，2018',
-            //     desc: 'Your First Dubbo Demo',
-            //     link: '/en-us/blog/dubbo-101.html',
-            // }
+            {
+                title: 'No blog in english, click me to get more blog in zh-cn',
+                author: '',
+                dateStr: '',
+                desc: '',
+                link: '/zh-cn/blog/index.html',
+            }
         ]
     },
     'zh-cn': {
