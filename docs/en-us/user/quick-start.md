@@ -19,7 +19,7 @@ registry: Zookeeper
 
 ## Start from the server
 
-### Step 1: coding the `Provider` struct and methods to provide service编写 `Provider` 结构体和提供服务的方法
+### Step 1: coding the `Provider` struct and methods to provide service
 
 > https://github.com/dubbogo/dubbogo-samples/blob/master/helloworld/dubbo/go-server/app/user.go
 
