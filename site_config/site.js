@@ -27,6 +27,11 @@ export default {
       //   link: '/en-us/community/index.html',
       // },
       {
+        key: 'downloads',
+        text: 'DOWNLOADS',
+        link: '/en-us/blog/download.html',
+      },
+      {
         key: 'java',
         text: 'JAVA',
         link: 'https://dubbo.apache.org/en-us/index.html',
@@ -127,6 +132,11 @@ export default {
       //   text: '社区',
       //   link: '/zh-cn/community/index.html',
       // },
+      {
+        key: 'downloads',
+        text: '下载',
+        link: '/zh-cn/blog/download.html',
+      },
       {
         key: 'java',
         text: 'Java',
