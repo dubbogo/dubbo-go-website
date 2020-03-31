@@ -1,0 +1,10 @@
+{
+  "filename": "download.md",
+  "__html": "<h1>Downloads</h1>\n<h2>dubbo-go architecture</h2>\n<p><a href=\"../../../resource/dubbo-go-arch.pptx\">dubbo-go-arch.pptx</a></p>\n<h2>technical sharing</h2>\n<ul>\n<li>\n<p><a href=\"../../../resource/2017-%E4%BA%8E%E9%9B%A8-dubbogo.pdf\">2017-于雨-dubbogo.pdf</a></p>\n</li>\n<li>\n<p><a href=\"../../../resource/DUBBO-GO@2019.08.17%E4%B8%8A%E6%B5%B702.pptx\">DUBBO GO@2019.08.17上海02.pptx</a></p>\n</li>\n<li>\n<p><a href=\"../../../resource/dubbogo20191224-shanghai-gopher.pptx\">dubbogo20191224-shanghai-gopher.pptx</a></p>\n</li>\n<li>\n<p><a href=\"../../../resource/dubbogo20191228-hangzhou-gopher-%E9%82%93%E6%98%8E.pptx\">dubbogo20191228-hangzhou-gopher-邓明.pptx</a></p>\n</li>\n<li>\n<p><a href=\"../../../resource/panty_dubbo-go_share.pptx\">panty_dubbo-go_share.pptx</a></p>\n</li>\n</ul>\n",
+  "link": "/en-us/blog/download.html",
+  "meta": {
+    "title": "Downloads",
+    "keywords": "download, dubbo-go",
+    "description": "this article collect of download resources dubbo-go"
+  }
+}
