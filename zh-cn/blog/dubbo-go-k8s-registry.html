@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta name="keywords" content="&#34;dubbo-go&#34;, &#34;Kubernets&#34;, &#34;注册中心&#34;" />
+	<meta name="description" content="介绍 dubbo-go 以 Kubernetes 为中⼼的服务注册的初衷，设计⽅案，以及具体实现。" />
+	<!-- 网页标签标题 -->
+	<title>dubbo-go 中将 Kubernets 原⽣作为注册中⼼_的设计和实现</title>
+	<link rel="shortcut icon" href="/dubbo-go-website/img/dubbo.ico"/>
+	<link rel="stylesheet" href="/dubbo-go-website/build/blogDetail.css" />
+</head>
+<body>
+	<div id="root"><div class="blog-detail-page" data-reactroot=""><header class="header-container header-container-normal"><div class="header-body"><a href="/dubbo-go-website/zh-cn/index.html"><img class="logo" src="/dubbo-go-website/img/dubbo_colorful.png"/></a><div class="search search-normal"><span class="icon-search"></span></div><span class="language-switch language-switch-normal">En</span><div class="header-menu"><img class="header-menu-toggle" src="/dubbo-go-website/img/menu_gray.png"/><ul><li class="menu-item menu-item-normal"><a href="/dubbo-go-website/zh-cn/index.html">首页</a></li><li class="menu-item menu-item-normal"><a href="/dubbo-go-website/zh-cn/docs/user/quick-start.html">文档</a></li><li class="menu-item menu-item-normal menu-item-normal-active"><a href="/dubbo-go-website/zh-cn/blog/index.html">博客</a></li><li class="menu-item menu-item-normal"><a href="/dubbo-go-website/zh-cn/community/index.html">社区</a></li><li class="menu-item menu-item-normal"><a href="/dubbo-go-website/zh-cn/blog/download.html">下载</a></li><li class="menu-item menu-item-normal"><a href="https://dubbo.apache.org/zh-cn/index.html">Java</a></li></ul></div></div></header><section class="blog-content markdown-body"><h1>dubbo-go 中将 Kubernets 原⽣作为注册中⼼</h1>
+<p>的设计和实现</p>
+<p>随着云原⽣的推⼴，越来越多的公司或组织将服务容器化，并将容器化后的服务部署在 Kubernetes 集群</p>
+<p>中。</p>
+<p>今天这篇⽂章将会介绍 dubbo-go 将 Kubernetes 作为注册中⼼的服务注册的初衷、设计⽅案，以及具体实现。</p>
+<p>到⽬前为⽌该⽅案的实现已经被合并到 dubbo-go 的 master 分⽀。具体实现为关于 Kubernetes 的 
+PullRequest 。</p>
+<h2>Kubernetes管理资源的哲学</h2>
+<p>Kubernetes 作为容器集群化管理⽅案管理资源的维度可主观的分为服务进程管理和服务接⼊管理。</p>
+<ul>
+<li>
+<p>服务实例管理，主要体现⽅式为 Pod 设计模式加控制器模式，控制器保证具有特定标签
+（ Kubernetes-Label ）的 Pod 保持在恒定的数量（多删，少补）。</p>
+</li>
+<li>
+<p>服务管理，主要为 Kubernetes-Service ，该 Service 默认为具有特定标签（ Kubernetes-Label ）的
+Pod 统⼀提供⼀个 VIP（ Kubernetes-ClusterIP ）所有需要请求该组 Pod 的请求都默认会按照 round-robin 的负载策略转发到真正提供服务的 Pod 。并且 CoreDNS 为该 Kubernetes-Service 提供集群内唯⼀的域名。</p>
+</li>
+</ul>
+<h2>Kubernetes的服务发现模型</h2>
+<p>为了明确 Kubernetes 在服务管理提供的解决⽅案。我们以 kubernetes Api-Server 提供的 API (HTTPS) 服</p>
+<p>务为例。Kubernetes 集群为该服务分配了⼀个集群内有效的 ClusterIP ，并通过 CoreDNS 为其分配了唯</p>
+<p>⼀的⼀个域名 **kubernetes **。如果集群内的 Pod 需要访问该服务时直接通过 **kubernetes **即可完成。
+<img src="../../img/blog/dubbo-go-k8s-registry.resources/k8s-discovery.png" alt="k8s-discovery.png">
+具体流程如上图所示 ( 红⾊为客户端，绿⾊为 kube-apiserver )：</p>
+<ol>
+<li>
+<p>⾸先客户端通过 CoreDNS 解析域名为 **kubernetes **的服务获得对应的 Cluster IP 为 10.96.0.1。</p>
+</li>
+<li>
+<p>客户端向 10.96.0.1 发起 HTTP 请求。</p>
+</li>
+<li>
+<p>HTTP 请求 kube-proxy 所创建的 IP tables 拦截随机 DNAT 为 10.0.2.16 或者 10.0.2.15 。</p>
+</li>
+<li>
+<p>Client 与最终提供服务的 Pod 建⽴连接并交互。</p>
+</li>
+</ol>
+<p>由此可⻅，Kubernetes 提供的服务发现为域名解析级别。</p>
+<h2>dubbo 的服务发现模型</h2>
+<p>同样为了明确 dubbo 服务发现的模型，以⼀个简单的 dubbo-consumer 发现并访问 Provider 的具体流</p>
+<p>程为例。
+<img src="../../img/blog/dubbo-go-k8s-registry.resources/dubbo-registry.png" alt="dubbo-registry.png">
+具体流程如上图所示：</p>
+<ol>
+<li>
+<p>Provider 将本进程的元数据注册到 Registry 中，包括 IP，Port，以及服务名称等。</p>
+</li>
+<li>
+<p>Consumer 通过 Registry 获取 Provider 的接⼊信息，直接发起请求</p>
+</li>
+</ol>
+<p>由此可⻅，dubbo 当前的服务发现模型是针对 Endpoint 级别的，并且注册的信息不只 IP 和端⼝包括其他</p>
+<p>的⼀些元数据。</p>
+<h2>无法直接使用 Kubernetes 服务发现模型的原因</h2>
+<p>通过上述两个⼩节，答案基本已经⽐较清晰了。总结⼀下，⽆法直接使⽤ Kubernetes 作为注册中⼼的原</p>
+<p>因主要为以下⼏点:</p>
+<ol>
+<li>
+<p>Kubernetes-Service 标准的资源对象具有的服务描述字段 中并未提供完整的 dubbo 进程元数据字段因此，⽆法直接使⽤Kubernetes-Service 进⾏服务注册与发现。</p>
+</li>
+<li>
+<p>dubbo-go 的服务注册是基于每个进程的，每个 dubbo 进程均需进⾏独⽴的注册。</p>
+</li>
+<li>
+<p>Kubernetes-Service 默认为服务创建 VIP，提供 round-robin 的负载策略也与 dubbo-go⾃有的 Cluster 模块的负载策略形成了冲突。</p>
+</li>
+</ol>
+<h2>Dubbo-go 所采⽤的注册/发现⽅案</h2>
+<h3>服务注册</h3>
+<p>Kubernetes 基于 Service 对象实现服务注册／发现。可是 dubbo 现有⽅案为每个 dubbo-go 进程独⽴注册，因此 dubbo-go选择将该进程具有的独有的元数据写⼊运⾏该 **dubbo-go **进程的 **Pod **在 **Kubernetes
+**中的 **Pod **资源对象的描述信息中。每个运⾏ dubbo 进程的 Pod 将本进程的元数据写⼊ Kubernetes-Pod
+Annotations 字段。为了避免与其他使⽤Annotations 字段的 Operator 或者其他类型的控制器（ Istio ）
+的字段冲突。dubbo-go 使⽤ Key 为 **<a href="http://dubbo.io/annotation">dubbo.io/annotation</a> **value 为具体存储的 K/V 对的数组的 json 编码后的 base64 编码。</p>
+<p>样例为：</p>
+<pre><code>apiVersion: v1
+kind: Pod
+metadata:
+ annotations:
+ dubbo.io/annotation:
+W3siayI6Ii9kdWJibyIsInYiOiIifSx7ImsiOiIvZHViYm8vY29tLmlrdXJlbnRvLnVzZXIuVXNlcl
+Byb3ZpZGVyIiwidiI6IiJ9LHsiayI6Ii9kdWJiby9jb20uaWt1cmVudG8udXNlci5Vc2VyUHJvdmlk
+ZXIvY29uc3VtZXJzIiwidiI6IiJ9LHsiayI6Ii9kdWJibyIsInYiOiIifSx7ImsiOiIvZHViYm8vY2
+9tLmlrdXJlbnRvLnVzZXIuVXNlclByb3ZpZGVyIiwidiI6IiJ9LHsiayI6Ii9kdWJiby9jb20uaWt1
+cmVudG8udXNlci5Vc2VyUHJvdmlkZXIvcHJvdmlkZXJzIiwidiI6IiJ9LHsiayI6Ii9kdWJiby9jb2
+0uaWt1cmVudG8udXNlci5Vc2VyUHJvdmlkZXIvY29uc3VtZXJzL2NvbnN1bWVyJTNBJTJGJTJGMTcy
+LjE3LjAuOCUyRlVzZXJQcm92aWRlciUzRmNhdGVnb3J5JTNEY29uc3VtZXJzJTI2ZHViYm8lM0RkdW
+Jib2dvLWNvbnN1bWVyLTIuNi4wJTI2cHJvdG9jb2wlM0RkdWJibyIsInYiOiIifV0=
+</code></pre>
+<p>由于每个 dubbo-go 的 Pod 均只负责注册本进程的元数据，因此 Annotations 字段⻓度也不会因为运⾏
+dubbo-go 进程的 Pod 数量增加⽽增加。</p>
+<h3>服务发现</h3>
+<p>依赖kubernetes Api-Server 提供了Watch的功能。可以观察特定namespace内各Pod对象的变化。</p>
+<p>dubbo-go为了避免dubbo-go进程watch到与dubbo-go进程⽆关的Pod的变化，dubbo-go将watch的</p>
+<p>条件限制在当前Pod所在的namespace，以及 watch 具有 Key为<strong><a href="http://dubbo.io/label">dubbo.io/label</a></strong> Value为 <strong><a href="http://dubbo.io">dubbo.io</a></strong>
+**value **的Pod。在Watch到对应Pod的变化后实时更新本地Cache，并通过Registry提供的Subscribe通</p>
+<p>知建⽴在注册中⼼之上的服务集群管理，或者其他功能。</p>
+<h3>总体设计图</h3>
+<p><img src="../../img/blog/dubbo-go-k8s-registry.resources/dubbo-k8s-registry.png" alt="dubbo-k8s-registry.png">
+具体流程如上图所示：</p>
+<ol>
+<li>
+<p>启动 dubbo-go 的 Deployment 或其他类型控制器使⽤ Kubernetes Downward-Api 将本 Pod 所在
+namespace 通过环境变量的形式注⼊ dubbo-go 进程。</p>
+</li>
+<li>
+<p>dubbo-go 进程的 Pod 启动后通过环境变量获得当前的 namespace 以及该 Pod 名称，调⽤
+Kubernetes-Apiserver PATCH 功能为本 Pod 添加 Key 为 <strong><a href="http://dubbo.io/label">dubbo.io/label</a></strong> Value为 **dubbo.io-value
+**的label。</p>
+</li>
+<li>
+<p>dubbo-go 进程调⽤ Kubernetes-Apiserver 将本进程的元数据通过 PATCH 接⼝写⼊当前 Pod 的
+Annotations 字段。</p>
+</li>
+<li>
+<p>dubbo-go 进程 LIST 当前 namespace 下其他具有同样标签的 Pod，并解码对应的 Annotations 字段
+获取其他 Pod 的信息。</p>
+</li>
+<li>
+<p>dubbo-go 进程 WATCH 当前 namespace 下其他具有同样标签的 Pod 的 Annotations 的字段变化。</p>
+</li>
+</ol>
+<h2>总结</h2>
+<p>Kubernetes 已经为其承载的服务提供了⼀套服务发现，服务注册，以及服务集群管理机制。⽽ dubbo-go 的同时也拥有⾃成体系的服务集群管理。这两个功能点形成了冲突，在⽆法调谐两者的情况。dubbo-go 选择保持⾃有的服务集群管理系，放弃 Kubernetes-Service 功能，将元数据直接写⼊到
+Kubernetes Pod 内。依赖 Kubernetes 提供的 Watch 功能提供维护服务集群状态。</p>
+</section><footer class="footer-container"><div class="footer-body"><img src="/dubbo-go-website/img/dubbo_gray.png"/><img class="apache" src="/dubbo-go-website/img/apache_logo.png"/><div class="cols-container"><div class="col col-12"><h3></h3><p></p></div><div class="col col-4"><dl><dt>ASF</dt><dd><a href="http://www.apache.org" target="_self">基金会</a></dd><dd><a href="http://www.apache.org/licenses/" target="_self">证书</a></dd><dd><a href="http://www.apache.org/events/current-event" target="_self">事件</a></dd><dd><a href="http://www.apache.org/foundation/sponsorship.html" target="_self">赞助</a></dd><dd><a href="http://www.apache.org/foundation/thanks.html" target="_self">致谢</a></dd></dl></div><div class="col col-4"><dl><dt>文档</dt><dd><a href="/dubbo-go-website/zh-cn/docs/user/quick-start.html" target="_self">快速开始</a></dd><dd><a href="/dubbo-go-website/zh-cn/docs/dev/build.html" target="_self">开发者指南</a></dd><dd><a href="/dubbo-go-website/zh-cn/docs/admin/ops/dubbo-ops.html" target="_self">运维管理</a></dd><dd><a href="https://github.com/dubbogo/dubbo-go-website/issues/new" target="_self">报告文档问题</a></dd><dd><a href="https://github.com/dubbogo/dubbo-go-website" target="_self">编辑此文档</a></dd></dl></div><div class="col col-4"><dl><dt>资源</dt><dd><a href="/dubbo-go-website/zh-cn/blog/index.html" target="_self">博客</a></dd><dd><a href="/dubbo-go-website/zh-cn/community/index.html" target="_self">社区</a></dd><dd><a href="https://www.apache.org/security" target="_self">安全</a></dd></dl></div></div><div class="copyright"><span>Copyright © 2018-2020 The Apache Software Foundation. Apache and the Apache feather logo are trademarks of The Apache Software Foundation.</span></div></div></footer></div></div>
+	<script src="https://f.alicdn.com/react/15.4.1/react-with-addons.min.js"></script>
+	<script src="https://f.alicdn.com/react/15.4.1/react-dom.min.js"></script>
+	<script>
+		window.rootPath = '/dubbo-go-website';
+  </script>
+  <script src="/dubbo-go-website/build/blogDetail.js"></script>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-112489517-1"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+
+		gtag('config', 'UA-112489517-1');
+	</script>
+</body>
+</html>
