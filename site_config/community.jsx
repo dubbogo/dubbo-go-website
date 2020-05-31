@@ -32,6 +32,12 @@ export default {
           title: 'Mailing List',
           link: 'mailto:dev-subscribe@dubbo.apache.org'
         },
+        {
+          img: '/img/dingding.png',
+          imgHover: '/img/dingding.png',
+          title: 'Ding ding',
+          link: '/img/dubbo-go-group.jpg'
+        },
       ],
     },
     contributorGuide: {
@@ -63,17 +69,95 @@ export default {
     ecos: {
       title: 'Eco System',
       list: [
-        // {
-        //     title: 'Bootstrap',
-        //     content: <span>Generate Dubbo project with Spring Boot:</span>,
-        //     tags: [
-        //         {
-        //             text: 'Dubbo Initializr',
-        //             link: 'http://start.dubbo.io',
-        //             bgColor: '#7A63FC',
-        //         },
-        //     ],
-        // },
+        {
+          title: 'registry',
+          content: <span>dubbo-go supported registries:</span>,
+          tags: [
+            {
+                text: 'zookeeper',
+                link: 'https://github.com/apache/dubbo-go/tree/master/registry/zookeeper',
+                bgColor: '#7A63FC',
+            },
+            {
+                text: 'etcdv3',
+                link: 'https://github.com/apache/dubbo-go/tree/master/registry/etcdv3',
+                bgColor: '#7A63FC',
+            },
+            {
+                text: 'consul',
+                link: 'https://github.com/apache/dubbo-go/tree/master/registry/consul',
+                bgColor: '#7A63FC',
+            },
+            {
+                text: 'kubernetes',
+                link: 'https://github.com/apache/dubbo-go/tree/master/registry/kubernetes',
+                bgColor: '#7A63FC',
+            },
+            {
+                text: 'nacos',
+                link: 'https://github.com/apache/dubbo-go/tree/master/registry/nacos',
+                bgColor: '#7A63FC',
+            },
+          ],
+        },
+        {
+          title: 'configuration center',
+          content: <span>dubbo-go supported configuration center:</span>,
+          tags: [
+            {
+                text: 'zookeeper',
+                link: 'https://github.com/apache/dubbo-go/tree/master/config_center/zookeeper',
+                bgColor: '#7A63FC',
+            },
+            {
+                text: 'nacos',
+                link: 'https://github.com/apache/dubbo-go/tree/master/config_center/nacos',
+                bgColor: '#7A63FC',
+            },
+            {
+                text: 'apollo',
+                link: 'https://github.com/apache/dubbo-go/tree/master/config_center/apollo',
+                bgColor: '#7A63FC',
+            },
+          ],
+        },
+        {
+          title: 'protocol',
+          content: <span>dubbo-go supported protocol:</span>,
+          tags: [
+            {
+                text: 'dubbo',
+                link: 'https://github.com/apache/dubbo-go/tree/master/protocol/dubbo',
+                bgColor: '#7A63FC',
+            },
+            {
+                text: 'grpc',
+                link: 'https://github.com/apache/dubbo-go/tree/master/protocol/grpc',
+                bgColor: '#7A63FC',
+            },
+            {
+                text: 'jsonrpc',
+                link: 'https://github.com/apache/dubbo-go/tree/master/protocol/jsonrpc',
+                bgColor: '#7A63FC',
+            },
+            {
+                text: 'rest',
+                link: 'https://github.com/apache/dubbo-go/tree/master/protocol/rest',
+                bgColor: '#7A63FC',
+            },
+          ],
+        },
+        {
+          title: 'metrics',
+          content: <span>dubbo-go supported metrics:</span>,
+          tags: [
+            {
+                text: 'prometheus',
+                link: 'https://github.com/apache/dubbo-go/tree/master/metrics/prometheus',
+                bgColor: '#7A63FC',
+            },
+          ],
+        },
       ],
     },
   },
@@ -108,6 +192,12 @@ export default {
           title: '邮件列表',
           link: 'mailto:dev-subscribe@dubbo.apache.org'
         },
+        {
+          img: '/img/dingding.png',
+          imgHover: '/img/dingding.png',
+          title: '钉钉',
+          link: '/img/dubbo-go-group.jpg'
+        },
       ],
     },
     contributorGuide: {
@@ -139,17 +229,95 @@ export default {
     ecos: {
       title: '生态系统',
       list: [
-        // {
-        //   title: '脚手架',
-        //   content: <span>快速生成基于 Spring Boot 的 Dubbo 项目:</span>,
-        //   tags: [
-        //     {
-        //         text: 'Dubbo Initializr',
-        //         link: 'http://start.dubbo.io',
-        //         bgColor: '#7A63FC',
-        //     },
-        //   ],
-        // },
+        {
+          title: '注册中心',
+          content: <span>dubbo-go支持的注册中心:</span>,
+          tags: [
+            {
+                text: 'zookeeper',
+                link: 'https://github.com/apache/dubbo-go/tree/master/registry/zookeeper',
+                bgColor: '#7A63FC',
+            },
+            {
+                text: 'etcdv3',
+                link: 'https://github.com/apache/dubbo-go/tree/master/registry/etcdv3',
+                bgColor: '#7A63FC',
+            },
+            {
+                text: 'consul',
+                link: 'https://github.com/apache/dubbo-go/tree/master/registry/consul',
+                bgColor: '#7A63FC',
+            },
+            {
+                text: 'kubernetes',
+                link: 'https://github.com/apache/dubbo-go/tree/master/registry/kubernetes',
+                bgColor: '#7A63FC',
+            },
+            {
+                text: 'nacos',
+                link: 'https://github.com/apache/dubbo-go/tree/master/registry/nacos',
+                bgColor: '#7A63FC',
+            },
+          ],
+        },
+        {
+          title: '配置中心',
+          content: <span>dubbo-go支持的配置中心:</span>,
+          tags: [
+            {
+                text: 'zookeeper',
+                link: 'https://github.com/apache/dubbo-go/tree/master/config_center/zookeeper',
+                bgColor: '#7A63FC',
+            },
+            {
+                text: 'nacos',
+                link: 'https://github.com/apache/dubbo-go/tree/master/config_center/nacos',
+                bgColor: '#7A63FC',
+            },
+            {
+                text: 'apollo',
+                link: 'https://github.com/apache/dubbo-go/tree/master/config_center/apollo',
+                bgColor: '#7A63FC',
+            },
+          ],
+        },
+        {
+          title: '协议',
+          content: <span>dubbo-go支持的协议:</span>,
+          tags: [
+            {
+                text: 'dubbo',
+                link: 'https://github.com/apache/dubbo-go/tree/master/protocol/dubbo',
+                bgColor: '#7A63FC',
+            },
+            {
+                text: 'grpc',
+                link: 'https://github.com/apache/dubbo-go/tree/master/protocol/grpc',
+                bgColor: '#7A63FC',
+            },
+            {
+                text: 'jsonrpc',
+                link: 'https://github.com/apache/dubbo-go/tree/master/protocol/jsonrpc',
+                bgColor: '#7A63FC',
+            },
+            {
+                text: 'rest',
+                link: 'https://github.com/apache/dubbo-go/tree/master/protocol/rest',
+                bgColor: '#7A63FC',
+            },
+          ],
+        },
+        {
+          title: '监控',
+          content: <span>dubbo-go支持的监控系统:</span>,
+          tags: [
+            {
+                text: 'prometheus',
+                link: 'https://github.com/apache/dubbo-go/tree/master/metrics/prometheus',
+                bgColor: '#7A63FC',
+            },
+          ],
+        },
       ],
     },
   },
