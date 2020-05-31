@@ -21,11 +21,16 @@ export default {
         text: 'BLOG',
         link: '/en-us/blog/index.html',
       },
-      // {
-      //   key: 'community',
-      //   text: 'COMMUNITY',
-      //   link: '/en-us/community/index.html',
-      // },
+      {
+        key: 'community',
+        text: 'COMMUNITY',
+        link: '/en-us/community/index.html',
+      },
+      {
+        key: 'downloads',
+        text: 'DOWNLOADS',
+        link: '/en-us/blog/download.html',
+      },
       {
         key: 'java',
         text: 'JAVA',
@@ -122,11 +127,16 @@ export default {
         text: '博客',
         link: '/zh-cn/blog/index.html',
       },
-      // {
-      //   key: 'community',
-      //   text: '社区',
-      //   link: '/zh-cn/community/index.html',
-      // },
+      {
+        key: 'community',
+        text: '社区',
+        link: '/zh-cn/community/index.html',
+      },
+      {
+        key: 'downloads',
+        text: '下载',
+        link: '/zh-cn/blog/download.html',
+      },
       {
         key: 'java',
         text: 'Java',
