@@ -4,18 +4,19 @@ export default {
         postsTitle: 'All posts',
         list: [
             {
-                title: 'No blog in english, click me to get more blog in zh-cn',
-                author: '',
-                dateStr: '',
-                desc: '',
-                link: '/zh-cn/blog/index.html',
-            }
-        ]
-    },
-    'zh-cn': {
-        barText: '博客',
-        postsTitle: '所有文章',
-        list: [
+                title: 'dubbo-go 可信调用实现',
+                author: '@郑泽超',
+                dateStr: 'May 22th, 2020',
+                desc: '本文将讲解如何在 Dubbo/Dubbo-Go 中实现灵活，安全和高效的身份验证和授权方案',
+                link: '/zh-cn/blog/dubbo-go-rusted-call-implementation.html',
+            }, 
+            {
+                title: 'dubbo-go 中将 Kubernets 原⽣作为注册中⼼_的设计和实现',
+                author: '@王翔',
+                dateStr: 'May 16th, 2020',
+                desc: '介绍 dubbo-go 以 Kubernetes 为中⼼的服务注册的初衷，设计⽅案，以及具体实现',
+                link: '/zh-cn/blog/dubbo-go-k8s-registry.html',
+            },
             {
                 title: '在dubbo-go 中使用sentinel',
                 author: '@panty',
@@ -65,6 +66,75 @@ export default {
                 desc: '使用dubbo-go的前因后果与踩坑过程',
                 link: '/zh-cn/blog/dubbo-go-experience.html',
             },
+        ]
+    },
+    'zh-cn': {
+        barText: '博客',
+        postsTitle: '所有文章',
+        list: [
+            {
+                title: 'dubbo-go 可信调用实现',
+                author: '@郑泽超',
+                dateStr: 'May 22th, 2020',
+                desc: '本文将讲解如何在 Dubbo/Dubbo-Go 中实现灵活，安全和高效的身份验证和授权方案',
+                link: '/zh-cn/blog/dubbo-go-rusted-call-implementation.html',
+            }, 
+            {
+                title: 'dubbo-go 中将 Kubernets 原⽣作为注册中⼼_的设计和实现',
+                author: '@王翔',
+                dateStr: 'May 16th, 2020',
+                desc: '介绍 dubbo-go 以 Kubernetes 为中⼼的服务注册的初衷，设计⽅案，以及具体实现',
+                link: '/zh-cn/blog/dubbo-go-k8s-registry.html',
+            },
+            {
+                title: '在dubbo-go 中使用sentinel',
+                author: '@panty',
+                dateStr: 'Mar 1st, 2020',
+                desc: '如何在dubbo-go中使用sentinel。讨论了adapter如何实现',
+                link: '/zh-cn/blog/dubbo-go-sentinel.html',
+            },
+            {
+                title: 'dubbo-go 中如何实现远程配置管理',
+                author: '@zouyx',
+                dateStr: 'Mar 1st, 2020',
+                desc: '在 dubbo-go 中如何实现远程配置管理。讨论了目前已有的实现，以及如何扩展新的配置中心。',
+                link: '/zh-cn/blog/dubbogo-configcenter.html',
+            },
+            {
+                title: 'dubbogo中的TPS Limit设计与实现',
+                author: '@flycash',
+                dateStr: 'Nov 10th, 2019',
+                desc: '在dubbogo中的TPS limit的设计与实现。讨论了目前已有的实现，以及可以扩展的接口。',
+                link: '/zh-cn/blog/dubbogo-tps-limit-design-implementation.html',
+            },
+            {
+                title: '要优雅退出吗？dubbogo给你',
+                author: '@flycash',
+                dateStr: 'Nov 21th, 2019',
+                desc: '在dubbogo中的优雅退出的设计与实现。讨论了直接退出的存在问题，因此得出优雅退出所需的步骤。',
+                link: '/zh-cn/blog/graceful-shutdown.html',
+            },
+            {
+                title: 'dubbo-go中metrics的设计',
+                author: '@flycash',
+                dateStr: 'Jan 18th, 2020',
+                desc: 'metrics是可观测性的核心部分。该文讨论了在dubbo-go中metrics的顶级抽象，通过Prometheus为例子揭示了如何采集和上报数据',
+                link: '/zh-cn/blog/dubbogo-metrics-design-implementation.html',
+            },
+            {
+                title: '无缝连接dubbo-go与gRPC',
+                author: '@flycash',
+                dateStr: 'Jan 18th, 2020',
+                desc: '在dubbo-go中接入gRPC的设计与实现。核心在于实现gRPC protocol，作为一个适配器将dubbo-go和gRPC连接起来',
+                link: '/zh-cn/blog/grpc-dubbo.html',
+            },
+            {
+                title: 'dubbo-go 踩坑记',
+                author: '@扶苏',
+                dateStr: 'Feb 23th, 2020',
+                desc: '使用dubbo-go的前因后果与踩坑过程',
+                link: '/zh-cn/blog/dubbo-go-experience.html',
+            }
         ]
     },
 };
