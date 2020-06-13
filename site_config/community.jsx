@@ -7,14 +7,14 @@ export default {
       title: 'Events & News',
       list: [
         {
-          img: '/img/dubbo_colorful.png',
+          img: '/img/dubbo-go.png',
           title: 'Go 版本入 Dubbo 生态一周年：已和 Spring Cloud、gRPC 互通',
           content: 'Go 版本入 Dubbo 生态一周年：已和 Spring Cloud、gRPC 互通',
           dateStr: 'May 29th，2020',
           link: '/zh-cn/blog/dubbo-go-one-year.html',
         },
         {
-          img: '/img/dubbo_colorful.png',
+          img: '/img/dubbo-go.png',
           title: 'dubbo-go 1.4.0 版本发布，支持 K8s 注册中心、rest 协议',
           content: '得益于社区活跃的支持，2020 年 3 月 25 日 我们发布了一个让人兴奋的版本——dubbo-go v1.4.0',
           dateStr: 'Mar 25th，2020',
@@ -167,14 +167,14 @@ export default {
       title: '事件 & 新闻',
       list: [
         {
-          img: '/img/dubbo_colorful.png',
+          img: '/img/dubbo-go.png',
           title: 'Go 版本入 Dubbo 生态一周年：已和 Spring Cloud、gRPC 互通',
           content: 'Go 版本入 Dubbo 生态一周年：已和 Spring Cloud、gRPC 互通',
           dateStr: 'May 29th，2020',
           link: '/zh-cn/blog/dubbo-go-one-year.html',
         },
         {
-          img: '/img/dubbo_colorful.png',
+          img: '/img/dubbo-go.png',
           title: 'dubbo-go 1.4.0 版本发布，支持 K8s 注册中心、rest 协议',
           content: '得益于社区活跃的支持，2020 年 3 月 25 日 我们发布了一个让人兴奋的版本——dubbo-go v1.4.0',
           dateStr: 'Mar 25th，2020',

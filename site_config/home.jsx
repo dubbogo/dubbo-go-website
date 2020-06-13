@@ -38,6 +38,23 @@ export default {
         link: '/zh-cn/docs/user/quick-start.html',
       },
     },
+    // blogs: {
+    //   title: '推荐文章',
+    //   list: [
+    //     {
+    //       url: '/zh-cn/blog/dubbo-go-practice-exploration.html',
+    //       display: '涂鸦智能 dubbo-go 亿级流量的实践与探索'
+    //     },
+    //     {
+    //       url: '/zh-cn/blog/dubbo-go-one-year.html',
+    //       display: 'Go 版本入 Dubbo 生态一周年：已和 Spring Cloud、gRPC 互通'
+    //     },
+    //     {
+    //       url: '/zh-cn/blog/dubbo-go-k8s-registry.html',
+    //       display: 'dubbo-go 中将 Kubernets 原⽣作为注册中⼼的设计和实现'
+    //     }
+    //   ]
+    // },
     users: {
       title: '谁在使用 Dubbo-go',
       desc: <span>请在 <a rel="noopener noreferrer" target="_blank" href="https://github.com/apache/dubbo-go/issues/2">Dubbo-go 用户列表</a> 上提供信息来帮助 Dubbo 做的更好。</span>,
@@ -85,6 +102,23 @@ export default {
         link: '/en-us/docs/user/quick-start.html',
       },
     },
+    // blogs: {
+    //   title: '推荐文章',
+    //   list: [
+    //     {
+    //       url: '/zh-cn/blog/dubbo-go-practice-exploration.html',
+    //       display: '涂鸦智能 dubbo-go 亿级流量的实践与探索'
+    //     },
+    //     {
+    //       url: '/zh-cn/blog/dubbo-go-one-year.html',
+    //       display: 'Go 版本入 Dubbo 生态一周年：已和 Spring Cloud、gRPC 互通'
+    //     },
+    //     {
+    //       url: '/zh-cn/blog/dubbo-go-k8s-registry.html',
+    //       display: 'dubbo-go 中将 Kubernets 原⽣作为注册中⼼的设计和实现'
+    //     }
+    //   ]
+    // },
     users: {
       title: 'Who is using Dubbo-go',
       desc: <span>Providing your info on <a rel="noopener noreferrer" target="_blank" href="https://github.com/apache/dubbo-go/issues/2">dubbo-go user list</a> to help improving dubbo better</span>,

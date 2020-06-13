@@ -122,6 +122,16 @@ class Home extends Language {
             <div className="right-part"><img src={`${window.rootPath}/img/quick_start.png`} /></div>
           </div>
         </section>
+        {/* <section className="blogs-section">
+          <h3>{dataSource.blogs.title}</h3>
+          <div className='blogs' >
+          {
+            dataSource.blogs.list.map((user, i) => (
+              <a href={`${window.rootPath}${user.url}`}><h4>{`${user.display}`}</h4></a>
+            ))
+          }
+          </div>
+        </section> */}
         <section className="users-section">
           <h3>{dataSource.users.title}</h3>
           <p>{dataSource.users.desc}</p>

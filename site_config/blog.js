@@ -4,6 +4,13 @@ export default {
         postsTitle: 'All posts',
         list: [
             {
+                title: '涂鸦智能 dubbo-go 亿级流量的实践与探索',
+                author: '@panty',
+                dateStr: 'June 13th, 2020',
+                desc: '本文分为实践和快速接入两部分，分享在涂鸦智能的 dubbo-go 实战经验，意在帮助用户快速接入 dubbo-go RPC 框架，希望能让大家少走些弯路',
+                link: '/zh-cn/blog/dubbo-go-practice-exploration.html',
+            },
+            {
                 title: 'dubbo-go 可信调用实现',
                 author: '@郑泽超',
                 dateStr: 'May 22th, 2020',
@@ -11,7 +18,7 @@ export default {
                 link: '/zh-cn/blog/dubbo-go-rusted-call-implementation.html',
             }, 
             {
-                title: 'dubbo-go 中将 Kubernets 原⽣作为注册中⼼_的设计和实现',
+                title: 'dubbo-go 中将 Kubernets 原⽣作为注册中⼼的设计和实现',
                 author: '@王翔',
                 dateStr: 'May 16th, 2020',
                 desc: '介绍 dubbo-go 以 Kubernetes 为中⼼的服务注册的初衷，设计⽅案，以及具体实现',
@@ -72,6 +79,13 @@ export default {
         barText: '博客',
         postsTitle: '所有文章',
         list: [
+            {
+                title: '涂鸦智能 dubbo-go 亿级流量的实践与探索',
+                author: '@panty',
+                dateStr: 'June 13th, 2020',
+                desc: '本文分为实践和快速接入两部分，分享在涂鸦智能的 dubbo-go 实战经验，意在帮助用户快速接入 dubbo-go RPC 框架，希望能让大家少走些弯路',
+                link: '/zh-cn/blog/dubbo-go-practice-exploration.html',
+            },
             {
                 title: 'dubbo-go 可信调用实现',
                 author: '@郑泽超',
