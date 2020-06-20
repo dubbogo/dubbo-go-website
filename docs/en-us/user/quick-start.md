@@ -21,7 +21,7 @@ registry: Zookeeper
 
 ### Step 1: coding the `Provider` struct and methods to provide service
 
-> https://github.com/dubbogo/dubbogo-samples/blob/master/helloworld/dubbo/go-server/app/user.go
+> <https://github.com/dubbogo/dubbo-samples/blob/master/golang/helloworld/dubbo/go-server/app/user.go>
 
 1. Coding the structure to be encoded, because `Hessian2` is used as the encoding protocol, `User` needs to implement the `JavaClassName` method, and its return value corresponds to the class name of User class in Dubbo.
 
@@ -68,7 +68,7 @@ func init() {
 
 ### Step 2：Coding main program
 
-> https://github.com/dubbogo/dubbogo-samples/blob/master/helloworld/dubbo/go-server/app/server.go
+> <https://github.com/dubbogo/dubbo-samples/blob/master/golang/helloworld/dubbo/go-server/app/server.go>
 
 1. Import the required Dubbo-go package
 
@@ -98,7 +98,7 @@ func main() {
 
 ### Step 3：Coding configuration files and configure environment variables
 
-1. Follow [log](https://github.com/dubbogo/dubbogo-samples/blob/master/helloworld/dubbo/go-server/profiles/release/log.yml) and [server](https://github.com/dubbogo/dubbogo-samples/blob/master/helloworld/dubbo/go-server/profiles/release/server.yml) to edit configuration files.
+1. Follow [log](https://github.com/dubbogo/dubbo-samples/blob/master/golang/helloworld/dubbo/go-server/profiles/release/log.yml) and [server](https://github.com/dubbogo/dubbo-samples/blob/master/golang/helloworld/dubbo/go-server/profiles/release/server.yml) to edit configuration files.
 
 Edit the following configurations: 
 
@@ -117,7 +117,7 @@ export APP_LOG_CONF_FILE="xxx"
 
 ### Step 1：coding the `Provider` of client
 
-> https://github.com/dubbogo/dubbogo-samples/blob/master/helloworld/dubbo/go-client/app/user.go
+> <https://github.com/dubbogo/dubbo-samples/blob/master/golang/helloworld/dubbo/go-client/app/user.go>
 
 1. Refer to the first point of step 1 in `Start from the server`.
 
@@ -144,7 +144,7 @@ func init() {
 
 ### Step 2：Coding main program of client
 
-> https://github.com/dubbogo/dubbogo-samples/blob/master/helloworld/dubbo/go-client/app/client.go
+> <https://github.com/dubbogo/dubbo-samples/blob/master/golang/helloworld/dubbo/go-client/app/client.go>
 
 1. Import the required Dubbo-go package
 
@@ -185,7 +185,7 @@ func println(format string, args ...interface{}) {
 
 ### Step 3：Coding configuration files and configure environment variables
 
-1. Follow [log](https://github.com/dubbogo/dubbogo-samples/blob/master/helloworld/dubbo/go-client/profiles/release/log.yml) and  [client](https://github.com/dubbogo/dubbogo-samples/blob/master/helloworld/dubbo/go-client/profiles/release/client.yml) to edit configuration files.
+1. Follow [log](https://github.com/dubbogo/dubbo-samples/blob/master/golang/helloworld/dubbo/go-client/profiles/release/log.yml) and [client](https://github.com/dubbogo/dubbo-samples/blob/master/golang/helloworld/dubbo/go-client/profiles/release/client.yml) to edit configuration files.
 
 Edit the following configurations: 
 
