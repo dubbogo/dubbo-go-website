@@ -8,6 +8,13 @@ export default {
       list: [
         {
           img: '/img/dubbo-go.png',
+          title: 'What\'s new of Dubbo-go-hessian2 v1.6.0',
+          content: 'What\'s new of Dubbo-go-hessian2 v1.6.0',
+          dateStr: 'June 20th，2020',
+          link: '/zh-cn/blog/dubbo-go-hessian2-1.6.html',
+        },
+        {
+          img: '/img/dubbo-go.png',
           title: 'Go 版本入 Dubbo 生态一周年：已和 Spring Cloud、gRPC 互通',
           content: 'Go 版本入 Dubbo 生态一周年：已和 Spring Cloud、gRPC 互通',
           dateStr: 'May 29th，2020',
@@ -166,6 +173,13 @@ export default {
     events: {
       title: '事件 & 新闻',
       list: [
+        {
+          img: '/img/dubbo-go.png',
+          title: 'What\'s new of Dubbo-go-hessian2 v1.6.0',
+          content: 'What\'s new of Dubbo-go-hessian2 v1.6.0',
+          dateStr: 'June 20th，2020',
+          link: '/zh-cn/blog/dubbo-go-hessian2-1.6.html',
+        },
         {
           img: '/img/dubbo-go.png',
           title: 'Go 版本入 Dubbo 生态一周年：已和 Spring Cloud、gRPC 互通',
