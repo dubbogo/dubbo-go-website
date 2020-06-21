@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta name="keywords" content="dubbo-go-hessian2-1.6" />
+	<meta name="description" content="dubbo-go-hessian2-1.6" />
+	<!-- 网页标签标题 -->
+	<title>dubbo-go-hessian2-1.6</title>
+	<link rel="shortcut icon" href="/dubbo-go-website/img/dubbo.ico"/>
+	<link rel="stylesheet" href="/dubbo-go-website/build/blogDetail.css" />
+</head>
+<body>
+	<div id="root"><div class="blog-detail-page" data-reactroot=""><header class="header-container header-container-normal"><div class="header-body"><a href="/dubbo-go-website/zh-cn/index.html"><img class="logo" src="/dubbo-go-website/img/dubbo_colorful.png"/></a><div class="search search-normal"><span class="icon-search"></span></div><span class="language-switch language-switch-normal">En</span><div class="header-menu"><img class="header-menu-toggle" src="/dubbo-go-website/img/menu_gray.png"/><ul><li class="menu-item menu-item-normal"><a href="/dubbo-go-website/zh-cn/index.html">首页</a></li><li class="menu-item menu-item-normal"><a href="/dubbo-go-website/zh-cn/docs/user/quick-start.html">文档</a></li><li class="menu-item menu-item-normal menu-item-normal-active"><a href="/dubbo-go-website/zh-cn/blog/index.html">博客</a></li><li class="menu-item menu-item-normal"><a href="/dubbo-go-website/zh-cn/community/index.html">社区</a></li><li class="menu-item menu-item-normal"><a href="/dubbo-go-website/zh-cn/blog/download.html">下载</a></li><li class="menu-item menu-item-normal"><a href="https://dubbo.apache.org/zh-cn/index.html">Java</a></li></ul></div></div></header><section class="blog-content markdown-body"><h1>What's new of Dubbo-go-hessian2 v1.6.0</h1>
+<p>发版人：<a href="https://github.com/wongoo">望哥</a></p>
+<h2>1. 增加缓存优化</h2>
+<p>dubbo-go-hessian2 在解析数据的数据大量使用到了 struct 的结构信息，这部分信息可以缓存起来反复利用，使得性能提升了一倍。优化过程记录可以详细阅读<a href="https://mp.weixin.qq.com/s/ouVxldQAt0_4BET7srjJ6Q">《记一次对 dubbo-go-hessian2 的性能优化》</a>.</p>
+<p>对应 pr <a href="https://github.com/apache/dubbo-go-hessian2/pull/179">#179</a>，作者 <a href="https://github.com/micln">micln</a>。</p>
+<h2>2. string 解析性能优化</h2>
+<p>由于 hessian （ dubbo 序列化协议，下称：hessian ）对 string 的定义是16 bit 的 unicode 的 UTF-8 表示形式，字符长度表示是16 bit 的字符数。这是仅针对 java 制定的规范，java 中一个字符是16 bit，对应到 UTF-16. hessian 库也是对每一个字符进行转码序列化。但 golang 里面字符是和 UTF-8 对应的，dubbo-go-hessian2 里面的 rune 是 32bit，和 unicode一一映射。对于 U+10000 ~ U+10FFFF 的字符，需按照 UTF16 的规范，将字符转换为 2 个字节的代理字符，再做转换，才能和 java 的序列化方式对应起来。</p>
+<p>原来不管是编码还是解析都是一个字符一个字符处理，特别是解析的时候，从流里面一个字节一个字节读取并组装成 rune，然后再转换为 string，这样效率特别低。我们的优化方案是，批次读取字节流到 buffer 中，对 buffer 进行解析转为 UTF-8 数组，并统计字符数量。其中需要对代理对字符将其转换为标准 UTF-8 子节数组。如果统计的字符数量不足，再进一步读取流种的数据进行解析。通过此方式提升一倍的解析效率。</p>
+<p>对应 pr <a href="https://github.com/apache/dubbo-go-hessian2/pull/188">#188</a>，作者 <a href="https://github.com/zonghaishang">zonghaishang</a>。</p>
+<h2>3. 解析忽略不存在的字段</h2>
+<p>hessian 库在解析数据的时候，对于一个 class 字段，如果不存在，则直接忽略掉。但 v1.6.0 版本之前 dubbo-go-hessian2 解析数据，如果遇到不存在的字段，会返回 error。从 v1.6.0 开始，与 hessian 一样，忽略不存在的字段。<strong>因为这是一个特性的变更，所以升级的同学一定要注意了。</strong></p>
+<p>对应 pr <a href="https://github.com/apache/dubbo-go-hessian2/pull/201">#201</a>，作者 <a href="https://github.com/micln">micln</a> &amp;
+<a href="https://github.com/fangyincheng">fangyincheng</a>。</p>
+<h2>4. 解决浮点数精度丢失问题</h2>
+<p>在对 float32 类型进行序列化时，我们一律强制转换为 float64 再进行序列化操作。由于浮点数的精度问题，在这个转换过程中可能出现小数点后出现多余的尾数，例如 (float32)99.8--&gt;(float64)99.80000305175781。</p>
+<p>1.6.0 版本对 float32 的序列化进行了优化：</p>
+<ul>
+<li>如果小数尾数小于 3 位，根据 hessian2 协议序列化为 double 32-bit 格式</li>
+<li>否则先转换为 string 类型，再转换为 float64 类型，这样做可以避免由于浮点数精度问题产生多余的尾数，最后对 float64 进行序列化。</li>
+</ul>
+<p>虽然对 float32 类型进行了优化，但是依然建议使用浮点数的时候优先使用 float64 类型。</p>
+<p>对应 pr <a href="https://github.com/apache/dubbo-go-hessian2/pull/196">#196</a>，作者 <a href="https://github.com/willson-chen">willson-chen</a>。</p>
+<h2>5. 解决 attachment 空值丢失问题</h2>
+<p>dubbo 请求中包含 attachment 信息，之前如果 attachment 里面含有如 <code>&quot;key1&quot;:&quot;&quot;</code>，这种 value 为空的情况，解析出来的结果会直接丢失这个属性 key1 ，v1.6.0 修复了此问题，现在解析出来的 attachment 会正确解析出空 value 的属性。</p>
+<p>对应 pr <a href="https://github.com/apache/dubbo-go-hessian2/pull/191">#191</a>，作者 <a href="https://github.com/champly">champly</a>。</p>
+<h2>6. 支持 ‘继承’ 和忽略冗余字段</h2>
+<p>由于 go 没有继承的概念，所以在之前的版本，Java 父类的字段不被 dubbo-go-hessian2 所支持。新版本中，dubbo-go-hessian2 将Java来自父类的字段用匿名结构体对应，如：</p>
+<pre><code>type Dog struct {
+    Animal
+    Gender  string
+    DogName string `hessian:&quot;-&quot;`
+}
+</code></pre>
+<p>同时，就像 json 编码中通过 immediately 可以在序列化中忽略该字段，同理，通过 hessian:&quot;-&quot; 用户也可以让冗余字段不参与 hessian 序列化。</p>
+<p>对应pr <a href="https://github.com/apache/dubbo-go-hessian2/pull/154">#154</a>，作者 <a href="https://github.com/micln">micln</a></p>
+<h2>欢迎加入 dubbo-go 社区</h2>
+<p>钉钉群: <a href="https://dubbogo.github.io/dubbo-go-website/img/dubbo-go-group.jpg">23331795</a></p>
+</section><footer class="footer-container"><div class="footer-body"><img src="/dubbo-go-website/img/dubbo_gray.png"/><img class="apache" src="/dubbo-go-website/img/apache_logo.png"/><div class="cols-container"><div class="col col-12"><h3></h3><p></p></div><div class="col col-4"><dl><dt>ASF</dt><dd><a href="http://www.apache.org" target="_self">基金会</a></dd><dd><a href="http://www.apache.org/licenses/" target="_self">证书</a></dd><dd><a href="http://www.apache.org/events/current-event" target="_self">事件</a></dd><dd><a href="http://www.apache.org/foundation/sponsorship.html" target="_self">赞助</a></dd><dd><a href="http://www.apache.org/foundation/thanks.html" target="_self">致谢</a></dd></dl></div><div class="col col-4"><dl><dt>文档</dt><dd><a href="/dubbo-go-website/zh-cn/docs/user/quick-start.html" target="_self">快速开始</a></dd><dd><a href="/dubbo-go-website/zh-cn/docs/dev/build.html" target="_self">开发者指南</a></dd><dd><a href="/dubbo-go-website/zh-cn/docs/admin/ops/dubbo-ops.html" target="_self">运维管理</a></dd><dd><a href="https://github.com/dubbogo/dubbo-go-website/issues/new" target="_self">报告文档问题</a></dd><dd><a href="https://github.com/dubbogo/dubbo-go-website" target="_self">编辑此文档</a></dd></dl></div><div class="col col-4"><dl><dt>资源</dt><dd><a href="/dubbo-go-website/zh-cn/blog/index.html" target="_self">博客</a></dd><dd><a href="/dubbo-go-website/zh-cn/community/index.html" target="_self">社区</a></dd><dd><a href="https://www.apache.org/security" target="_self">安全</a></dd></dl></div></div><div class="copyright"><span>Copyright © 2018-2020 The Apache Software Foundation. Apache and the Apache feather logo are trademarks of The Apache Software Foundation.</span></div></div></footer></div></div>
+	<script src="https://f.alicdn.com/react/15.4.1/react-with-addons.min.js"></script>
+	<script src="https://f.alicdn.com/react/15.4.1/react-dom.min.js"></script>
+	<script>
+		window.rootPath = '/dubbo-go-website';
+  </script>
+  <script src="/dubbo-go-website/build/blogDetail.js"></script>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-112489517-1"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+
+		gtag('config', 'UA-112489517-1');
+	</script>
+</body>
+</html>
