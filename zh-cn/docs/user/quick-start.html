@@ -25,7 +25,7 @@
 <h2>从服务端开始</h2>
 <h3>第一步：编写 <code>Provider</code> 结构体和提供服务的方法</h3>
 <blockquote>
-<p><a href="https://github.com/dubbogo/dubbogo-samples/blob/master/helloworld/dubbo/go-server/app/user.go">https://github.com/dubbogo/dubbogo-samples/blob/master/helloworld/dubbo/go-server/app/user.go</a></p>
+<p><a href="https://github.com/dubbogo/dubbo-samples/blob/master/golang/helloworld/dubbo/go-server/app/user.go">https://github.com/dubbogo/dubbo-samples/blob/master/golang/helloworld/dubbo/go-server/app/user.go</a></p>
 </blockquote>
 <ol>
 <li>编写需要被编码的结构体，由于使用 <code>Hessian2</code> 作为编码协议，<code>User</code> 需要实现 <code>JavaClassName</code> 方法，它的返回值在dubbo中对应User类的类名。</li>
@@ -69,7 +69,7 @@
 </code></pre>
 <h3>第二步：编写主程序</h3>
 <blockquote>
-<p><a href="https://github.com/dubbogo/dubbogo-samples/blob/master/helloworld/dubbo/go-server/app/server.go">https://github.com/dubbogo/dubbogo-samples/blob/master/helloworld/dubbo/go-server/app/server.go</a></p>
+<p><a href="https://github.com/dubbogo/dubbo-samples/blob/master/golang/helloworld/dubbo/go-server/app/server.go">https://github.com/dubbogo/dubbo-samples/blob/master/golang/helloworld/dubbo/go-server/app/server.go</a></p>
 </blockquote>
 <ol>
 <li>引入必需的dubbo-go包</li>
@@ -97,7 +97,7 @@
 </code></pre>
 <h3>第三步：编写配置文件并配置环境变量</h3>
 <ol>
-<li>参考 <a href="https://github.com/dubbogo/dubbogo-samples/blob/master/helloworld/dubbo/go-server/profiles/release/log.yml">log</a> 和 <a href="https://github.com/dubbogo/dubbogo-samples/blob/master/helloworld/dubbo/go-server/profiles/release/server.yml">server</a> 编辑配置文件。</li>
+<li>参考 <a href="https://github.com/dubbogo/dubbo-samples/blob/master/golang/helloworld/dubbo/go-server/profiles/release/log.yml">log</a> 和 <a href="https://github.com/dubbogo/dubbo-samples/blob/master/golang/helloworld/dubbo/go-server/profiles/release/server.yml">server</a> 编辑配置文件。</li>
 </ol>
 <p>主要编辑以下部分：</p>
 <ul>
@@ -117,7 +117,7 @@ export APP_LOG_CONF_FILE="xxx"
 <h2>接着是客户端</h2>
 <h3>第一步：编写客户端 <code>Provider</code></h3>
 <blockquote>
-<p><a href="https://github.com/dubbogo/dubbogo-samples/blob/master/helloworld/dubbo/go-client/app/user.go">https://github.com/dubbogo/dubbogo-samples/blob/master/helloworld/dubbo/go-client/app/user.go</a></p>
+<p><a href="https://github.com/dubbogo/dubbo-samples/blob/master/golang/helloworld/dubbo/go-client/app/user.go">https://github.com/dubbogo/dubbo-samples/blob/master/golang/helloworld/dubbo/go-client/app/user.go</a></p>
 </blockquote>
 <ol>
 <li>
@@ -145,7 +145,7 @@ export APP_LOG_CONF_FILE="xxx"
 </code></pre>
 <h3>第二步：编写客户端主程序</h3>
 <blockquote>
-<p><a href="https://github.com/dubbogo/dubbogo-samples/blob/master/helloworld/dubbo/go-client/app/client.go">https://github.com/dubbogo/dubbogo-samples/blob/master/helloworld/dubbo/go-client/app/client.go</a></p>
+<p><a href="https://github.com/dubbogo/dubbo-samples/blob/master/golang/helloworld/dubbo/go-client/app/client.go">https://github.com/dubbogo/dubbo-samples/blob/master/golang/helloworld/dubbo/go-client/app/client.go</a></p>
 </blockquote>
 <ol>
 <li>引入必需的dubbo-go包</li>
@@ -184,7 +184,7 @@ export APP_LOG_CONF_FILE="xxx"
 </code></pre>
 <h3>第三步：编写配置文件并配置环境变量</h3>
 <ol>
-<li>参考 <a href="https://github.com/dubbogo/dubbogo-samples/blob/master/helloworld/dubbo/go-client/profiles/release/log.yml">log</a> 和 <a href="https://github.com/dubbogo/dubbogo-samples/blob/master/helloworld/dubbo/go-client/profiles/release/client.yml">client</a> 编辑配置文件。</li>
+<li>参考 <a href="https://github.com/dubbogo/dubbo-samples/blob/master/golang/helloworld/dubbo/go-client/profiles/release/log.yml">log</a> 和 <a href="https://github.com/dubbogo/dubbo-samples/blob/master/golang/helloworld/dubbo/go-client/profiles/release/client.yml">client</a> 编辑配置文件。</li>
 </ol>
 <p>主要编辑以下部分：</p>
 <ul>

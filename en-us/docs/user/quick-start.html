@@ -25,7 +25,7 @@ registry: Zookeeper</p>
 <h2>Start from the server</h2>
 <h3>Step 1: coding the <code>Provider</code> struct and methods to provide service</h3>
 <blockquote>
-<p><a href="https://github.com/dubbogo/dubbogo-samples/blob/master/helloworld/dubbo/go-server/app/user.go">https://github.com/dubbogo/dubbogo-samples/blob/master/helloworld/dubbo/go-server/app/user.go</a></p>
+<p><a href="https://github.com/dubbogo/dubbo-samples/blob/master/golang/helloworld/dubbo/go-server/app/user.go">https://github.com/dubbogo/dubbo-samples/blob/master/golang/helloworld/dubbo/go-server/app/user.go</a></p>
 </blockquote>
 <ol>
 <li>Coding the structure to be encoded, because <code>Hessian2</code> is used as the encoding protocol, <code>User</code> needs to implement the <code>JavaClassName</code> method, and its return value corresponds to the class name of User class in Dubbo.</li>
@@ -69,7 +69,7 @@ registry: Zookeeper</p>
 </code></pre>
 <h3>Step 2：Coding main program</h3>
 <blockquote>
-<p><a href="https://github.com/dubbogo/dubbogo-samples/blob/master/helloworld/dubbo/go-server/app/server.go">https://github.com/dubbogo/dubbogo-samples/blob/master/helloworld/dubbo/go-server/app/server.go</a></p>
+<p><a href="https://github.com/dubbogo/dubbo-samples/blob/master/golang/helloworld/dubbo/go-server/app/server.go">https://github.com/dubbogo/dubbo-samples/blob/master/golang/helloworld/dubbo/go-server/app/server.go</a></p>
 </blockquote>
 <ol>
 <li>Import the required Dubbo-go package</li>
@@ -97,7 +97,7 @@ registry: Zookeeper</p>
 </code></pre>
 <h3>Step 3：Coding configuration files and configure environment variables</h3>
 <ol>
-<li>Follow <a href="https://github.com/dubbogo/dubbogo-samples/blob/master/helloworld/dubbo/go-server/profiles/release/log.yml">log</a> and <a href="https://github.com/dubbogo/dubbogo-samples/blob/master/helloworld/dubbo/go-server/profiles/release/server.yml">server</a> to edit configuration files.</li>
+<li>Follow <a href="https://github.com/dubbogo/dubbo-samples/blob/master/golang/helloworld/dubbo/go-server/profiles/release/log.yml">log</a> and <a href="https://github.com/dubbogo/dubbo-samples/blob/master/golang/helloworld/dubbo/go-server/profiles/release/server.yml">server</a> to edit configuration files.</li>
 </ol>
 <p>Edit the following configurations:</p>
 <ul>
@@ -117,7 +117,7 @@ export APP_LOG_CONF_FILE="xxx"
 <h2>The second is client</h2>
 <h3>Step 1：coding the <code>Provider</code> of client</h3>
 <blockquote>
-<p><a href="https://github.com/dubbogo/dubbogo-samples/blob/master/helloworld/dubbo/go-client/app/user.go">https://github.com/dubbogo/dubbogo-samples/blob/master/helloworld/dubbo/go-client/app/user.go</a></p>
+<p><a href="https://github.com/dubbogo/dubbo-samples/blob/master/golang/helloworld/dubbo/go-client/app/user.go">https://github.com/dubbogo/dubbo-samples/blob/master/golang/helloworld/dubbo/go-client/app/user.go</a></p>
 </blockquote>
 <ol>
 <li>
@@ -145,7 +145,7 @@ export APP_LOG_CONF_FILE="xxx"
 </code></pre>
 <h3>Step 2：Coding main program of client</h3>
 <blockquote>
-<p><a href="https://github.com/dubbogo/dubbogo-samples/blob/master/helloworld/dubbo/go-client/app/client.go">https://github.com/dubbogo/dubbogo-samples/blob/master/helloworld/dubbo/go-client/app/client.go</a></p>
+<p><a href="https://github.com/dubbogo/dubbo-samples/blob/master/golang/helloworld/dubbo/go-client/app/client.go">https://github.com/dubbogo/dubbo-samples/blob/master/golang/helloworld/dubbo/go-client/app/client.go</a></p>
 </blockquote>
 <ol>
 <li>Import the required Dubbo-go package</li>
@@ -184,7 +184,7 @@ export APP_LOG_CONF_FILE="xxx"
 </code></pre>
 <h3>Step 3：Coding configuration files and configure environment variables</h3>
 <ol>
-<li>Follow <a href="https://github.com/dubbogo/dubbogo-samples/blob/master/helloworld/dubbo/go-client/profiles/release/log.yml">log</a> and  <a href="https://github.com/dubbogo/dubbogo-samples/blob/master/helloworld/dubbo/go-client/profiles/release/client.yml">client</a> to edit configuration files.</li>
+<li>Follow <a href="https://github.com/dubbogo/dubbo-samples/blob/master/golang/helloworld/dubbo/go-client/profiles/release/log.yml">log</a> and <a href="https://github.com/dubbogo/dubbo-samples/blob/master/golang/helloworld/dubbo/go-client/profiles/release/client.yml">client</a> to edit configuration files.</li>
 </ol>
 <p>Edit the following configurations:</p>
 <ul>
