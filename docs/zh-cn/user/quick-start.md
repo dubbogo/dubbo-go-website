@@ -21,7 +21,7 @@ description: 快速上手dubbo-go，编写一个简单的hellowworld应用
 
 ### 第一步：编写 `Provider` 结构体和提供服务的方法
 
-> https://github.com/dubbogo/dubbogo-samples/blob/master/helloworld/dubbo/go-server/app/user.go
+> <https://github.com/dubbogo/dubbo-samples/blob/master/golang/helloworld/dubbo/go-server/app/user.go>
 
 1. 编写需要被编码的结构体，由于使用 `Hessian2` 作为编码协议，`User` 需要实现 `JavaClassName` 方法，它的返回值在dubbo中对应User类的类名。
 
@@ -68,7 +68,7 @@ func init() {
 
 ### 第二步：编写主程序
 
-> https://github.com/dubbogo/dubbogo-samples/blob/master/helloworld/dubbo/go-server/app/server.go
+> <https://github.com/dubbogo/dubbo-samples/blob/master/golang/helloworld/dubbo/go-server/app/server.go>
 
 1. 引入必需的dubbo-go包
 
@@ -98,7 +98,7 @@ func main() {
 
 ### 第三步：编写配置文件并配置环境变量
 
-1. 参考 [log](https://github.com/dubbogo/dubbogo-samples/blob/master/helloworld/dubbo/go-server/profiles/release/log.yml) 和 [server](https://github.com/dubbogo/dubbogo-samples/blob/master/helloworld/dubbo/go-server/profiles/release/server.yml) 编辑配置文件。
+1. 参考 [log](https://github.com/dubbogo/dubbo-samples/blob/master/golang/helloworld/dubbo/go-server/profiles/release/log.yml) 和 [server](https://github.com/dubbogo/dubbo-samples/blob/master/golang/helloworld/dubbo/go-server/profiles/release/server.yml) 编辑配置文件。
 
 主要编辑以下部分：
 
@@ -117,7 +117,7 @@ export APP_LOG_CONF_FILE="xxx"
 
 ### 第一步：编写客户端 `Provider`
 
-> https://github.com/dubbogo/dubbogo-samples/blob/master/helloworld/dubbo/go-client/app/user.go
+> <https://github.com/dubbogo/dubbo-samples/blob/master/golang/helloworld/dubbo/go-client/app/user.go>
 
 1. 参考服务端第一步的第一点。
 
@@ -144,7 +144,7 @@ func init() {
 
 ### 第二步：编写客户端主程序
 
-> https://github.com/dubbogo/dubbogo-samples/blob/master/helloworld/dubbo/go-client/app/client.go
+> <https://github.com/dubbogo/dubbo-samples/blob/master/golang/helloworld/dubbo/go-client/app/client.go>
 
 1. 引入必需的dubbo-go包
 
@@ -185,7 +185,7 @@ func println(format string, args ...interface{}) {
 
 ### 第三步：编写配置文件并配置环境变量
 
-1. 参考 [log](https://github.com/dubbogo/dubbogo-samples/blob/master/helloworld/dubbo/go-client/profiles/release/log.yml) 和 [client](https://github.com/dubbogo/dubbogo-samples/blob/master/helloworld/dubbo/go-client/profiles/release/client.yml) 编辑配置文件。
+1. 参考 [log](https://github.com/dubbogo/dubbo-samples/blob/master/golang/helloworld/dubbo/go-client/profiles/release/log.yml) 和 [client](https://github.com/dubbogo/dubbo-samples/blob/master/golang/helloworld/dubbo/go-client/profiles/release/client.yml) 编辑配置文件。
 
 主要编辑以下部分：
 
