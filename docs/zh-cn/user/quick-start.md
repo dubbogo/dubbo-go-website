@@ -96,8 +96,8 @@ func main() {
 }
 ```
 
-### 第三步：编写配置文件并配置环境变量
-
+### 第三步：配置
+####  1.使用环境变量
 1. 参考 [log](https://github.com/dubbogo/dubbo-samples/blob/master/golang/helloworld/dubbo/go-server/profiles/release/log.yml) 和 [server](https://github.com/dubbogo/dubbo-samples/blob/master/golang/helloworld/dubbo/go-server/profiles/release/server.yml) 编辑配置文件。
 
 主要编辑以下部分：
@@ -111,6 +111,27 @@ func main() {
 ```shell
 export CONF_PROVIDER_FILE_PATH="xxx"
 export APP_LOG_CONF_FILE="xxx"
+```
+####  2.自定义配置文件
+
+1. var consumerConfigStr = `xxxxx`// 配置文件内容，可以参考[log](https://github.com/dubbogo/dubbo-samples/blob/master/golang/helloworld/dubbo/go-client/profiles/release/log.yml) 和 [client](https://github.com/dubbogo/dubbo-samples/blob/master/golang/helloworld/dubbo/go-client/profiles/release/client.yml) 
+
+   * 在这里你可以定义配置文件的获取方式，比如配置中心，本地文件读取
+
+2. 在```config.Load()```之前设置配置
+```go
+func main() {
+	hessian.RegisterPOJO(&User{})
+	providerConfig := config.ProviderConfig{}
+	yaml.Unmarshal([]byte(providerConfigStr), &providerConfig)
+	config.SetProviderConfig(providerConfig)
+	defaultServerConfig := dubbo.GetDefaultServerConfig()
+	dubbo.SetServerConfig(defaultServerConfig)
+	logger.SetLoggerLevel("warn") // info,warn
+	config.Load()
+	select {
+	}
+}
 ```
 
 ## 接着是客户端
@@ -183,8 +204,8 @@ func println(format string, args ...interface{}) {
 }
 ```
 
-### 第三步：编写配置文件并配置环境变量
-
+### 第三步：配置
+####  1.使用环境变量
 1. 参考 [log](https://github.com/dubbogo/dubbo-samples/blob/master/golang/helloworld/dubbo/go-client/profiles/release/log.yml) 和 [client](https://github.com/dubbogo/dubbo-samples/blob/master/golang/helloworld/dubbo/go-client/profiles/release/client.yml) 编辑配置文件。
 
 主要编辑以下部分：
@@ -199,3 +220,28 @@ func println(format string, args ...interface{}) {
 export CONF_CONSUMER_FILE_PATH="xxx"
 export APP_LOG_CONF_FILE="xxx"
 ```
+####  2.自定义配置文件
+1. var consumerConfigStr = `xxxxx`// 配置文件内容，可以参考[log](https://github.com/dubbogo/dubbo-samples/blob/master/golang/helloworld/dubbo/go-client/profiles/release/log.yml) 和 [client](https://github.com/dubbogo/dubbo-samples/blob/master/golang/helloworld/dubbo/go-client/profiles/release/client.yml) 
+
+   * 在这里你可以定义配置文件的获取方式，比如配置中心，本地文件读取
+
+2. 在```config.Load()```之前设置配置
+  ```go
+  func main() {
+       p := config.ConsumerConfig{}
+       yaml.Unmarshal([]byte(consumerConfigStr), &p)
+       config.SetConsumerConfig(p)
+       defaultClientConfig := dubbo.GetDefaultClientConfig()
+       dubbo.SetClientConf(defaultClientConfig)
+       logger.SetLoggerLevel("warn") // info,warn
+       config.Load()
+  
+       user := &User{}
+       err := userProvider.GetUser(context.TODO(), []interface{}{"A001"}, user)
+       if err != nil {
+           log.Print(err)
+           return
+       }
+    log.Print(user)
+  }
+  ```
