@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta name="keywords" content="zero-cost-access-to-mosn-for-dubbo-go" />
+	<meta name="description" content="zero-cost-access-to-mosn-for-dubbo-go" />
+	<!-- 网页标签标题 -->
+	<title>zero-cost-access-to-mosn-for-dubbo-go</title>
+	<link rel="shortcut icon" href="/dubbo-go-website/img/dubbo.ico"/>
+	<link rel="stylesheet" href="/dubbo-go-website/build/documentation.css" />
+</head>
+<body>
+	<div id="root"><div class="documentation-page" data-reactroot=""><header class="header-container header-container-normal"><div class="header-body"><a href="/dubbo-go-website/zh-cn/index.html"><img class="logo" src="/dubbo-go-website/img/dubbo_colorful.png"/></a><div class="search search-normal"><span class="icon-search"></span></div><span class="language-switch language-switch-normal">En</span><div class="header-menu"><img class="header-menu-toggle" src="/dubbo-go-website/img/menu_gray.png"/><ul><li class="menu-item menu-item-normal"><a href="/dubbo-go-website/zh-cn/index.html">首页</a></li><li class="menu-item menu-item-normal menu-item-normal-active"><a href="/dubbo-go-website/zh-cn/docs/user/quick-start.html">文档</a></li><li class="menu-item menu-item-normal"><a href="/dubbo-go-website/zh-cn/blog/index.html">博客</a></li><li class="menu-item menu-item-normal"><a href="/dubbo-go-website/zh-cn/community/index.html">社区</a></li><li class="menu-item menu-item-normal"><a href="/dubbo-go-website/zh-cn/blog/download.html">下载</a></li><li class="menu-item menu-item-normal"><a href="https://dubbo.apache.org/zh-cn/index.html">Java</a></li></ul></div></div></header><div class="bar"><div class="bar-body"><img src="/dubbo-go-website/img/docs.png" class="front-img"/><span>文档</span><img src="/dubbo-go-website/img/docs.png" class="back-img"/></div></div><section class="content-section"><div class="sidemenu"><div class="sidemenu-toggle"><img src="https://img.alicdn.com/tfs/TB1E6apXHGYBuNjy0FoXXciBFXa-200-200.png"/></div><ul><li class="menu-item menu-item-level-1"><span>用户指南</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><span>入门<img style="transform:rotate(-90deg)" class="menu-toggle" src="/dubbo-go-website/img/arrow_down.png"/></span><ul><li class="menu-item menu-item-level-3"><a href="/dubbo-go-website/zh-cn/docs/user/preface/architecture.html" target="_self">架构</a></li></ul></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/dubbo-go-website/zh-cn/docs/user/quick-start.html" target="_self">快速启动</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><span>配置<img style="transform:rotate(-90deg)" class="menu-toggle" src="/dubbo-go-website/img/arrow_down.png"/></span><ul><li class="menu-item menu-item-level-3"><a href="/dubbo-go-website/zh-cn/docs/user/configuration/provider.html" target="_self">提供者</a></li></ul></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><span>注册中心参考手册<img style="transform:rotate(-90deg)" class="menu-toggle" src="/dubbo-go-website/img/arrow_down.png"/></span><ul><li class="menu-item menu-item-level-3"><a href="/dubbo-go-website/zh-cn/docs/user/registry/introduction.html" target="_self">介绍</a></li><li class="menu-item menu-item-level-3"><a href="/dubbo-go-website/zh-cn/docs/user/registry/zookeeper.html" target="_self">Zookeeper 注册中心</a></li><li class="menu-item menu-item-level-3"><a href="/dubbo-go-website/zh-cn/docs/user/registry/nacos.html" target="_self">Nacos 注册中心</a></li><li class="menu-item menu-item-level-3"><a href="/dubbo-go-website/zh-cn/docs/user/registry/consul.html" target="_self">Consul 注册中心</a></li><li class="menu-item menu-item-level-3"><a href="/dubbo-go-website/zh-cn/docs/user/registry/etcdv3.html" target="_self">Etcdv3 注册中心</a></li></ul></li></ul></li><li class="menu-item menu-item-level-1"><span>开发者指南</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/dubbo-go-website/zh-cn/docs/developer/design.html" target="_self">框架设计</a></li></ul></li><li class="menu-item menu-item-level-1"><span>源码导读</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/dubbo-go-website/zh-cn/docs/source_code/extension.html" target="_self">拓展点</a></li></ul></li></ul></div><div class="doc-content markdown-body"><h1><a href="https://mosn.io/docs/dev/dubbo-integrate/">Dubbo/Dubbo-go 应用零成本接入 MOSN</a></h1>
+<h2>Dubbo 介绍</h2>
+<p>Dubbo 最初是 <strong>Java 开发的一套 RPC 框架</strong>，随着社区的发展。当前 dubbo 也渐渐成为一套跨语言的解决方案。<strong>除了 Java 以外，还有相应的 Go 实现</strong>。有规律的版本发布节奏，社区较为活跃。</p>
+<h2>Dubbo 服务 mesh 化</h2>
+<p>接入 service mesh 的应用，其服务发现应该由相应的 mesh 模块接管。一般由控制面将相应的服务发现配置进行订阅和下发。但这里存在几个问题：</p>
+<p>如果公司是第一次接入 service mesh，不希望一次引入太多模块，这样会增加整体的运维负担。如果可以渐进地迁移到 service mesh 架构，例如先接入数据面，再接入控制面。那么就可以随时以较低的成本进行回滚。也不会给运维造成太大的压力。</p>
+<p>每个公司都有自己的发展规划，并不是每个公司都完整地拥抱了云原生。大部分公司可能存在部分上云，部分未上云的情况，在迁移到 service mesh 时，也存在部分应用接入了 service mesh，而另一部分未接入的情况。需要考虑跨架构互通。</p>
+<p>我们这里提出的方案希望能够解决这些问题。</p>
+<h3>服务发现接入</h3>
+<h4>配置工作</h4>
+<p>在配置文件中，我们配置了两个 listener：</p>
+<p>一个是 serverListener，负责拦截外部进入的流量，转发给本地模块，这个方向的请求不需要做特殊处理，只要使用 xprotocol 转发给本机即可。</p>
+<p>一个是 clientListener，负责拦截本机向外发起的请求，因为外部集群根据服务注册中心下发的 endpoint 列表动态变化，所以该 listener 对应的也是一个 特殊的 router 名 “dubbo”。，这里务必注意。</p>
+<pre><code class="language-json">    "listeners": [
+        {
+            "name": "serverListener",
+            "address": "127.0.0.1:2046",
+            "bind_port": true,
+            "log_path": "stdout",
+            "filter_chains": [
+                {
+                    "tls_context": {},
+                    "filters": [
+                        {
+                            "type": "proxy",
+                            "config": {
+                                "downstream_protocol": "X",
+                                "upstream_protocol": "X",
+                                "router_config_name": "server_router",
+                                "extend_config": {
+                                    "sub_protocol": "dubbo"
+                                }
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "clientListener",
+            "address": "0.0.0.0:2045",
+            "bind_port": true,
+            "log_path": "stdout",
+            "filter_chains": [
+                {
+                    "tls_context": {},
+                    "filters": [
+                        {
+                            "type": "proxy",
+                            "config": {
+                                "downstream_protocol": "X",
+                                "upstream_protocol": "X",
+                                "router_config_name": "dubbo",
+                                "extend_config": {
+                                    "sub_protocol": "dubbo"
+                                }
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+</code></pre>
+<h4>开发工作</h4>
+<p>第一步，在 MOSN 配置中增加 dubbo_registry 扩展选项：</p>
+<pre><code class="language-json">"extend": [
+    {
+        "type": "dubbo_registry",
+        "config": {
+            "enable": true,
+            "server_port": 20080,
+            "api_port": 22222,
+            "log_path": "/tmp"
+        }
+    }
+]
+</code></pre>
+<p>该配置与 tracing、admin 等为平级配置。</p>
+<p>第二步，针对接入的服务，需要简单修改 sdk 中的 pub、sub 环节代码：</p>
+<p>pub 时，如果当前环境为接入 MOSN 环境(可通过配置系统下发的开关来判断)，则调用 MOSN 的 pub 接口，而非直接去注册中心 pub。</p>
+<p>sub 时，如果当前环境为接入 MOSN 环境，则调用 MOSN 的 sub 接口，不去注册中心 sub。</p>
+<p>第三步，应用退出时，需要将所有 pub、sub 的服务执行反向操作，即 unpub、unsub。</p>
+<p>在本文中使用 httpie 来发送 http 请求。使用 dubbo-go 中的样例程序作为我们的服务的 client 和 server。</p>
+<p>接下来我们使用 httpie 来模拟各种情况下的 pub、sub 流程。</p>
+<p>直连 client 与正常的 dubbo service 互通
+例子路径</p>
+<p>Service 是正常的 dubbo service，所以会自动注册到 zk 中去，不需要我们帮它 pub，这里只要 sub 就可以了，所以执行流程为：</p>
+<p>第一步，修改 MOSN 配置，增加 dubbo_registry 的 extend 扩展。</p>
+<p>第二步，mosn start。</p>
+<p>第三步，start server。</p>
+<p>第四步，subscribe service。</p>
+<pre><code class="language-sh">http --json post localhost:22222/sub registry:=<span class="hljs-string">'{"type":"zookeeper", "addr" : "127.0.0.1:2181"}'</span> service:=<span class="hljs-string">'{"interface" : "com.ikurento.user.UserProvider", "methods" :["GetUser"], "group" : "", "version" : ""}'</span> --verbose
+</code></pre>
+<p>第五步，start client。</p>
+<p>在 client 中正确看到返回结果的话，说明请求成功了。</p>
+<p>直连 client 与直连 dubbo service 互通
+例子路径</p>
+<p>直连的服务不会主动对自身进行发布，直连的 client 不会主动进行订阅。因此此例子中，pub 和 sub 都是由我们来辅助进行的。</p>
+<p>第一步，修改 MOSN 配置，增加 dubbo_registry 的 extend 扩展。</p>
+<p>第二步，mosn start</p>
+<p>第三步，start server</p>
+<p>第四步，subscribe service</p>
+<pre><code class="language-sh">http --json post localhost:22222/sub registry:=<span class="hljs-string">'{"type":"zookeeper", "addr" : "127.0.0.1:2181"}'</span> service:=<span class="hljs-string">'{"interface" : "com.ikurento.user.UserProvider", "methods" :["GetUser"], "group" : "", "version" : ""}'</span> --verbose
+</code></pre>
+<p>第五步，publish service</p>
+<p>http --json post localhost:22222/pub registry:='{&quot;type&quot;:&quot;zookeeper&quot;, &quot;addr&quot; : &quot;127.0.0.1:2181&quot;}' service:='{&quot;interface&quot; : &quot;com.ikurento.user.UserProvider&quot;, &quot;methods&quot; :[&quot;GetUser&quot;], &quot;group&quot; : &quot;&quot;, &quot;version&quot; : &quot;&quot;}' --verbose
+第六步，start client</p>
+<p>此时应该能看到 client 侧的响应。</p>
+<p>正常的 client 与直连 dubbo service 互通
+例子路径</p>
+<p>Client 是正常 client，因此 client 会自己去 subscribe。我们只要正常地把服务 pub 出去即可：</p>
+<p>第一步，修改 MOSN 配置，增加 dubbo_registry 的 extend 扩展。</p>
+<p>第二步，mosn start</p>
+<p>第三步，start server</p>
+<p>第四步，publish service</p>
+<pre><code class="language-sh">http --json post localhost:22222/sub registry:=<span class="hljs-string">'{"type":"zookeeper", "addr" : "127.0.0.1:2181"}'</span> service:=<span class="hljs-string">'{"interface" : "com.ikurento.user.UserProvider", "methods" :["GetUser"], "group" : "", "version" : ""}'</span> --verbose
+</code></pre>
+<p>第五步，start client</p>
+<p>此时应该能看到 client 侧的响应。</p>
+</div></section><footer class="footer-container"><div class="footer-body"><img src="/dubbo-go-website/img/dubbo_gray.png"/><img class="apache" src="/dubbo-go-website/img/apache_logo.png"/><div class="cols-container"><div class="col col-12"><h3></h3><p></p></div><div class="col col-4"><dl><dt>ASF</dt><dd><a href="http://www.apache.org" target="_self">基金会</a></dd><dd><a href="http://www.apache.org/licenses/" target="_self">证书</a></dd><dd><a href="http://www.apache.org/events/current-event" target="_self">事件</a></dd><dd><a href="http://www.apache.org/foundation/sponsorship.html" target="_self">赞助</a></dd><dd><a href="http://www.apache.org/foundation/thanks.html" target="_self">致谢</a></dd></dl></div><div class="col col-4"><dl><dt>文档</dt><dd><a href="/dubbo-go-website/zh-cn/docs/user/quick-start.html" target="_self">快速开始</a></dd><dd><a href="/dubbo-go-website/zh-cn/docs/dev/build.html" target="_self">开发者指南</a></dd><dd><a href="/dubbo-go-website/zh-cn/docs/admin/ops/dubbo-ops.html" target="_self">运维管理</a></dd><dd><a href="https://github.com/dubbogo/dubbo-go-website/issues/new" target="_self">报告文档问题</a></dd><dd><a href="https://github.com/dubbogo/dubbo-go-website" target="_self">编辑此文档</a></dd></dl></div><div class="col col-4"><dl><dt>资源</dt><dd><a href="/dubbo-go-website/zh-cn/blog/index.html" target="_self">博客</a></dd><dd><a href="/dubbo-go-website/zh-cn/community/index.html" target="_self">社区</a></dd><dd><a href="https://www.apache.org/security" target="_self">安全</a></dd></dl></div></div><div class="copyright"><span>Copyright © 2018-2020 The Apache Software Foundation. Apache and the Apache feather logo are trademarks of The Apache Software Foundation.</span></div></div></footer></div></div>
+	<script src="https://f.alicdn.com/react/15.4.1/react-with-addons.min.js"></script>
+	<script src="https://f.alicdn.com/react/15.4.1/react-dom.min.js"></script>
+	<script>
+		window.rootPath = '/dubbo-go-website';
+  </script>
+  <script src="/dubbo-go-website/build/documentation.js"></script>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-112489517-1"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+
+		gtag('config', 'UA-112489517-1');
+	</script>
+</body>
+</html>

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta name="keywords" content="how-to-implement-remote-configuration-management-in-dubbo-go" />
+	<meta name="description" content="how-to-implement-remote-configuration-management-in-dubbo-go" />
+	<!-- 网页标签标题 -->
+	<title>how-to-implement-remote-configuration-management-in-dubbo-go</title>
+	<link rel="shortcut icon" href="/dubbo-go-website/img/dubbo.ico"/>
+	<link rel="stylesheet" href="/dubbo-go-website/build/documentation.css" />
+</head>
+<body>
+	<div id="root"><div class="documentation-page" data-reactroot=""><header class="header-container header-container-normal"><div class="header-body"><a href="/dubbo-go-website/zh-cn/index.html"><img class="logo" src="/dubbo-go-website/img/dubbo_colorful.png"/></a><div class="search search-normal"><span class="icon-search"></span></div><span class="language-switch language-switch-normal">En</span><div class="header-menu"><img class="header-menu-toggle" src="/dubbo-go-website/img/menu_gray.png"/><ul><li class="menu-item menu-item-normal"><a href="/dubbo-go-website/zh-cn/index.html">首页</a></li><li class="menu-item menu-item-normal menu-item-normal-active"><a href="/dubbo-go-website/zh-cn/docs/user/quick-start.html">文档</a></li><li class="menu-item menu-item-normal"><a href="/dubbo-go-website/zh-cn/blog/index.html">博客</a></li><li class="menu-item menu-item-normal"><a href="/dubbo-go-website/zh-cn/community/index.html">社区</a></li><li class="menu-item menu-item-normal"><a href="/dubbo-go-website/zh-cn/blog/download.html">下载</a></li><li class="menu-item menu-item-normal"><a href="https://dubbo.apache.org/zh-cn/index.html">Java</a></li></ul></div></div></header><div class="bar"><div class="bar-body"><img src="/dubbo-go-website/img/docs.png" class="front-img"/><span>文档</span><img src="/dubbo-go-website/img/docs.png" class="back-img"/></div></div><section class="content-section"><div class="sidemenu"><div class="sidemenu-toggle"><img src="https://img.alicdn.com/tfs/TB1E6apXHGYBuNjy0FoXXciBFXa-200-200.png"/></div><ul><li class="menu-item menu-item-level-1"><span>用户指南</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><span>入门<img style="transform:rotate(-90deg)" class="menu-toggle" src="/dubbo-go-website/img/arrow_down.png"/></span><ul><li class="menu-item menu-item-level-3"><a href="/dubbo-go-website/zh-cn/docs/user/preface/architecture.html" target="_self">架构</a></li></ul></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/dubbo-go-website/zh-cn/docs/user/quick-start.html" target="_self">快速启动</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><span>配置<img style="transform:rotate(-90deg)" class="menu-toggle" src="/dubbo-go-website/img/arrow_down.png"/></span><ul><li class="menu-item menu-item-level-3"><a href="/dubbo-go-website/zh-cn/docs/user/configuration/provider.html" target="_self">提供者</a></li></ul></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><span>注册中心参考手册<img style="transform:rotate(-90deg)" class="menu-toggle" src="/dubbo-go-website/img/arrow_down.png"/></span><ul><li class="menu-item menu-item-level-3"><a href="/dubbo-go-website/zh-cn/docs/user/registry/introduction.html" target="_self">介绍</a></li><li class="menu-item menu-item-level-3"><a href="/dubbo-go-website/zh-cn/docs/user/registry/zookeeper.html" target="_self">Zookeeper 注册中心</a></li><li class="menu-item menu-item-level-3"><a href="/dubbo-go-website/zh-cn/docs/user/registry/nacos.html" target="_self">Nacos 注册中心</a></li><li class="menu-item menu-item-level-3"><a href="/dubbo-go-website/zh-cn/docs/user/registry/consul.html" target="_self">Consul 注册中心</a></li><li class="menu-item menu-item-level-3"><a href="/dubbo-go-website/zh-cn/docs/user/registry/etcdv3.html" target="_self">Etcdv3 注册中心</a></li></ul></li></ul></li><li class="menu-item menu-item-level-1"><span>开发者指南</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/dubbo-go-website/zh-cn/docs/developer/design.html" target="_self">框架设计</a></li></ul></li><li class="menu-item menu-item-level-1"><span>源码导读</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/dubbo-go-website/zh-cn/docs/source_code/extension.html" target="_self">拓展点</a></li></ul></li></ul></div><div class="doc-content markdown-body"><h1><a href="https://blog.csdn.net/weixin_39860915/article/details/104548947">dubbo-go 中如何实现远程配置管理？</a></h1>
+<p>2020-02-27 20:00:00</p>
+<p>之前在 Apache/dubbo-go（以下简称 dubbo-go ）社区中，有同学希望配置文件不仅可以放于本地，还可以放于配置管理中心里。那么，放在本地和配置管理中心究竟有哪些不一样呢？</p>
+<p>放在本地，每次更新需要重启，配置文件管理困难，无法做到实时更新即刻生效。此外，本地文件还依赖人工版本控制，在微服务的场景下，大大的增加了运维的成本与难度。</p>
+<p>而配置管理中心提供了统一的配置文件管理，支持文件更新、实时同步、统一版本控制、权限管理等功能。</p>
+<h1><strong>目标</strong></h1>
+<hr>
+<p>基于以上几个背景，可以总结出以下<strong>目标</strong></p>
+<ul>
+<li>
+<p>与 Dubbo 现有的配置中心内的配置文件兼容，降低新增语言栈的学习成本；</p>
+</li>
+<li>
+<p>支持多种配置文件格式；</p>
+</li>
+<li>
+<p>支持主流配置中心，适应不一样的使用场景，实现高扩展的配置下发；</p>
+</li>
+</ul>
+<h1><strong>配置中心</strong></h1>
+<hr>
+<p>配置中心在 dubbo-go 中主要承担以下场景的职责：</p>
+<p>1、作为外部化配置中心，即存储 dubbo.properties 配置文件，此时，key 值通常为文件名如 dubbo.properties , value 则为配置文件内容。</p>
+<p>2、存储单个配置项，如各种开关项、常量值等。</p>
+<p>3、存储服务治理规则，此时 key 通常按照 “服务名 + 规则类型” 的格式来组织，而 value 则为具体的治理规则。</p>
+<p>就目前而言，dubbo-go 首要支持的是 Dubbo 中支持的开源配置中心，包括：</p>
+<p>1、Apollo ：携程框架部门研发的分布式配置中心，能够集中化管理应用不同环境、不同集群的配置，配置修改后能够实时推送到应用端，并且具备规范的权限、流程治理等特性，适用于微服务配置管理场景。</p>
+<p>2、ZooKeeper ：一个分布式的，开放源码的分布式应用程序协调服务，是 Google 的 Chubby 一个开源的实现，是 Hadoop 和 Hbase 的重要组件。它是一个为分布式应用提供一致性服务的软件，提供的功能包括：配置维护、域名服务、分布式同步、组服务等。</p>
+<p>3、Nacos : Alibaba 开源的配置管理组件，提供了一组简单易用的特性集，帮助您实现动态服务发现、服务配置管理、服务及流量管理。</p>
+<p>而考虑到某些公司内部有自身的研发的配置中心，又或者当前流行而 Dubbo 尚未支持的配置中心，如 etcd，我们的核心在于设计一套机制，允许我们，也包括用户，可以通过扩展接口新的实现，来快速接入不同的配置中心。</p>
+<p>那在 dubbo-go 中究竟怎么实现呢？我们的答案是：<strong>基于动态的插件机制在启动时按需加载配置中心的不同实现。</strong></p>
+<p>实现该部分功能放置于一个独立的子项目中，见：</p>
+<p><em><a href="https://github.com/apache/dubbo-go/tree/master/config_center">https://github.com/apache/dubbo-go/tree/master/config_center</a></em></p>
+<h2><strong>dubbo-go 设计</strong></h2>
+<p>原逻辑为：启动时读取本地配置文件，将其加载进内存，通过配置文件中的配置读取注册中心的信息获取服务提供者，注册服务消费者。</p>
+<p>有些读者会有点困惑，不是说好了使用配置中心的，为什么现在又要读取本地配置呢？答案就是，读取的这部分信息分成两部分：</p>
+<ul>
+<li>
+<p>使用什么作为配置中心；</p>
+</li>
+<li>
+<p>该配置中心的元数据，比如说使用 zookeeper 作为配置中心，那么 zookeeper 的链接信息就是元数据，毕竟我们只有在知道了链接信息之后才能连上 zookeeper；</p>
+</li>
+</ul>
+<p>在改造的时候，需要考虑以下的问题：</p>
+<p><strong>1、如何实现支持多个配置中心？如何实现按需加载？</strong></p>
+<p>通过抽象 DynamicConfiguration 让开发者可以快速支持多个配置中心。使用者导入指定的组件包后，在启动阶段将需要的组件加载进内存中，以便给程序按需调用，如下图绿色部分。</p>
+<p><strong>2、配置中心的配置加载阶段在什么时候？</strong></p>
+<p>应在读取配置文件阶段后，读取并解析本地配置文件中配置中心信息。初始化配置中心链接，读取 /dubbo/config/dubbo/dubbo.properties 与 /dubbo/config/dubbo/应用名/dubbo.properties ，并将其加载到内存之中覆盖原有配置，监听其变更，实时更新至内存，如下图蓝色部分:</p>
+<p><img src="../../pic/config-center/how-to-implement-remote-configuration-management-in-dubbo-go-a.jpg" alt="" title="configcenter-class.jpg"></p>
+<h3><strong>ConfigCenterFactory</strong></h3>
+<p>使用者加载对应配置中心模块后，在初始化阶段加入各配置中心模块往其中注册其初始化类。</p>
+<p><img src="../../pic/config-center/how-to-implement-remote-configuration-management-in-dubbo-go-b.png" alt="" title="configCenterFactory.png"></p>
+<h3><strong>DynamicConfigurationFactory</strong></h3>
+<p>整个动态配置中心的关键点就在 DynamicConfigurationFactory 上，其中通过解析内部自定义的 URL ，获取其协议类型，反射其参数，用于创建配置中心的链接。</p>
+<p><img src="../../pic/config-center/how-to-implement-remote-configuration-management-in-dubbo-go-c.png" alt="" title="configurationFactory.png"></p>
+<p>如：</p>
+<p>配置文件中配置：</p>
+<pre><code class="language-css"><span class="hljs-selector-tag">config_center</span>:
+  <span class="hljs-selector-tag">protocol</span>: <span class="hljs-selector-tag">zookeeper</span>
+  <span class="hljs-selector-tag">address</span>: 127<span class="hljs-selector-class">.0</span><span class="hljs-selector-class">.0</span><span class="hljs-selector-class">.1</span><span class="hljs-selector-pseudo">:2181</span>
+  <span class="hljs-selector-tag">namespace</span>: <span class="hljs-selector-tag">test</span>
+</code></pre>
+<p>dubbo-go 内部会解析为：</p>
+<pre><code class="language-javascript">zookeeper:<span class="hljs-comment">//127.0.0.1:2181?namespace=test</span>
+</code></pre>
+<p>在内部传递，用于初始化配置中心链接。</p>
+<p>**PS：**在 dubbo-go 中到处可见这种内部协议，透彻理解这个内部协议对阅读 dubbo-go 代码很有帮助。</p>
+<h3><strong>DynamicConfiguration</strong></h3>
+<p>该接口规定了各个配置中心需要实现的功能：</p>
+<ul>
+<li>
+<p>配置数据反序列化方式：目前只有 Properties 转换器，参见：DefaultConfigurationParser 。</p>
+</li>
+<li>
+<p>增加监听器：用于增加监听数据变化后增加特定逻辑（受限于配置中心 client 端实现）。</p>
+</li>
+<li>
+<p>删除监听器：删除已有监听器（受限于配置中心 client 端实现，目前所知 nacos client 没有提供该方法）。</p>
+</li>
+<li>
+<p>获取路由配置：获取路由表配置。</p>
+</li>
+<li>
+<p>获取应用级配置：获取应用层级配置，如：协议类型配置等。</p>
+</li>
+</ul>
+<p><img src="../../pic/config-center/how-to-implement-remote-configuration-management-in-dubbo-go-d.png" alt="" title="dynamicConfiguration.png"></p>
+<h2><strong>实现</strong></h2>
+<hr>
+<p><img src="../../pic/config-center/how-to-implement-remote-configuration-management-in-dubbo-go-e.png" alt="" title="design.jpg"></p>
+<p>优先考虑与现有 Dubbo 设计兼容，从而降低使用者的学习成本，dubbo-admin 作为服务提供者实现应用级配置管理， dubbo-go 作为消费端实现配置下发管理功能。下面以 ZooKeeper 为例，对服务提供者与服务消费者进行整体流程分析。</p>
+<h3><strong>如何存储配置管理</strong></h3>
+<p>dubbo-admin 配置管理中增加 global 配置，ZooKeeper 中会自动生成其对应配置节点，内容均为 dubbo-admin 中设置的配置。</p>
+<p>1、/dubbo/config/dubbo/dubbo.properties 对应全局配置文件。</p>
+<p>2、/dubbo/config/dubbo/ 应用名 /dubbo.properties 对应指定应用配置文件。</p>
+<h4><strong>节点路径</strong></h4>
+<h4><img src="../../pic/config-center/how-to-implement-remote-configuration-management-in-dubbo-go-f.png" alt="" title="key-struct.jpg"></h4>
+<p>上图展示了 dubbo.properties 文件在 ZooKeeper 和 Apollo 中的存储结构：</p>
+<p><strong>ZooKeeper</strong></p>
+<ul>
+<li>
+<p>命名空间 namespace 都为：Dubbo</p>
+</li>
+<li>
+<p>分组 group ：全局级别为 dubbo , 所有应用共享；应用级别为应用名 demo-provider ，只对该应用生效</p>
+</li>
+<li>
+<p>key : dubbo.properties</p>
+</li>
+</ul>
+<p><strong>Apollo</strong></p>
+<ul>
+<li>
+<p>app_id : 自由指定，默认：dubbo ，最好与 zookeeper  namespace 一致</p>
+</li>
+<li>
+<p>cluster : 自由指定，最好与 zookeeper group 一致</p>
+</li>
+<li>
+<p>命名空间 namespace : dubbo.properties</p>
+</li>
+</ul>
+<p>ZooKeeper 与 Apollo 最大的不一样就在于 dubbo.properties 所在的节点。</p>
+<h3><strong>实现配置管理中心支持</strong></h3>
+<p>以 Apollo 为例，简单的介绍，如何实现支持一个新的配置管理中心。</p>
+<h4><strong>选择配置管理中心 Client / SDK</strong></h4>
+<p>本例中使用的 Apollo Go Client 为：<a href="https://github.com/zouyx/agollo">https://github.com/zouyx/agollo</a> 。</p>
+<p><strong>PS:</strong> 如没找到，自己实现也是可以的哦。</p>
+<h4><strong>节点路径</strong></h4>
+<p>因为每个配置管理中心的存储结构各有特点，导致 Dubbo 在使用外部配置管理中心时，存储配置节点的结构不一样。在 dubbo-configcenter 找到希望支持的配置管理中心，而本例中 Apollo 则在 ApolloDynamicConfiguration.java 。</p>
+<p>注释中表明，Apollo namespace = governance (governance .properties) 用于治理规则，namespace = dubbo (dubbo.properties) 用于配置文件。</p>
+<h4><strong>实现 DynamicConfiguration</strong></h4>
+<p>新建创建客户端方法，最好客户端保持为单例。</p>
+<p><img src="../../pic/config-center/how-to-implement-remote-configuration-management-in-dubbo-go-g.png" alt="" title="image.png"></p>
+<p>以下为必须实现的方法，以下方法用于获取配置中心配置。</p>
+<ul>
+<li>
+<p>GetInternalProperty：在配置文件（Apollo 为 namespace）中，根据 key 获取对应 value；</p>
+</li>
+<li>
+<p>GetRule：获取治理配置文件（Apollo 为 namespace）；</p>
+</li>
+<li>
+<p>GetProperties：获取整个配置文件（Apollo 为 namespace）；</p>
+</li>
+</ul>
+<p>可选择实现的方法，如不实现，则不能动态更新 dubbo-go 中配置信息。</p>
+<ul>
+<li>
+<p>RemoveListener</p>
+</li>
+<li>
+<p>AddListener</p>
+</li>
+</ul>
+<p>而 Parser &amp; SetParser 使用默认实现即可，默认为 Properties 转换器。</p>
+<p>更多信息，参考：dubbo-go-apollo ，详情参考：</p>
+<p><em><a href="https://github.com/apache/dubbo-go/tree/master/config_center/apollo">https://github.com/apache/dubbo-go/tree/master/config_center/apollo</a></em></p>
+<h2><strong>使用方法</strong></h2>
+<p>从上面的设计里面，也能大概猜到怎么使用了：</p>
+<p><img src="../../pic/config-center/how-to-implement-remote-configuration-management-in-dubbo-go-h.png" alt="" title="zookeeper-usercase.png"></p>
+<p>很显然，使用配置中心并不复杂，只需要把对应的依赖引入进来。在包初始化的时候，会创建出来对应的配置中心的实现。比如说加载 ZooKeeper 或者 Apollo 作为配置中心：</p>
+<p><strong>ZooKeeper</strong></p>
+<pre><code class="language-nginx"><span class="hljs-attribute">_</span> <span class="hljs-string">"github.com/apache/dubbo-go/config_center/zookeeper"</span>
+</code></pre>
+<p><strong>Apollo</strong></p>
+<pre><code class="language-nginx"><span class="hljs-attribute">_</span> <span class="hljs-string">"github.com/apache/dubbo-go/config_center/apollo"</span>
+</code></pre>
+<p>当然仅仅加载还不够，比如说虽然我加载了 zookeeper，但是我还需要知道怎么连上这个配置中心，即前面提到的配置中心的元数据，这部分信息是需要在本地配置出来的。比如说：</p>
+<p><strong>ZooKeeper</strong></p>
+<pre><code class="language-css"><span class="hljs-selector-tag">config_center</span>:
+  <span class="hljs-selector-tag">protocol</span>: "<span class="hljs-selector-tag">zookeeper</span>"
+  <span class="hljs-selector-tag">address</span>: "127<span class="hljs-selector-class">.0</span><span class="hljs-selector-class">.0</span><span class="hljs-selector-class">.1</span><span class="hljs-selector-pseudo">:2181"</span>
+</code></pre>
+<p><strong>Apollo</strong></p>
+<p>如果需要使用 Apollo 作为配置中心，请提前创建 namespace: dubbo.properties，用于配置管理。</p>
+<pre><code class="language-properties"><span class="hljs-attr">config_center</span>:<span class="hljs-string"></span>
+  <span class="hljs-attr">protocol</span>: <span class="hljs-string">"apollo"</span>
+  <span class="hljs-attr">address</span>: <span class="hljs-string">"127.0.0.1:8070"</span>
+  <span class="hljs-attr">app_id</span>: <span class="hljs-string">test_app</span>
+  <span class="hljs-attr">cluster</span>: <span class="hljs-string">dev</span>
+</code></pre>
+<h1><strong>总结</strong></h1>
+<hr>
+<p>更加具体的实现，我就不详细论述，大家可以去看源码，欢迎大家持续关注，或者贡献代码。</p>
+<p>整个配置中心的功能，麻雀虽小，但五脏俱全。目前并不算是十分完善，但是整个框架层面上来说，是走在了正确的路上。从扩展性来说，是比较便利。目前支持的配置中心还不够丰富，只有 ZooKeeper 与 Apollo ，支持的配置文件格式也只有 properties ，虽然能满足基本使用场景，距离完善还有还长远的路。</p>
+<p><strong>未来计划：</strong></p>
+<ul>
+<li>
+<p>Nacos（等待发布 ）</p>
+</li>
+<li>
+<p>etcd（正在开发）</p>
+</li>
+<li>
+<p>consul（未支持）</p>
+</li>
+<li>
+<p>丰富的文件配置格式，如：yml , xml 等</p>
+</li>
+</ul>
+<p>**本文作者：**邹毅贤，Github ID @zouyx，开源爱好者，就职于 SheIn 供应链部门，负责供应链开放平台。</p>
+<p>本文缩略图：icon by 用户7388492991</p>
+</div></section><footer class="footer-container"><div class="footer-body"><img src="/dubbo-go-website/img/dubbo_gray.png"/><img class="apache" src="/dubbo-go-website/img/apache_logo.png"/><div class="cols-container"><div class="col col-12"><h3></h3><p></p></div><div class="col col-4"><dl><dt>ASF</dt><dd><a href="http://www.apache.org" target="_self">基金会</a></dd><dd><a href="http://www.apache.org/licenses/" target="_self">证书</a></dd><dd><a href="http://www.apache.org/events/current-event" target="_self">事件</a></dd><dd><a href="http://www.apache.org/foundation/sponsorship.html" target="_self">赞助</a></dd><dd><a href="http://www.apache.org/foundation/thanks.html" target="_self">致谢</a></dd></dl></div><div class="col col-4"><dl><dt>文档</dt><dd><a href="/dubbo-go-website/zh-cn/docs/user/quick-start.html" target="_self">快速开始</a></dd><dd><a href="/dubbo-go-website/zh-cn/docs/dev/build.html" target="_self">开发者指南</a></dd><dd><a href="/dubbo-go-website/zh-cn/docs/admin/ops/dubbo-ops.html" target="_self">运维管理</a></dd><dd><a href="https://github.com/dubbogo/dubbo-go-website/issues/new" target="_self">报告文档问题</a></dd><dd><a href="https://github.com/dubbogo/dubbo-go-website" target="_self">编辑此文档</a></dd></dl></div><div class="col col-4"><dl><dt>资源</dt><dd><a href="/dubbo-go-website/zh-cn/blog/index.html" target="_self">博客</a></dd><dd><a href="/dubbo-go-website/zh-cn/community/index.html" target="_self">社区</a></dd><dd><a href="https://www.apache.org/security" target="_self">安全</a></dd></dl></div></div><div class="copyright"><span>Copyright © 2018-2020 The Apache Software Foundation. Apache and the Apache feather logo are trademarks of The Apache Software Foundation.</span></div></div></footer></div></div>
+	<script src="https://f.alicdn.com/react/15.4.1/react-with-addons.min.js"></script>
+	<script src="https://f.alicdn.com/react/15.4.1/react-dom.min.js"></script>
+	<script>
+		window.rootPath = '/dubbo-go-website';
+  </script>
+  <script src="/dubbo-go-website/build/documentation.js"></script>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-112489517-1"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+
+		gtag('config', 'UA-112489517-1');
+	</script>
+</body>
+</html>

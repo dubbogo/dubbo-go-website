@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta name="keywords" content="mosn-performance-optimization" />
+	<meta name="description" content="mosn-performance-optimization" />
+	<!-- 网页标签标题 -->
+	<title>mosn-performance-optimization</title>
+	<link rel="shortcut icon" href="/dubbo-go-website/img/dubbo.ico"/>
+	<link rel="stylesheet" href="/dubbo-go-website/build/documentation.css" />
+</head>
+<body>
+	<div id="root"><div class="documentation-page" data-reactroot=""><header class="header-container header-container-normal"><div class="header-body"><a href="/dubbo-go-website/zh-cn/index.html"><img class="logo" src="/dubbo-go-website/img/dubbo_colorful.png"/></a><div class="search search-normal"><span class="icon-search"></span></div><span class="language-switch language-switch-normal">En</span><div class="header-menu"><img class="header-menu-toggle" src="/dubbo-go-website/img/menu_gray.png"/><ul><li class="menu-item menu-item-normal"><a href="/dubbo-go-website/zh-cn/index.html">首页</a></li><li class="menu-item menu-item-normal menu-item-normal-active"><a href="/dubbo-go-website/zh-cn/docs/user/quick-start.html">文档</a></li><li class="menu-item menu-item-normal"><a href="/dubbo-go-website/zh-cn/blog/index.html">博客</a></li><li class="menu-item menu-item-normal"><a href="/dubbo-go-website/zh-cn/community/index.html">社区</a></li><li class="menu-item menu-item-normal"><a href="/dubbo-go-website/zh-cn/blog/download.html">下载</a></li><li class="menu-item menu-item-normal"><a href="https://dubbo.apache.org/zh-cn/index.html">Java</a></li></ul></div></div></header><div class="bar"><div class="bar-body"><img src="/dubbo-go-website/img/docs.png" class="front-img"/><span>文档</span><img src="/dubbo-go-website/img/docs.png" class="back-img"/></div></div><section class="content-section"><div class="sidemenu"><div class="sidemenu-toggle"><img src="https://img.alicdn.com/tfs/TB1E6apXHGYBuNjy0FoXXciBFXa-200-200.png"/></div><ul><li class="menu-item menu-item-level-1"><span>用户指南</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><span>入门<img style="transform:rotate(-90deg)" class="menu-toggle" src="/dubbo-go-website/img/arrow_down.png"/></span><ul><li class="menu-item menu-item-level-3"><a href="/dubbo-go-website/zh-cn/docs/user/preface/architecture.html" target="_self">架构</a></li></ul></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/dubbo-go-website/zh-cn/docs/user/quick-start.html" target="_self">快速启动</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><span>配置<img style="transform:rotate(-90deg)" class="menu-toggle" src="/dubbo-go-website/img/arrow_down.png"/></span><ul><li class="menu-item menu-item-level-3"><a href="/dubbo-go-website/zh-cn/docs/user/configuration/provider.html" target="_self">提供者</a></li></ul></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><span>注册中心参考手册<img style="transform:rotate(-90deg)" class="menu-toggle" src="/dubbo-go-website/img/arrow_down.png"/></span><ul><li class="menu-item menu-item-level-3"><a href="/dubbo-go-website/zh-cn/docs/user/registry/introduction.html" target="_self">介绍</a></li><li class="menu-item menu-item-level-3"><a href="/dubbo-go-website/zh-cn/docs/user/registry/zookeeper.html" target="_self">Zookeeper 注册中心</a></li><li class="menu-item menu-item-level-3"><a href="/dubbo-go-website/zh-cn/docs/user/registry/nacos.html" target="_self">Nacos 注册中心</a></li><li class="menu-item menu-item-level-3"><a href="/dubbo-go-website/zh-cn/docs/user/registry/consul.html" target="_self">Consul 注册中心</a></li><li class="menu-item menu-item-level-3"><a href="/dubbo-go-website/zh-cn/docs/user/registry/etcdv3.html" target="_self">Etcdv3 注册中心</a></li></ul></li></ul></li><li class="menu-item menu-item-level-1"><span>开发者指南</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/dubbo-go-website/zh-cn/docs/developer/design.html" target="_self">框架设计</a></li></ul></li><li class="menu-item menu-item-level-1"><span>源码导读</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/dubbo-go-website/zh-cn/docs/source_code/extension.html" target="_self">拓展点</a></li></ul></li></ul></div><div class="doc-content markdown-body"><h1><a href="https://gocn.vip/topics/10492">记一次在 mosn 对 dubbo、dubbo-go-hessian2 的性能优化</a></h1>
+<h3>背景</h3>
+<p>蚂蚁内部对 Service Mesh 的稳定性和性能要求是比较高的，内部 mosn 广泛用于生产环境。在云上和开源社区，RPC 领域 dubbo 和 spring cloud 同样广泛用于生产环境，我们在 mosn 基础上，支持了 dubbo 和 spring cloud 流量代理。我们发现在支持 dubbo 协议过程中，经过 Mesh 流量代理后，性能有非常大的性能损耗，在大商户落地 Mesh 中也对性能有较高要求，因此本文会重点描述在基于 Go 语言库 <a href="https://github.com/apache/dubbo-go-hessian2">dubbo-go-hessian2</a> 、dubbo 协议中对 <a href="https://github.com/mosn/mosn">mosn</a> 所做的性能优化。</p>
+<h3>性能优化概述</h3>
+<p>根据实际业务部署场景，并没有选用高性能机器，使用普通 linux 机器，配置和压测参数如下：</p>
+<ul>
+<li>Intel(R) Xeon(R) Platinum 8163 CPU @ 2.50GHz 4 核 16G 。</li>
+<li>pod 配置 <code>2c、1g</code>，JVM 参数 <code>-server -Xms1024m -Xmx1024m</code>。</li>
+<li>网络延迟 0.23 ms, 2 台 linux 机器，分别部署 server + mosn, 压测程序 <a href="https://github.com/zonghaishang/rpc-performance">rpc-perfomance</a>。</li>
+</ul>
+<p>经过 3 轮性能优化后，使用优化版本 mosn 将会获得以下性能收益（框架随机 512 和 1k 字节压测）：</p>
+<ul>
+<li>512 字节数据：mosn + dubbo 服务调用 TPS 整体提升 55-82.8%，RT 降低 45% 左右，内存占用 40M，</li>
+<li>1k 数据：mosn + dubbo 服务调用 TPS 整体提升 51.1-69.3%，RT 降低 41%左右, 内存占用 41M。</li>
+</ul>
+<h3>性能优化工具 pprof</h3>
+<p>磨刀不误砍柴工，在性能优化前首先要找到性能卡点，找到性能卡点后，另一个难点就是如何用高效代码优化替代 slow code。因为蚂蚁 Service Mesh 是基于 go 语言实现的，我们首选 go 自带的 pprof 性能工具，我们简要介绍这个工具如何使用。如果我们 go 库自带 http.Server 时并且在 main 头部导入<code>import _ &quot;net/http/pprof&quot;</code>，go 会帮我们挂载对应的 handler , 详细可以参考 <a href="https://pkg.go.dev/net/http/pprof?tab=doc">godoc</a> 。</p>
+<p>因为 mosn 默认会在<code>34902</code>端口暴露 http 服务，通过以下命令轻松获取 mosn 的性能诊断文件：</p>
+<pre><code>go tool pprof -seconds 60 http://benchmark-server-ip:34902/debug/pprof/profile
+# 会生成类似以下文件，该命令采样cpu 60秒
+# pprof.mosn.samples.cpu.001.pb.gz
+</code></pre>
+<p>然后继续用 pprof 打开诊断文件，方便在浏览器查看，在图 1-1 给出压测后 profiler 火焰图：</p>
+<pre><code># http=:8000代表pprof打开8000端口然后用于web浏览器分析
+# mosnd代表mosn的二进制可执行文件，用于分析代码符号
+# pprof.mosn.samples.cpu.001.pb.gz是cpu诊断文件
+go tool pprof -http=:8000 mosnd pprof.mosn.samples.cpu.001.pb.gz
+</code></pre>
+<p><img src="../../pic/hessian2/mosn-performance-optimization-1.png" alt="mosn性能诊断火焰图"></p>
+<center>图 1-1 mosn 性能压测火焰图</center>
+<p>在获得诊断数据后，可以切到浏览器 Flame Graph（火焰图，go 1.11 以上版本自带），火焰图的 x 轴坐标代表 CPU 消耗情况， y 轴代码方法调用堆栈。在优化开始之前，我们借助 go 工具 pprof 可以诊断出大致的性能卡点在以下几个方面（直接压 server 端 mosn）：</p>
+<ul>
+<li>mosn 在接收 dubbo 请求，CPU 卡点在 streamConnection.Dispatch</li>
+<li>mosn 在转发 dubbo 请求，CPU 卡点在 downStream.Receive</li>
+</ul>
+<p>可以点击火焰图任意横条，进去查看长方块耗时和堆栈明细（请参考图 1-2 和 1-3 所示）：</p>
+<p><img src="../../pic/hessian2/mosn-performance-optimization-2.png" alt="1-2">)</p>
+<center>图 1-2 Dispatch 火焰图明细 </center>
+<p><img src="../../pic/hessian2/mosn-performance-optimization-3.png" alt="1-3"></p>
+<center>图 1-3 Receive 火焰图明细 </center>
+<h3>性能优化思路</h3>
+<p>本文重点记录优化了哪些 case 才能提升 50%以上的吞吐量和降低 RT，因此后面直接分析当前优化了哪些 case。在此之前，我们以 Dispatch 为例，看下它为甚么那么吃性能 。在 terminal 中通过以下命令可以查看代码行耗费 CPU 数据（代码有删减）：</p>
+<pre><code class="language-go"><span class="hljs-keyword">go</span> tool pprof mosnd pprof.mosn.samples.cpu<span class="hljs-number">.001</span>.pb.gz
+(pprof) list Dispatch
+Total: <span class="hljs-number">1.75</span>mins
+     <span class="hljs-number">370</span>ms     <span class="hljs-number">37.15</span>s (flat, cum) <span class="hljs-number">35.46</span>% of Total
+      <span class="hljs-number">10</span>ms       <span class="hljs-number">10</span>ms    <span class="hljs-number">123</span>:<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(conn *streamConnection)</span> <span class="hljs-title">Dispatch</span><span class="hljs-params">(buffer types.IoBuffer)</span></span> {
+      <span class="hljs-number">40</span>ms      <span class="hljs-number">630</span>ms    <span class="hljs-number">125</span>:	log.DefaultLogger.Tracef(<span class="hljs-string">"stream connection dispatch data string = %v"</span>, buffer.String())
+         .          .    <span class="hljs-number">126</span>:
+         .          .    <span class="hljs-number">127</span>:	<span class="hljs-comment">// get sub protocol codec</span>
+         .      <span class="hljs-number">250</span>ms    <span class="hljs-number">128</span>:	requestList := conn.codec.SplitFrame(buffer.Bytes())
+      <span class="hljs-number">20</span>ms       <span class="hljs-number">20</span>ms    <span class="hljs-number">129</span>:	<span class="hljs-keyword">for</span> _, request := <span class="hljs-keyword">range</span> requestList {
+      <span class="hljs-number">10</span>ms      <span class="hljs-number">160</span>ms    <span class="hljs-number">134</span>:		headers := <span class="hljs-built_in">make</span>(<span class="hljs-keyword">map</span>[<span class="hljs-keyword">string</span>]<span class="hljs-keyword">string</span>)
+         .          .    <span class="hljs-number">135</span>:		<span class="hljs-comment">// support dynamic route</span>
+      <span class="hljs-number">50</span>ms      <span class="hljs-number">920</span>ms    <span class="hljs-number">136</span>:		headers[strings.ToLower(protocol.MosnHeaderHostKey)] = conn.connection.RemoteAddr().String()
+         .          .    <span class="hljs-number">149</span>:
+         .          .    <span class="hljs-number">150</span>:		<span class="hljs-comment">// get stream id</span>
+      <span class="hljs-number">10</span>ms      <span class="hljs-number">440</span>ms    <span class="hljs-number">151</span>:		streamID := conn.codec.GetStreamID(request)
+         .          .    <span class="hljs-number">156</span>:		<span class="hljs-comment">// request route</span>
+         .       <span class="hljs-number">50</span>ms    <span class="hljs-number">157</span>:		requestRouteCodec, ok := conn.codec.(xprotocol.RequestRouting)
+         .          .    <span class="hljs-number">158</span>:		<span class="hljs-keyword">if</span> ok {
+         .     <span class="hljs-number">20.11</span>s    <span class="hljs-number">159</span>:			routeHeaders := requestRouteCodec.GetMetas(request)
+         .          .    <span class="hljs-number">165</span>:		}
+         .          .    <span class="hljs-number">166</span>:
+         .          .    <span class="hljs-number">167</span>:		<span class="hljs-comment">// tracing</span>
+      <span class="hljs-number">10</span>ms       <span class="hljs-number">80</span>ms    <span class="hljs-number">168</span>:		tracingCodec, ok := conn.codec.(xprotocol.Tracing)
+         .          .    <span class="hljs-number">169</span>:		<span class="hljs-keyword">var</span> span types.Span
+         .          .    <span class="hljs-number">170</span>:		<span class="hljs-keyword">if</span> ok {
+      <span class="hljs-number">10</span>ms      <span class="hljs-number">1.91</span>s    <span class="hljs-number">171</span>:			serviceName := tracingCodec.GetServiceName(request)
+         .      <span class="hljs-number">2.17</span>s    <span class="hljs-number">172</span>:			methodName := tracingCodec.GetMethodName(request)
+         .          .    <span class="hljs-number">176</span>:
+         .          .    <span class="hljs-number">177</span>:			<span class="hljs-keyword">if</span> trace.IsEnabled() {
+         .       <span class="hljs-number">50</span>ms    <span class="hljs-number">179</span>:				tracer := trace.Tracer(protocol.Xprotocol)
+         .          .    <span class="hljs-number">180</span>:				<span class="hljs-keyword">if</span> tracer != <span class="hljs-literal">nil</span> {
+      <span class="hljs-number">20</span>ms      <span class="hljs-number">1.66</span>s    <span class="hljs-number">181</span>:					span = tracer.Start(conn.context, headers, time.Now())
+         .          .    <span class="hljs-number">182</span>:				}
+         .          .    <span class="hljs-number">183</span>:			}
+         .          .    <span class="hljs-number">184</span>:		}
+         .          .    <span class="hljs-number">185</span>:
+         .      <span class="hljs-number">110</span>ms    <span class="hljs-number">186</span>:		reqBuf := networkbuffer.NewIoBufferBytes(request)
+         .          .    <span class="hljs-number">188</span>:		<span class="hljs-comment">// append sub protocol header</span>
+      <span class="hljs-number">10</span>ms      <span class="hljs-number">950</span>ms    <span class="hljs-number">189</span>:		headers[types.HeaderXprotocolSubProtocol] = <span class="hljs-keyword">string</span>(conn.subProtocol)
+      <span class="hljs-number">10</span>ms      <span class="hljs-number">4.96</span>s    <span class="hljs-number">190</span>:		conn.OnReceive(ctx, streamID, protocol.CommonHeader(headers), reqBuf, span, isHearbeat)
+      <span class="hljs-number">30</span>ms       <span class="hljs-number">60</span>ms    <span class="hljs-number">191</span>:		buffer.Drain(requestLen)
+         .          .    <span class="hljs-number">192</span>:	}
+         .          .    <span class="hljs-number">193</span>:}
+</code></pre>
+<p>通过上面 <code>list Dispatch</code> 命令，性能卡点主要分布在 <code>159</code> 、 <code>171</code> 、<code>172</code> 、 <code>181</code> 、和 <code>190</code> 等行，主要卡点在解码 dubbo 参数、重复解参数、tracer、发序列化和 log 等。</p>
+<h4>1. 优化 dubbo 解码 GetMetas</h4>
+<p>我们通过解码 dubbo 的 body 可以获得以下信息，调用的目标接口（ interface ）和调用方法的服务分组（ group ）等信息，但是需要跳过所有业务方法参数，目前使用开源的 <a href="https://github.com/apache/dubbo-go-hessian2">dubbo-go-hessian2</a> 库，解析 string 和 map 性能较差, 提升 hessian 库解码性能，会在本文后面讲解。</p>
+<p><strong>优化思路：</strong></p>
+<p>在 mosn 的 ingress 端（ mosn 直接转发请求给本地 java server 进程）, 我们根据请求的 path 和 version 窥探用户使用的 interface 和 group , 构建正确的 dataID 可以进行无脑转发，无需解码 body，榨取性能提升。</p>
+<p>我们可以在服务注册时，构建服务发布的 path 、version 和 group 到 interface 、group 映射。在 mosn 转发 dubbo 请求时可以通过读锁查 cache + 跳过解码 body，加速 mosn 性能。</p>
+<p>因此我们构建以下 cache 实现（数组 + 链表数据结构）, 可参见 <a href="https://github.com/mosn/mosn/pull/1174/commits/9020ee9995cd15a7a4321a375a9506cf94dc70a8#diff-f5ff30debd68b8318c8236a0b5ccde07R6">优化代码 diff</a> ：</p>
+<pre><code class="language-go"><span class="hljs-comment">// metadata.go</span>
+<span class="hljs-comment">// DubboPubMetadata dubbo pub cache metadata</span>
+<span class="hljs-keyword">var</span> DubboPubMetadata = &amp;Metadata{}
+
+<span class="hljs-comment">// DubboSubMetadata dubbo sub cache metadata</span>
+<span class="hljs-keyword">var</span> DubboSubMetadata = &amp;Metadata{}
+
+<span class="hljs-comment">// Metadata cache service pub or sub metadata.</span>
+<span class="hljs-comment">// speed up for decode or encode dubbo peformance.</span>
+<span class="hljs-comment">// please do not use outside of the dubbo framwork.</span>
+<span class="hljs-keyword">type</span> Metadata <span class="hljs-keyword">struct</span> {
+	data <span class="hljs-keyword">map</span>[<span class="hljs-keyword">string</span>]*Node
+	mu   sync.RWMutex <span class="hljs-comment">// protect data internal</span>
+}
+
+<span class="hljs-comment">// Find cached pub or sub metatada.</span>
+<span class="hljs-comment">// caller should be check match is true</span>
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(m *Metadata)</span> <span class="hljs-title">Find</span><span class="hljs-params">(path, version <span class="hljs-keyword">string</span>)</span> <span class="hljs-params">(node *Node, matched <span class="hljs-keyword">bool</span>)</span></span> {
+	<span class="hljs-comment">// we found nothing</span>
+	<span class="hljs-keyword">if</span> m.data == <span class="hljs-literal">nil</span> {
+		<span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span>, <span class="hljs-literal">false</span>
+	}
+
+	m.mu.RLocker().Lock()
+	<span class="hljs-comment">// for performance</span>
+	<span class="hljs-comment">// m.mu.RLocker().Unlock() should be called.</span>
+
+	<span class="hljs-comment">// we check head node first</span>
+	head := m.data[path]
+	<span class="hljs-keyword">if</span> head == <span class="hljs-literal">nil</span> || head.count &lt;= <span class="hljs-number">0</span> {
+		m.mu.RLocker().Unlock()
+		<span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span>, <span class="hljs-literal">false</span>
+	}
+
+	node = head.Next
+	<span class="hljs-comment">// just only once, just return</span>
+	<span class="hljs-comment">// for dubbo framwork, that's what we're expected.</span>
+	<span class="hljs-keyword">if</span> head.count == <span class="hljs-number">1</span> {
+		m.mu.RLocker().Unlock()
+		<span class="hljs-keyword">return</span> node, <span class="hljs-literal">true</span>
+	}
+
+	<span class="hljs-keyword">var</span> count <span class="hljs-keyword">int</span>
+	<span class="hljs-keyword">var</span> found *Node
+
+	<span class="hljs-keyword">for</span> ; node != <span class="hljs-literal">nil</span>; node = node.Next {
+		<span class="hljs-keyword">if</span> node.Version == version {
+			<span class="hljs-keyword">if</span> found == <span class="hljs-literal">nil</span> {
+				found = node
+			}
+			count++
+		}
+	}
+
+	m.mu.RLocker().Unlock()
+	<span class="hljs-keyword">return</span> found, count == <span class="hljs-number">1</span>
+}
+
+<span class="hljs-comment">// Register pub or sub metadata</span>
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(m *Metadata)</span> <span class="hljs-title">Register</span><span class="hljs-params">(path <span class="hljs-keyword">string</span>, node *Node)</span></span> {
+	m.mu.Lock()
+	<span class="hljs-comment">// for performance</span>
+	<span class="hljs-comment">// m.mu.Unlock() should be called.</span>
+
+	<span class="hljs-keyword">if</span> m.data == <span class="hljs-literal">nil</span> {
+		m.data = <span class="hljs-built_in">make</span>(<span class="hljs-keyword">map</span>[<span class="hljs-keyword">string</span>]*Node, <span class="hljs-number">4</span>)
+	}
+
+	<span class="hljs-comment">// we check head node first</span>
+	head := m.data[path]
+	<span class="hljs-keyword">if</span> head == <span class="hljs-literal">nil</span> {
+		head = &amp;Node{
+			count: <span class="hljs-number">1</span>,
+		}
+		<span class="hljs-comment">// update head</span>
+		m.data[path] = head
+	}
+
+	insert := &amp;Node{
+		Service: node.Service,
+		Version: node.Version,
+		Group:   node.Group,
+	}
+
+	next := head.Next
+	<span class="hljs-keyword">if</span> next == <span class="hljs-literal">nil</span> {
+		<span class="hljs-comment">// fist insert, just insert to head</span>
+		head.Next = insert
+		<span class="hljs-comment">// record last element</span>
+		head.last = insert
+		m.mu.Unlock()
+		<span class="hljs-keyword">return</span>
+	}
+
+	<span class="hljs-comment">// we check already exist first</span>
+	<span class="hljs-keyword">for</span> ; next != <span class="hljs-literal">nil</span>; next = next.Next {
+		<span class="hljs-comment">// we found it</span>
+		<span class="hljs-keyword">if</span> next.Version == node.Version &amp;&amp; next.Group == node.Group {
+			<span class="hljs-comment">// release lock and no nothing</span>
+			m.mu.Unlock()
+			<span class="hljs-keyword">return</span>
+		}
+	}
+
+	head.count++
+	<span class="hljs-comment">// append node to the end of the list</span>
+	head.last.Next = insert
+	<span class="hljs-comment">// update last element</span>
+	head.last = insert
+	m.mu.Unlock()
+}
+</code></pre>
+<p>通过服务注册时构建好的 cache，可以在 mosn 的 stream 做解码时命中 cache , 无需解码参数获取接口和 group 信息，可参见<a href="https://github.com/mosn/mosn/pull/1174/commits/9020ee9995cd15a7a4321a375a9506cf94dc70a8#diff-73d1153005841c788c91116915f460a5R188">优化代码 diff</a> :</p>
+<pre><code class="language-go"><span class="hljs-comment">// decoder.go</span>
+<span class="hljs-comment">// for better performance.</span>
+<span class="hljs-comment">// If the ingress scenario is not using group,</span>
+<span class="hljs-comment">// we can skip parsing attachment to improve performance</span>
+<span class="hljs-keyword">if</span> listener == IngressDubbo {
+	<span class="hljs-keyword">if</span> node, matched = DubboPubMetadata.Find(path, version); matched {
+		meta[ServiceNameHeader] = node.Service
+		meta[GroupNameHeader] = node.Group
+	}
+} <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> listener == EgressDubbo {
+	<span class="hljs-comment">// for better performance.</span>
+	<span class="hljs-comment">// If the egress scenario is not using group,</span>
+	<span class="hljs-comment">// we can skip parsing attachment to improve performance</span>
+	<span class="hljs-keyword">if</span> node, matched = DubboSubMetadata.Find(path, version); matched {
+		meta[ServiceNameHeader] = node.Service
+		meta[GroupNameHeader] = node.Group
+	}
+}
+</code></pre>
+<p>在 mosn 的 egress 端（ mosn 直接转发请求给本地 java client 进程）, 我们采用类似的思路, 我们根据请求的 path 和 version 去窥探用户使用的 interface 和 group , 构建正确的 dataID 可以进行无脑转发，无需解码 body，榨取性能提升。</p>
+<h4>2. 优化 dubbo 解码参数</h4>
+<p>在 dubbo 解码参数值的时候 ，mosn 采用的是 hessian 的正则表达式查找，非常耗费性能。我们先看下优化前后 benchmark 对比, 性能提升 50 倍。</p>
+<pre><code class="language-go"><span class="hljs-keyword">go</span> test -bench=BenchmarkCountArgCount -run=^$ -benchmem
+BenchmarkCountArgCountByRegex<span class="hljs-number">-12</span>	<span class="hljs-number">200000</span>	<span class="hljs-number">6236</span> ns/op	<span class="hljs-number">1472</span> B/op	<span class="hljs-number">24</span> allocs/op
+BenchmarkCountArgCountOptimized<span class="hljs-number">-12</span>	<span class="hljs-number">10000000</span>	<span class="hljs-number">124</span> ns/op	<span class="hljs-number">0</span> B/op	<span class="hljs-number">0</span> allocs/op
+</code></pre>
+<p><strong>优化思路：</strong></p>
+<p>可以消除正则表达式，采用简单字符串解析识别参数类型个数， <a href="https://github.com/zonghaishang/dubbo/blob/e0fd702825a274379fb609229bdb06ca0586122e/dubbo-common/src/main/java/org/apache/dubbo/common/utils/ReflectUtils.java#L370">dubbo 编码参数个数字符串实现</a> 并不复杂, 主要给对象加 L 前缀、数组加[、primitive 类型有单字符代替。采用 go 可以实现同等解析, 可以参考<a href="https://github.com/mosn/mosn/pull/1174/commits/9020ee9995cd15a7a4321a375a9506cf94dc70a8#diff-73d1153005841c788c91116915f460a5R245">优化代码 diff</a> ：</p>
+<pre><code>func getArgumentCount(desc string) int {
+	len := len(desc)
+	if len == 0 {
+		return 0
+	}
+
+	var args, next = 0, false
+	for _, ch := range desc {
+
+		// is array ?
+		if ch == '[' {
+			continue
+		}
+
+		// is object ?
+		if next &amp;&amp; ch != ';' {
+			continue
+		}
+
+		switch ch {
+		case 'V', // void
+			'Z', // boolean
+			'B', // byte
+			'C', // char
+			'D', // double
+			'F', // float
+			'I', // int
+			'J', // long
+			'S': // short
+			args++
+		default:
+			// we found object
+			if ch == 'L' {
+				args++
+				next = true
+				// end of object ?
+			} else if ch == ';' {
+				next = false
+			}
+		}
+
+	}
+	return args
+}
+</code></pre>
+<h4>3. 优化 dubbo hessian go 解码 string 性能</h4>
+<p>在图 1-2 中可以看到 dubbo hessian go 在解码 string 占比 CPU 采样较高，我们在解码 dubbo 请求时，会解析 dubbo 框架版本、调用 path 、接口版本和方法名，这些都是 string 类型，dubbo hessian go 解析 string 会影响 RPC 性能。</p>
+<p>我们首先跑一下 benchmar k 前后解码 string 性能对比，性能提升 56.11%， 对应到 RPC 中有 5% 左右提升。</p>
+<pre><code>BenchmarkDecodeStringOriginal-12     1967202     613 ns/op     272 B/op     6 allocs/op
+BenchmarkDecodeStringOptimized-12     4477216     269 ns/op     224 B/op     5 allocs/op
+</code></pre>
+<p><strong>优化思路：</strong></p>
+<p>直接使用 UTF-8 byte 解码，性能最高，之前先解码 byte 成 rune , 对 rune 解码成 string ，及其耗费性能。增加批量 string chunk copy ，降低 read 调用，并且使用 unsafe 转换 string （避免一些校验），因为代码优化 diff 较多，这里给出<a href="https://github.com/apache/dubbo-go-hessian2/pull/188">优化代码 PR</a> 。</p>
+<p>go SDK 代码<code>runtime/string.go#slicerunetostring</code>（ rune 转换成 string ）， 同样是把 rune 转成 byte 数组，这里给了我优化思路启发。</p>
+<h4>4. 优化 hessian 库编解码对象</h4>
+<p>虽然消除了 dubbo 的 body 解码部分，但是 mosn 在处理 dubbo 请求时，必须要借助 hessian 去 decode 请求头部的框架版本、请求 path 和接口版本值。但是每次在解码的时候都会创建序列化对象，开销非常高，因为 hessian 每次在创建 reader 的时候会 allocate 4k 数据并 reset。</p>
+<pre><code>      10ms       10ms     75:func unSerialize(serializeId int, data []byte, parseCtl unserializeCtl) *dubboAttr {
+      10ms      140ms     82:	attr := &amp;dubboAttr{}
+      80ms      2.56s     83:	decoder := hessian.NewDecoderWithSkip(data[:])
+ROUTINE ======================== bufio.NewReaderSize in /usr/local/go/src/bufio/bufio.go
+      50ms      2.44s (flat, cum)  2.33% of Total
+         .      220ms     55:	r := new(Reader)
+      50ms      2.22s     56:	r.reset(make([]byte, size), rd)
+         .          .     57:	return r
+         .          .     58:}
+</code></pre>
+<p>我们可以写个池化内存前后性能对比, 性能提升 85.4% , <a href="https://github.com/zonghaishang/dubbo-go-hessian2/blob/9b418c4e2700964f244e6b982855b4e89b45990d/string_test.go#L161">benchmark 用例</a> ：</p>
+<pre><code class="language-go">BenchmarkNewDecoder<span class="hljs-number">-12</span>	<span class="hljs-number">1487685</span>	<span class="hljs-number">803</span> ns/op	<span class="hljs-number">4528</span> B/op	<span class="hljs-number">9</span> allocs/op
+BenchmarkNewDecoderOptimized<span class="hljs-number">-12</span>	<span class="hljs-number">10564024</span>	<span class="hljs-number">117</span> ns/op	<span class="hljs-number">128</span> B/op	<span class="hljs-number">3</span> allocs/op
+</code></pre>
+<p><strong>优化思路：</strong></p>
+<p>在每次编解码时，池化 hessian 的 decoder 对象，新增 NewCheapDecoderWithSkip 并支持 reset 复用 decoder 。</p>
+<pre><code>var decodePool = &amp;sync.Pool{
+    New: func() interface{} {
+        return hessian.NewCheapDecoderWithSkip([]byte{})
+    },
+}
+
+// 在解码时按照如下方法调用
+decoder := decodePool.Get().(*hessian.Decoder)
+// fill decode data
+decoder.Reset(data[:])
+hessianPool.Put(decoder)
+</code></pre>
+<h4>5. 优化重复解码 service 和 methodName 值</h4>
+<p>xprotocol 在实现 xprotocol.Tracing 获取服务名称和方法时，会触发调用并解析 2 次，调用开销比较大。</p>
+<pre><code>      10ms      1.91s    171:			serviceName := tracingCodec.GetServiceName(request)
+         .      2.17s    172:			methodName := tracingCodec.GetMethodName(request)
+</code></pre>
+<p><strong>优化思路：</strong></p>
+<p>因为在 GetMetas 里面已经解析过一次了，可以把解析过的 headers 传进去，如果 headers 有了就不用再去解析了，并且重构接口名称为一个，返回值为二元组，消除一次调用。</p>
+<h4>6. 优化 streamID 类型转换</h4>
+<p>在 go 中将 byte 数组和 streamID 进行互转的时候，比较费性能。</p>
+<p><strong>优化思路：</strong></p>
+<p>生产代码中, 尽量不要使用 fmt.Sprintf 和 fmt.Printf 去做类型转换和打印信息。可以使用 strconv 去转换。</p>
+<pre><code>   .      430ms    147: reqIDStr := fmt.Sprintf(&quot;%d&quot;, reqID)
+60ms      4.10s    168: fmt.Printf(&quot;src=%s, len=%d, reqid:%v\n&quot;, streamID, reqIDStrLen, reqIDStr)
+</code></pre>
+<h4>7. 优化昂贵的系统调用</h4>
+<p>mosn 在解码 dubbo 的请求时，会在 header 中塞一份远程 host 的地址，并且在 for 循环中获取 remote IP，系统调用开销比较高。</p>
+<p><strong>优化思路：</strong></p>
+<pre><code>     50ms      920ms    136:		headers[strings.ToLower(protocol.MosnHeaderHostKey)] = conn.connection.RemoteAddr().String()
+</code></pre>
+<p>在获取远程地址时，尽可能在 streamConnection 中 cache 远程 IP 值，不要每次都去调用 RemoteAddr。</p>
+<h4>8. 优化 slice 和 map 触发扩容和 rehash</h4>
+<p>在 mosn 处理 dubbo 请求时，会根据接口、版本和分组去构建 dataID ，然后匹配 cluster , 会创建默认 slice 和 map 对象，经过性能诊断，导致不断 allocate slice 和 grow map 容量比较费性能。</p>
+<p><strong>优化思路：</strong></p>
+<p>使用 slice 和 map 时，尽可能预估容量大小，使用 make(type, capacity) 去指定初始大小。</p>
+<h4>9. 优化 trace 日志级别输出</h4>
+<p>mosn 中不少代码在处理逻辑时，会打很多 trace 级别的日志，并且会传递不少参数值。</p>
+<p><strong>优化思路：</strong></p>
+<p>调用 trace 输出前，尽量判断一下日志级别，如果有多个 trace 调用，尽可能把所有字符串写到 buf 中，然后把 buf 内容写到日志中，并且尽可能少的调用 trace 日志方法。</p>
+<h4>10. 优化 tracer、log 和 metrics</h4>
+<p>在大促期间，对机器的性能要求较高，经过性能诊断，tracer、mosn log 和 cloud metrics 写日志（ IO 操作）非常耗费性能。</p>
+<p><strong>优化思路：</strong></p>
+<p>通过配置中心下发配置或者增加大促开关，允许 API 调用这些 feature 的开关。</p>
+<pre><code>/api/v1/downgrade/on
+/api/v1/downgrade/off
+</code></pre>
+<h4>11. 优化 route header 解析</h4>
+<p>mosn 中在做路由前，需要做大量的 header 的 map 访问，比如 IDC、antvip 等逻辑判断，商业版或者开源 mosn 不需要这些逻辑，这些也会占用一些开销。</p>
+<p><strong>优化思路：</strong></p>
+<p>如果是云上逻辑，主站的逻辑都不走。</p>
+<h4>12. 优化 featuregate 调用</h4>
+<p>在 mosn 中处理请求时，为了区分主站和商业版路由逻辑，会通过 featuregate 判断逻辑走哪部分。通过 featuregate 调用开销较大，需要频繁的做类型转换和多层 map 去获取。</p>
+<p><strong>优化思路：</strong></p>
+<p>通过一个 bool 变量记录 featuregate 对应开关，如果没有初始化过，就主动调用一下 featuregate。</p>
+<h3>未来性能优化思考</h3>
+<p>经过几轮性能优化 ，目前看火焰图，卡点都在 connection 的 read 和 write ，可以优化的空间比较小了。但是可能从以下场景中获得收益：</p>
+<ul>
+<li>减少 connection 的 read 和 write 次数 (syscall) 。</li>
+<li>优化 IO 线程模型，减少携程和上下文切换等。</li>
+</ul>
+<p>作为结束，给出了最终优化后的火焰图 ，大部分卡点都在系统调用和网络读写, 请参考图 1-4。</p>
+<p><img src="../../pic/hessian2/mosn-performance-optimization-4.png" alt="mosn优化后火焰图"></p>
+<center>图 1-4 优化版本 mosn + dubbo 火线图</center>
+<h3>其他</h3>
+<p>pprof 工具异常强大，可以诊断 CPU、memory、go 协程、tracer 和死锁等，该工具可以参考 <a href="https://blog.golang.org/pprof">godoc</a>，性能优化参考：</p>
+<ul>
+<li>
+<p><a href="https://blog.golang.org/pprof">https://blog.golang.org/pprof</a></p>
+</li>
+<li>
+<p><a href="https://www.cnblogs.com/Dr-wei/p/11742414.html">https://www.cnblogs.com/Dr-wei/p/11742414.html</a></p>
+</li>
+<li>
+<p><a href="https://www.youtube.com/watch?v=N3PWzBeLX2M">https://www.youtube.com/watch?v=N3PWzBeLX2M</a></p>
+</li>
+</ul>
+<h3>关于作者</h3>
+<p>诣极，github ID zonghaishang，Apache Dubbo PMC，目前就职于蚂蚁金服中间件团队，主攻 RPC 和 Service Mesh 方向。 《深入理解 Apache Dubbo 与实战》一书作者。</p>
+</div></section><footer class="footer-container"><div class="footer-body"><img src="/dubbo-go-website/img/dubbo_gray.png"/><img class="apache" src="/dubbo-go-website/img/apache_logo.png"/><div class="cols-container"><div class="col col-12"><h3></h3><p></p></div><div class="col col-4"><dl><dt>ASF</dt><dd><a href="http://www.apache.org" target="_self">基金会</a></dd><dd><a href="http://www.apache.org/licenses/" target="_self">证书</a></dd><dd><a href="http://www.apache.org/events/current-event" target="_self">事件</a></dd><dd><a href="http://www.apache.org/foundation/sponsorship.html" target="_self">赞助</a></dd><dd><a href="http://www.apache.org/foundation/thanks.html" target="_self">致谢</a></dd></dl></div><div class="col col-4"><dl><dt>文档</dt><dd><a href="/dubbo-go-website/zh-cn/docs/user/quick-start.html" target="_self">快速开始</a></dd><dd><a href="/dubbo-go-website/zh-cn/docs/dev/build.html" target="_self">开发者指南</a></dd><dd><a href="/dubbo-go-website/zh-cn/docs/admin/ops/dubbo-ops.html" target="_self">运维管理</a></dd><dd><a href="https://github.com/dubbogo/dubbo-go-website/issues/new" target="_self">报告文档问题</a></dd><dd><a href="https://github.com/dubbogo/dubbo-go-website" target="_self">编辑此文档</a></dd></dl></div><div class="col col-4"><dl><dt>资源</dt><dd><a href="/dubbo-go-website/zh-cn/blog/index.html" target="_self">博客</a></dd><dd><a href="/dubbo-go-website/zh-cn/community/index.html" target="_self">社区</a></dd><dd><a href="https://www.apache.org/security" target="_self">安全</a></dd></dl></div></div><div class="copyright"><span>Copyright © 2018-2020 The Apache Software Foundation. Apache and the Apache feather logo are trademarks of The Apache Software Foundation.</span></div></div></footer></div></div>
+	<script src="https://f.alicdn.com/react/15.4.1/react-with-addons.min.js"></script>
+	<script src="https://f.alicdn.com/react/15.4.1/react-dom.min.js"></script>
+	<script>
+		window.rootPath = '/dubbo-go-website';
+  </script>
+  <script src="/dubbo-go-website/build/documentation.js"></script>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-112489517-1"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+
+		gtag('config', 'UA-112489517-1');
+	</script>
+</body>
+</html>

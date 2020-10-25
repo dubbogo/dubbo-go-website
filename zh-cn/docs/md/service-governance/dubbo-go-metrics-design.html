@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta name="keywords" content="dubbo-go-metrics-design" />
+	<meta name="description" content="dubbo-go-metrics-design" />
+	<!-- 网页标签标题 -->
+	<title>dubbo-go-metrics-design</title>
+	<link rel="shortcut icon" href="/dubbo-go-website/img/dubbo.ico"/>
+	<link rel="stylesheet" href="/dubbo-go-website/build/documentation.css" />
+</head>
+<body>
+	<div id="root"><div class="documentation-page" data-reactroot=""><header class="header-container header-container-normal"><div class="header-body"><a href="/dubbo-go-website/zh-cn/index.html"><img class="logo" src="/dubbo-go-website/img/dubbo_colorful.png"/></a><div class="search search-normal"><span class="icon-search"></span></div><span class="language-switch language-switch-normal">En</span><div class="header-menu"><img class="header-menu-toggle" src="/dubbo-go-website/img/menu_gray.png"/><ul><li class="menu-item menu-item-normal"><a href="/dubbo-go-website/zh-cn/index.html">首页</a></li><li class="menu-item menu-item-normal menu-item-normal-active"><a href="/dubbo-go-website/zh-cn/docs/user/quick-start.html">文档</a></li><li class="menu-item menu-item-normal"><a href="/dubbo-go-website/zh-cn/blog/index.html">博客</a></li><li class="menu-item menu-item-normal"><a href="/dubbo-go-website/zh-cn/community/index.html">社区</a></li><li class="menu-item menu-item-normal"><a href="/dubbo-go-website/zh-cn/blog/download.html">下载</a></li><li class="menu-item menu-item-normal"><a href="https://dubbo.apache.org/zh-cn/index.html">Java</a></li></ul></div></div></header><div class="bar"><div class="bar-body"><img src="/dubbo-go-website/img/docs.png" class="front-img"/><span>文档</span><img src="/dubbo-go-website/img/docs.png" class="back-img"/></div></div><section class="content-section"><div class="sidemenu"><div class="sidemenu-toggle"><img src="https://img.alicdn.com/tfs/TB1E6apXHGYBuNjy0FoXXciBFXa-200-200.png"/></div><ul><li class="menu-item menu-item-level-1"><span>用户指南</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><span>入门<img style="transform:rotate(-90deg)" class="menu-toggle" src="/dubbo-go-website/img/arrow_down.png"/></span><ul><li class="menu-item menu-item-level-3"><a href="/dubbo-go-website/zh-cn/docs/user/preface/architecture.html" target="_self">架构</a></li></ul></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/dubbo-go-website/zh-cn/docs/user/quick-start.html" target="_self">快速启动</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><span>配置<img style="transform:rotate(-90deg)" class="menu-toggle" src="/dubbo-go-website/img/arrow_down.png"/></span><ul><li class="menu-item menu-item-level-3"><a href="/dubbo-go-website/zh-cn/docs/user/configuration/provider.html" target="_self">提供者</a></li></ul></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><span>注册中心参考手册<img style="transform:rotate(-90deg)" class="menu-toggle" src="/dubbo-go-website/img/arrow_down.png"/></span><ul><li class="menu-item menu-item-level-3"><a href="/dubbo-go-website/zh-cn/docs/user/registry/introduction.html" target="_self">介绍</a></li><li class="menu-item menu-item-level-3"><a href="/dubbo-go-website/zh-cn/docs/user/registry/zookeeper.html" target="_self">Zookeeper 注册中心</a></li><li class="menu-item menu-item-level-3"><a href="/dubbo-go-website/zh-cn/docs/user/registry/nacos.html" target="_self">Nacos 注册中心</a></li><li class="menu-item menu-item-level-3"><a href="/dubbo-go-website/zh-cn/docs/user/registry/consul.html" target="_self">Consul 注册中心</a></li><li class="menu-item menu-item-level-3"><a href="/dubbo-go-website/zh-cn/docs/user/registry/etcdv3.html" target="_self">Etcdv3 注册中心</a></li></ul></li></ul></li><li class="menu-item menu-item-level-1"><span>开发者指南</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/dubbo-go-website/zh-cn/docs/developer/design.html" target="_self">框架设计</a></li></ul></li><li class="menu-item menu-item-level-1"><span>源码导读</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/dubbo-go-website/zh-cn/docs/source_code/extension.html" target="_self">拓展点</a></li></ul></li></ul></div><div class="doc-content markdown-body"><h1><a href="https://mp.weixin.qq.com/s/_ibXd2z1RqjOJwk7jMAwig">eBay 邓明：dubbo-go 中 metrics 的设计</a></h1>
+<p>发布于：2020 年 4 月 22 日 17:15</p>
+<p>最近因为要在 Apache/dubbo-go（以下简称 dubbo-go ）里面实现类似的这个 metrics 功能，于是花了很多时间去了解现在 Dubbo 里面的 metrics 是怎么实现的。该部分，实际上是被放在一个独立的项目里面，即 metrics 。</p>
+<p>总体上来说，Dubbo 的 metrics 是一个从设计到实现都非常优秀的模块，理论上来说，大部分的 Java 项目是可以直接使用 metrics 的。但也因为兼顾性能、扩展性等各种非功能特性，所以初看代码会有种无从下手的感觉。</p>
+<p>今天这篇文章将会从比较大的概念和抽象上讨论一下 dubbo-go 中的 metrics 模块的设计——实际上也就是 Dubbo 中的 metrics 的设计。因为我仅仅是将 Dubbo 里面的相关内容在 dubbo-go 中复制一份。</p>
+<p>目前 dubbo-go 的 metrics 刚刚开始起步，第一个 PR 是：</p>
+<h2>总体设计</h2>
+<p><strong>Metric</strong></p>
+<p>要想理解 metrics 的设计，首先要理解，我们需要收集一些什么数据。我们可以轻易列举出来在 RPC 领域里面我们所关心的各种指标，诸如每个服务的调用次数，响应时间；如果更加细致一点，还有各种响应时间的分布，平均响应时间，999 线……</p>
+<p>但是上面列举的是从数据的内容上划分的。 metrics 在抽象上，则是摒弃了这种划分方式，而是结合了数据的特性和表现形式综合划分的。</p>
+<p>从源码里面很容易找到这种划分的抽象。</p>
+<p>metrics 设计了 Metric 接口作为所有数据的顶级抽象：</p>
+<p>在 Dubbo 里面，其比较关键的子接口是：</p>
+<p>为了大家理解，这里我抄一下这些接口的用途：</p>
+<ul>
+<li>Gauge: 一种实时数据的度量，反映的是瞬态的数据，不具有累加性，例如当前 JVM 的线程数；</li>
+<li>Counter: 计数器型指标，适用于记录调用总量等类型的数据；</li>
+<li>Histogram : 直方分布指标，例如，可以用于统计某个接口的响应时间，可以展示 50%, 70%, 90% 的请求响应时间落在哪个区间内；</li>
+<li>Meter: 一种用于度量一段时间内吞吐率的计量器。例如，一分钟内，五分钟内，十五分钟内的 qps 指标；</li>
+<li>Timer: Timer 相当于 Meter+Histogram 的组合，同时统计一段代码，一个方法的 qps，以及执行时间的分布情况；</li>
+</ul>
+<p>目前 dubbo-go 只实现了 FastCompass ，它也是 Metric 的子类：</p>
+<p>这个接口功能很简单，就是用于收集一段时间之内的 subCategory 执行的次数和响应时间。 subCategory 是一个比较宽泛的概念，无论是在 Dubbo 还是在 dubbo-go 里面，一个典型的 subCategory 就会是某个服务。</p>
+<p>这里的设计要点在于，它是从什么角度上去做这些数据的抽象的。</p>
+<p>很多人在开发这种采集数据的相关系统或者功能的时候，最容易陷入的就是从数据内容上做抽象，例如抽象一个接口，里面的方法就是获得服务的调用次数或者平均响应时间等。</p>
+<p>这种抽象并非不可以，尤其是在简单系统里面，还非常好用。唯独在通用性和扩展性上要差很多。</p>
+<p><strong>MetricManager</strong></p>
+<p>在我们定义了 Metric 之后，很容易就想到，我要有一个东西来管理这些 Metric 。这就是 MetricManager ——对应到 Dubbo 里面的 IMetricManager 接口。</p>
+<p>MetricManager 接口目前在 dubbo-go 里面还很简单：</p>
+<p>本质上来说，我在前面提到的那些 Metric 的子类，都可以从这个 MetricManager 里面拿到。它是对外的唯一入口。</p>
+<p>因此无论是上报采集的数据，还是某些功能要用这些采集的数据，最重要的就是获得一个 MetricManager 的实例。例如我们最近正在开发的接入 Prometheus 就是拿到这个 MetriManger 实例，而后从里面拿到 FastCompass 的实例，而后采集这些数据：</p>
+<p><strong>MetricRegistry</strong></p>
+<p>MetricRegistry 是一个对 Metric 集合的抽象。 MetricManager 的默认实现里面，就是使用 MetricRegistry 来管理 Metric 的:</p>
+<p>所以，本质上它就是提供了一些注册 Metric 然后再从里面捞出来的方法。</p>
+<p>于是，这就有一个问题了：为什么我在有了 MetricManager 之后，还有有一个 MetricRegistry？似乎这两个功能有些重叠？</p>
+<p>答案大概是两个方面：<br>
+1、除了管理所有的 Metric 之外，还承担着额外的功能，这些功能典型的就是 IsEnabled 。而实际上，在未来我们会赋予它管理生命周期的责任，比如说在 Dubbo 里面，该接口就还有一个 clear 方法；<br>
+2、 metrics 里面还有一个 group 的概念，而这只能由 MetricManager 来进行管理，至少交给 MetricRegistry 是不合适的。</p>
+<p>metrics 的 group 说起来也很简单。比如在 Dubbo 框架里面采集的数据，都会归属于 Dubbo 这个 group 。也就是说，如果我想将非框架层面采集的数据——比如纯粹的业务数据——分隔出来，就可以借用一个 business group 。又或者我采集到的机器自身的数据，可以将其归类到 system 这个 group 下。</p>
+<p>所以 MetricManger 和 MetricRegistry 的关系是：</p>
+<p>Clock 抽象是一个初看没什么用，再看会觉得其抽象的很好。Clock 里面就两个方法：</p>
+<p>一个是获得时间戳，另外一个则是获得时间周期 (Tick)。比如通常采集数据可能是每一分钟采集一次，所以你得知道现在处在哪个时间周期里面。Clock 就提供了这种抽象。</p>
+<p>很多人在实现自己的这种 metrics 的框架的时候，大多数都是直接使用系统的时钟，也就是系统的时间戳。于是所有的 Metic 在采集数据或者上报数据的时候，不得不自己去处理这种时钟方面的问题。</p>
+<p>这样不同的 Metric 之间就很难做到时钟的同步。比如说可能在某个 Metric1 里面，采集周期是当前这一分钟，而 Metric2 是当前这一分钟的第三十秒到下一分钟的第三十秒。虽然它们都是一分钟采集一次，但是这个周期就对不上了。</p>
+<p>另外一个有意思的地方在于，Clock 提供的这种抽象，允许我们不必真的按照现实时间的时间戳来处理。比如说，可以考虑按照 CPU 的运行时间来设计 Clock 的实现。</p>
+<h2>例子</h2>
+<p>就用这一次 PR 的内容来展示一下这个设计。</p>
+<p>在 dubbo-go 里面这次实现了 metricsFilter ，它主要就是收集调用次数和响应时间，其核心是：</p>
+<p>report 其实就是把 metrics reports 给 MetricManager ：</p>
+<p>所以，这里面可以看出来，如果我们要收集什么数据，也是要先获得 MetricManager 的实例。</p>
+<p>FastCompass 的实现里面会将这一次调用的服务及其响应时间保存下来。而后在需要的时候再取出来。</p>
+<p>所谓的需要的时候，通常就是上报给监控系统的时候。比如前面的提到的上报给 Prometheus。</p>
+<p>所以这个流程可以抽象表达为：</p>
+<p>这是一个更加宽泛的抽象。也就是意味着，我们除了可以从这个 metricFilter 里面收集数据，也可以从自身的业务里面去收集数据。比如说统计某段代码的执行时间，一样可以使用 FastCompass 。</p>
+<p>而除了 Prometheus ，如果用户自己的公司里面有监控框架，那么他们可以自己实现自己的上报逻辑。而上报的数据则只需要拿到 MetricManager 实例就能拿到。</p>
+<h2>总结</h2>
+<p>本质上来说，整个 metrics 可以看做是一个巨大无比的 provider-conumer 模型。</p>
+<p>不同的数据会在不同的地方和不同时间点上被采集。有些人在读这些源码的时候会有点困惑，就是这些数据什么时间点会被采集呢？</p>
+<p>它们只会在两类时间点采集：<br>
+1、实时采集。如我上面举例的 metricsFilter ，一次调用过来，它的数据就被采集了；<br>
+2、另外一个则是如同 Prometheus 。每次 Prometheus 触发了 collect 方法，那么它就会把每种（如 Meter, Gauge ）里面的数据收集过来，然后上报，可以称为是定时采集；</p>
+<p>这些具体的实现，我就不一一讨论了，大家有兴趣可以去看看源码。这些数据，也是我们 dubbo-go 后面要陆续实现的东西，欢迎大家持续关注，或者来贡献代码。</p>
+</div></section><footer class="footer-container"><div class="footer-body"><img src="/dubbo-go-website/img/dubbo_gray.png"/><img class="apache" src="/dubbo-go-website/img/apache_logo.png"/><div class="cols-container"><div class="col col-12"><h3></h3><p></p></div><div class="col col-4"><dl><dt>ASF</dt><dd><a href="http://www.apache.org" target="_self">基金会</a></dd><dd><a href="http://www.apache.org/licenses/" target="_self">证书</a></dd><dd><a href="http://www.apache.org/events/current-event" target="_self">事件</a></dd><dd><a href="http://www.apache.org/foundation/sponsorship.html" target="_self">赞助</a></dd><dd><a href="http://www.apache.org/foundation/thanks.html" target="_self">致谢</a></dd></dl></div><div class="col col-4"><dl><dt>文档</dt><dd><a href="/dubbo-go-website/zh-cn/docs/user/quick-start.html" target="_self">快速开始</a></dd><dd><a href="/dubbo-go-website/zh-cn/docs/dev/build.html" target="_self">开发者指南</a></dd><dd><a href="/dubbo-go-website/zh-cn/docs/admin/ops/dubbo-ops.html" target="_self">运维管理</a></dd><dd><a href="https://github.com/dubbogo/dubbo-go-website/issues/new" target="_self">报告文档问题</a></dd><dd><a href="https://github.com/dubbogo/dubbo-go-website" target="_self">编辑此文档</a></dd></dl></div><div class="col col-4"><dl><dt>资源</dt><dd><a href="/dubbo-go-website/zh-cn/blog/index.html" target="_self">博客</a></dd><dd><a href="/dubbo-go-website/zh-cn/community/index.html" target="_self">社区</a></dd><dd><a href="https://www.apache.org/security" target="_self">安全</a></dd></dl></div></div><div class="copyright"><span>Copyright © 2018-2020 The Apache Software Foundation. Apache and the Apache feather logo are trademarks of The Apache Software Foundation.</span></div></div></footer></div></div>
+	<script src="https://f.alicdn.com/react/15.4.1/react-with-addons.min.js"></script>
+	<script src="https://f.alicdn.com/react/15.4.1/react-dom.min.js"></script>
+	<script>
+		window.rootPath = '/dubbo-go-website';
+  </script>
+  <script src="/dubbo-go-website/build/documentation.js"></script>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-112489517-1"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+
+		gtag('config', 'UA-112489517-1');
+	</script>
+</body>
+</html>

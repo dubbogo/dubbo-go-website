@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta name="keywords" content="what&#39;s-new-in-dubbo-go-hessian2-v1.7.0" />
+	<meta name="description" content="what&#39;s-new-in-dubbo-go-hessian2-v1.7.0" />
+	<!-- 网页标签标题 -->
+	<title>what&#39;s-new-in-dubbo-go-hessian2-v1.7.0</title>
+	<link rel="shortcut icon" href="/dubbo-go-website/img/dubbo.ico"/>
+	<link rel="stylesheet" href="/dubbo-go-website/build/documentation.css" />
+</head>
+<body>
+	<div id="root"><div class="documentation-page" data-reactroot=""><header class="header-container header-container-normal"><div class="header-body"><a href="/dubbo-go-website/zh-cn/index.html"><img class="logo" src="/dubbo-go-website/img/dubbo_colorful.png"/></a><div class="search search-normal"><span class="icon-search"></span></div><span class="language-switch language-switch-normal">En</span><div class="header-menu"><img class="header-menu-toggle" src="/dubbo-go-website/img/menu_gray.png"/><ul><li class="menu-item menu-item-normal"><a href="/dubbo-go-website/zh-cn/index.html">首页</a></li><li class="menu-item menu-item-normal menu-item-normal-active"><a href="/dubbo-go-website/zh-cn/docs/user/quick-start.html">文档</a></li><li class="menu-item menu-item-normal"><a href="/dubbo-go-website/zh-cn/blog/index.html">博客</a></li><li class="menu-item menu-item-normal"><a href="/dubbo-go-website/zh-cn/community/index.html">社区</a></li><li class="menu-item menu-item-normal"><a href="/dubbo-go-website/zh-cn/blog/download.html">下载</a></li><li class="menu-item menu-item-normal"><a href="https://dubbo.apache.org/zh-cn/index.html">Java</a></li></ul></div></div></header><div class="bar"><div class="bar-body"><img src="/dubbo-go-website/img/docs.png" class="front-img"/><span>文档</span><img src="/dubbo-go-website/img/docs.png" class="back-img"/></div></div><section class="content-section"><div class="sidemenu"><div class="sidemenu-toggle"><img src="https://img.alicdn.com/tfs/TB1E6apXHGYBuNjy0FoXXciBFXa-200-200.png"/></div><ul><li class="menu-item menu-item-level-1"><span>用户指南</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><span>入门<img style="transform:rotate(-90deg)" class="menu-toggle" src="/dubbo-go-website/img/arrow_down.png"/></span><ul><li class="menu-item menu-item-level-3"><a href="/dubbo-go-website/zh-cn/docs/user/preface/architecture.html" target="_self">架构</a></li></ul></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/dubbo-go-website/zh-cn/docs/user/quick-start.html" target="_self">快速启动</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><span>配置<img style="transform:rotate(-90deg)" class="menu-toggle" src="/dubbo-go-website/img/arrow_down.png"/></span><ul><li class="menu-item menu-item-level-3"><a href="/dubbo-go-website/zh-cn/docs/user/configuration/provider.html" target="_self">提供者</a></li></ul></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><span>注册中心参考手册<img style="transform:rotate(-90deg)" class="menu-toggle" src="/dubbo-go-website/img/arrow_down.png"/></span><ul><li class="menu-item menu-item-level-3"><a href="/dubbo-go-website/zh-cn/docs/user/registry/introduction.html" target="_self">介绍</a></li><li class="menu-item menu-item-level-3"><a href="/dubbo-go-website/zh-cn/docs/user/registry/zookeeper.html" target="_self">Zookeeper 注册中心</a></li><li class="menu-item menu-item-level-3"><a href="/dubbo-go-website/zh-cn/docs/user/registry/nacos.html" target="_self">Nacos 注册中心</a></li><li class="menu-item menu-item-level-3"><a href="/dubbo-go-website/zh-cn/docs/user/registry/consul.html" target="_self">Consul 注册中心</a></li><li class="menu-item menu-item-level-3"><a href="/dubbo-go-website/zh-cn/docs/user/registry/etcdv3.html" target="_self">Etcdv3 注册中心</a></li></ul></li></ul></li><li class="menu-item menu-item-level-1"><span>开发者指南</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/dubbo-go-website/zh-cn/docs/developer/design.html" target="_self">框架设计</a></li></ul></li><li class="menu-item menu-item-level-1"><span>源码导读</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/dubbo-go-website/zh-cn/docs/source_code/extension.html" target="_self">拓展点</a></li></ul></li></ul></div><div class="doc-content markdown-body"><h1><a href="https://www.oschina.net/news/118648/dubbogo-hessian2-1-7-0-released">Dubbo-go-hessian2 v1.7.0 发布</a></h1>
+<p>Dubbo-go-hessian2 v1.7.0已发布，详见 <a href="https://github.com/apache/dubbo-go-hessian2/releases/tag/v1.7.0%EF%BC%8C">https://github.com/apache/dubbo-go-hessian2/releases/tag/v1.7.0，</a> 以下对这次更新内容进行详细整理。</p>
+<p>另外v1.6.3 将 attachment 类型由 map[string]stiring 改为map[string]interface{} 导致版本不兼容问题，这部分已还原，后续的计划是将dubbo协议的request/response对象整体迁移到dubbogo项目中进行迭代修改， hessian2中将不再改动到request/response对象。</p>
+<h2>1. New Features</h2>
+<h3>1.1 add GetStackTrace method into Throwabler and its implements. <a href="https://github.com/apache/dubbo-go-hessian2/pull/207">#207</a></h3>
+<blockquote>
+<p>contributed by <a href="https://github.com/cvictory">https://github.com/cvictory</a></p>
+</blockquote>
+<p>go语言client请求java语言服务时，如果java语言抛出了异常，异常对应的堆栈信息是被保存在StackTraceElement中。</p>
+<p>这个异常信息在日志中最好能被打印出来，以方便客户端排查问题，所以在Throwabler和对应子类中增加了StackTraceElement的获取。</p>
+<p>注：其实还有一种更好的方法，所有的具体的异常类型都包含java_exception/exception.go的Throwable struct。这样只需要在Throwable中增加GetStackTrace方法就可以了。但是这种方式需要更多的测试验证，改动的逻辑相对会复杂一些。但是代码会更整洁。 这里先不用这种方法。</p>
+<h3>1.2 catch user defined exceptions. <a href="https://github.com/apache/dubbo-go-hessian2/pull/208">#208</a></h3>
+<blockquote>
+<p>contributed by <a href="https://github.com/cvictory">https://github.com/cvictory</a></p>
+</blockquote>
+<p>golang中增加一个java中Exception对象的序列化输出方法：</p>
+<pre><code class="language-css"><span class="hljs-selector-tag">func</span> <span class="hljs-selector-tag">JavaException</span>() <span class="hljs-selector-attr">[]</span><span class="hljs-selector-tag">byte</span> {
+	<span class="hljs-attribute">e </span>:= hessian.<span class="hljs-built_in">NewEncoder</span>()
+	exception := java_exception.<span class="hljs-built_in">NewException</span>(<span class="hljs-string">"java_exception"</span>)
+	e.<span class="hljs-built_in">Encode</span>(exception)
+	return e.<span class="hljs-built_in">Buffer</span>()
+}
+</code></pre>
+<p>在output/output.go 提供调用入口:添加如下函数初始化声明</p>
+<pre><code class="language-plain">func init() {
+    funcMap[&quot;JavaException&quot;] = testfuncs.JavaException
+}
+</code></pre>
+<p>java代码中增加调用go方法序列化结果: <strong>说明</strong>: Assert.assertEquals 不能直接比较Exception对象是否相等</p>
+<pre><code class="language-php">    <span class="hljs-comment">/**
+     * test java java.lang.Exception object and go java_exception Exception struct
+     */</span>
+    @Test
+    <span class="hljs-keyword">public</span> void testException() {
+        <span class="hljs-keyword">Exception</span> <span class="hljs-keyword">exception</span> = <span class="hljs-keyword">new</span> <span class="hljs-keyword">Exception</span>(<span class="hljs-string">"java_exception"</span>);
+        Object javaException = GoTestUtil.readGoObject(<span class="hljs-string">"JavaException"</span>);
+        <span class="hljs-keyword">if</span> (javaException <span class="hljs-keyword">instanceof</span> <span class="hljs-keyword">Exception</span>) {
+            Assert.assertEquals(<span class="hljs-keyword">exception</span>.getMessage(), ((<span class="hljs-keyword">Exception</span>) javaException).getMessage());
+        }
+    }
+</code></pre>
+<h3>1.3 support java8 time object. <a href="https://github.com/apache/dubbo-go-hessian2/pull/212">#212</a>, <a href="https://github.com/apache/dubbo-go-hessian2/pull/221">#221</a></h3>
+<blockquote>
+<p>contributed by <a href="https://github.com/willson-chen">https://github.com/willson-chen</a>, <a href="https://github.com/cyb-code">https://github.com/cyb-code</a></p>
+</blockquote>
+<p>golang中增加一个java8对象的序列化输出方法：</p>
+<pre><code class="language-go"><span class="hljs-comment">// test java8 java.time.Year</span>
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">Java8TimeYear</span><span class="hljs-params">()</span> []<span class="hljs-title">byte</span></span> {
+    e := hessian.NewEncoder()
+    year := java8_time.Year{Year: <span class="hljs-number">2020</span>}
+    e.Encode(year)
+    <span class="hljs-keyword">return</span> e.Buffer()
+}
+
+<span class="hljs-comment">// test java8 java.time.LocalDate</span>
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">Java8LocalDate</span><span class="hljs-params">()</span> []<span class="hljs-title">byte</span></span> {
+    e := hessian.NewEncoder()
+    date := java8_time.LocalDate{Year: <span class="hljs-number">2020</span>, Month: <span class="hljs-number">9</span>, Day: <span class="hljs-number">12</span>}
+    e.Encode(date)
+    <span class="hljs-keyword">return</span> e.Buffer()
+}
+</code></pre>
+<p>在output/output.go 提供调用入口:添加函数初始化声明</p>
+<pre><code class="language-plain">func init() {
+	funcMap[&quot;Java8TimeYear&quot;] = testfuncs.Java8TimeYear
+	funcMap[&quot;Java8LocalDate&quot;] = testfuncs.Java8LocalDate
+}
+</code></pre>
+<p>java代码中增加调用go方法序列化结果:</p>
+<pre><code class="language-java"><span class="hljs-comment">/**
+ * test java8 java.time.* object and go java8_time/* struct
+ */</span>
+<span class="hljs-meta">@Test</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">testJava8Year</span><span class="hljs-params">()</span> </span>{
+    Year year = Year.of(<span class="hljs-number">2020</span>);
+    Assert.assertEquals(year
+            , GoTestUtil.readGoObject(<span class="hljs-string">"Java8TimeYear"</span>));
+    LocalDate localDate = LocalDate.of(<span class="hljs-number">2020</span>, <span class="hljs-number">9</span>, <span class="hljs-number">12</span>);
+    Assert.assertEquals(localDate, GoTestUtil.readGoObject(<span class="hljs-string">"Java8LocalDate"</span>));
+}
+</code></pre>
+<h3>1.4 support test golang encoding data in java. <a href="https://github.com/apache/dubbo-go-hessian2/pull/213">#213</a></h3>
+<blockquote>
+<p>contributed by <a href="https://github.com/wongoo">https://github.com/wongoo</a></p>
+</blockquote>
+<p>为了更好的测试验证hessian库，原来已经支持在golang中测试java的序列化数据，现在增加在java中测试golang的序列化数据，实现双向测试验证。</p>
+<p>golang中增加序列化输出方法:</p>
+<pre><code class="language-css"><span class="hljs-selector-tag">func</span> <span class="hljs-selector-tag">HelloWorldString</span>() <span class="hljs-selector-attr">[]</span><span class="hljs-selector-tag">byte</span> {
+    <span class="hljs-attribute">e </span>:= hessian.<span class="hljs-built_in">NewEncoder</span>()
+    e.<span class="hljs-built_in">Encode</span>(<span class="hljs-string">"hello world"</span>)
+    return e.<span class="hljs-built_in">Buffer</span>()
+}
+</code></pre>
+<p>将该方法注册到output/output.go中</p>
+<pre><code class="language-plain"> // add all output func here
+ func init() {
+     funcMap[&quot;HelloWorldString&quot;] = testfuncs.HelloWorldString
+}
+</code></pre>
+<p>output/output.go 提供调用入口:</p>
+<pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> {
+    flag.Parse()
+
+    <span class="hljs-keyword">if</span> *funcName == <span class="hljs-string">""</span> {
+        _, _ = fmt.Fprintln(os.Stderr, <span class="hljs-string">"func name required"</span>)
+        os.Exit(<span class="hljs-number">1</span>)
+    }
+    f, exist := funcMap[*funcName]
+    <span class="hljs-keyword">if</span> !exist {
+        _, _ = fmt.Fprintln(os.Stderr, <span class="hljs-string">"func name not exist: "</span>, *funcName)
+        os.Exit(<span class="hljs-number">1</span>)
+    }
+
+    <span class="hljs-keyword">defer</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> {
+        <span class="hljs-keyword">if</span> err := <span class="hljs-built_in">recover</span>(); err != <span class="hljs-literal">nil</span> {
+            _, _ = fmt.Fprintln(os.Stderr, <span class="hljs-string">"error: "</span>, err)
+            os.Exit(<span class="hljs-number">1</span>)
+        }
+    }()
+    <span class="hljs-keyword">if</span> _, err := os.Stdout.Write(f()); err != <span class="hljs-literal">nil</span> {
+        _, _ = fmt.Fprintln(os.Stderr, <span class="hljs-string">"call error: "</span>, err)
+        os.Exit(<span class="hljs-number">1</span>)
+    }
+    os.Exit(<span class="hljs-number">0</span>)
+}
+</code></pre>
+<p>java代码中增加调用go方法序列化结果:</p>
+<pre><code class="language-plain">public class GoTestUtil {
+
+    public static Object readGoObject(String func) {
+        System.out.println(&quot;read go data: &quot; + func);
+        try {
+            Process process = Runtime.getRuntime()
+                    .exec(&quot;go run output/output.go -func_name=&quot; + func,
+                            null,
+                            new File(&quot;..&quot;));
+
+            int exitValue = process.waitFor();
+            if (exitValue != 0) {
+                Assert.fail(readString(process.getErrorStream()));
+                return null;
+            }
+
+            InputStream is = process.getInputStream();
+            Hessian2Input input = new Hessian2Input(is);
+            return input.readObject();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private static String readString(InputStream in) throws IOException {
+        StringBuilder out = new StringBuilder();
+        InputStreamReader reader = new InputStreamReader(in, StandardCharsets.UTF_8);
+        char[] buffer = new char[4096];
+
+        int bytesRead;
+        while ((bytesRead = reader.read(buffer)) != -1) {
+            out.append(buffer, 0, bytesRead);
+        }
+
+        return out.toString();
+    }
+}
+</code></pre>
+<p>增加java测试代码:</p>
+<pre><code class="language-java"><span class="hljs-meta">@Test</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">testHelloWordString</span><span class="hljs-params">()</span> </span>{
+    Assert.assertEquals(<span class="hljs-string">"hello world"</span>
+            , GoTestUtil.readGoObject(<span class="hljs-string">"HelloWorldString"</span>));
+}
+</code></pre>
+<h3>1.5 support java.sql.Time &amp; java.sql.Date. <a href="https://github.com/apache/dubbo-go-hessian2/pull/219">#219</a></h3>
+<blockquote>
+<p>contributed by <a href="https://github.com/zhangshen023">https://github.com/zhangshen023</a></p>
+</blockquote>
+<p>增加了 java 类 java.sql.Time, java.sql.Date 支持，分别对应到hessian.Time 和 hessian.Date， 详见 <a href="https://github.com/apache/dubbo-go-hessian2/pull/219/files%E3%80%82">https://github.com/apache/dubbo-go-hessian2/pull/219/files。</a></p>
+<h2>2. Enhancement</h2>
+<h3>2.1 Export function EncNull. <a href="https://github.com/apache/dubbo-go-hessian2/pull/225">#225</a></h3>
+<blockquote>
+<p>contributed by <a href="https://github.com/cvictory">https://github.com/cvictory</a></p>
+</blockquote>
+<p>开放 hessian.EncNull 方法，以便用户特定情况下使用。</p>
+<h2>3. Bugfixes</h2>
+<h3>3.1 fix enum encode error in request. <a href="https://github.com/apache/dubbo-go-hessian2/pull/203">#203</a></h3>
+<blockquote>
+<p>contributed by <a href="https://github.com/pantianying">https://github.com/pantianying</a></p>
+</blockquote>
+<p>原来在 dubbo request 对象中没有判断 enum 类型的情况，此pr增加了判断是不是POJOEnum类型。详见 <a href="https://github.com/apache/dubbo-go-hessian2/pull/203/files">https://github.com/apache/dubbo-go-hessian2/pull/203/files</a></p>
+<h3>3.2 fix []byte field decoding issue. <a href="https://github.com/apache/dubbo-go-hessian2/pull/216">#216</a></h3>
+<blockquote>
+<p>contributed by <a href="https://github.com/wongoo">https://github.com/wongoo</a></p>
+</blockquote>
+<p>v1.7.0 之前如果 struct中包含[]byte字段时无法反序列化, 报错“error list tag: 0x29”，主要原因是被当做list进行处理，对于这种情况应该按照binary数据进行处理即可。</p>
+<pre><code class="language-go"><span class="hljs-keyword">type</span> Circular <span class="hljs-keyword">struct</span> {
+    Num      <span class="hljs-keyword">int</span>
+	Previous *Circular
+	Next     *Circular
+	ResponseDataBytes    []<span class="hljs-keyword">byte</span> <span class="hljs-comment">// &lt;---- </span>
+}
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(Circular)</span> <span class="hljs-title">JavaClassName</span><span class="hljs-params">()</span> <span class="hljs-title">string</span></span> {
+	<span class="hljs-keyword">return</span> <span class="hljs-string">"com.company.Circular"</span>
+}
+</code></pre>
+<h3>3.3 fix decoding error for map in map. <a href="https://github.com/apache/dubbo-go-hessian2/pull/229">#229</a></h3>
+<blockquote>
+<p>contributed by <a href="https://github.com/wongoo">https://github.com/wongoo</a></p>
+</blockquote>
+<p>v1.7.0 之前嵌套map无法正确解析，主要原因是对应的map对象被当做一个数据类型却未被自动加到类引用列表中，而嵌套map类信息是同一类型的引用，去类引用列表找，找不到就报错了。 解决这个问题的方法就是遇到map类对象，也将其加入到类引用列表中即可。 问题详细参考 <a href="https://github.com/apache/dubbo-go-hessian2/issues/119">#119</a>.</p>
+<h3>3.4 fix fields name mismatch in Duration class. <a href="https://github.com/apache/dubbo-go-hessian2/pull/234">#234</a></h3>
+<blockquote>
+<p>contributed by <a href="https://github.com/skyao">https://github.com/skyao</a></p>
+</blockquote>
+<p>这个 PR 解决了Duration对象中字段错误定义，原来是&quot;second/nano&quot;， 应该是&quot;seconds/nanos&quot;。</p>
+<p>同时改善了测试验证数据。之前使用0作为int字段的测试数据，这是不准确的，因为int类型默认值就是0.</p>
+</div></section><footer class="footer-container"><div class="footer-body"><img src="/dubbo-go-website/img/dubbo_gray.png"/><img class="apache" src="/dubbo-go-website/img/apache_logo.png"/><div class="cols-container"><div class="col col-12"><h3></h3><p></p></div><div class="col col-4"><dl><dt>ASF</dt><dd><a href="http://www.apache.org" target="_self">基金会</a></dd><dd><a href="http://www.apache.org/licenses/" target="_self">证书</a></dd><dd><a href="http://www.apache.org/events/current-event" target="_self">事件</a></dd><dd><a href="http://www.apache.org/foundation/sponsorship.html" target="_self">赞助</a></dd><dd><a href="http://www.apache.org/foundation/thanks.html" target="_self">致谢</a></dd></dl></div><div class="col col-4"><dl><dt>文档</dt><dd><a href="/dubbo-go-website/zh-cn/docs/user/quick-start.html" target="_self">快速开始</a></dd><dd><a href="/dubbo-go-website/zh-cn/docs/dev/build.html" target="_self">开发者指南</a></dd><dd><a href="/dubbo-go-website/zh-cn/docs/admin/ops/dubbo-ops.html" target="_self">运维管理</a></dd><dd><a href="https://github.com/dubbogo/dubbo-go-website/issues/new" target="_self">报告文档问题</a></dd><dd><a href="https://github.com/dubbogo/dubbo-go-website" target="_self">编辑此文档</a></dd></dl></div><div class="col col-4"><dl><dt>资源</dt><dd><a href="/dubbo-go-website/zh-cn/blog/index.html" target="_self">博客</a></dd><dd><a href="/dubbo-go-website/zh-cn/community/index.html" target="_self">社区</a></dd><dd><a href="https://www.apache.org/security" target="_self">安全</a></dd></dl></div></div><div class="copyright"><span>Copyright © 2018-2020 The Apache Software Foundation. Apache and the Apache feather logo are trademarks of The Apache Software Foundation.</span></div></div></footer></div></div>
+	<script src="https://f.alicdn.com/react/15.4.1/react-with-addons.min.js"></script>
+	<script src="https://f.alicdn.com/react/15.4.1/react-dom.min.js"></script>
+	<script>
+		window.rootPath = '/dubbo-go-website';
+  </script>
+  <script src="/dubbo-go-website/build/documentation.js"></script>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-112489517-1"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+
+		gtag('config', 'UA-112489517-1');
+	</script>
+</body>
+</html>

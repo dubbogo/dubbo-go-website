@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta name="keywords" content="quick-start-dubbo-go" />
+	<meta name="description" content="quick-start-dubbo-go" />
+	<!-- 网页标签标题 -->
+	<title>quick-start-dubbo-go</title>
+	<link rel="shortcut icon" href="/dubbo-go-website/img/dubbo.ico"/>
+	<link rel="stylesheet" href="/dubbo-go-website/build/documentation.css" />
+</head>
+<body>
+	<div id="root"><div class="documentation-page" data-reactroot=""><header class="header-container header-container-normal"><div class="header-body"><a href="/dubbo-go-website/zh-cn/index.html"><img class="logo" src="/dubbo-go-website/img/dubbo_colorful.png"/></a><div class="search search-normal"><span class="icon-search"></span></div><span class="language-switch language-switch-normal">En</span><div class="header-menu"><img class="header-menu-toggle" src="/dubbo-go-website/img/menu_gray.png"/><ul><li class="menu-item menu-item-normal"><a href="/dubbo-go-website/zh-cn/index.html">首页</a></li><li class="menu-item menu-item-normal menu-item-normal-active"><a href="/dubbo-go-website/zh-cn/docs/user/quick-start.html">文档</a></li><li class="menu-item menu-item-normal"><a href="/dubbo-go-website/zh-cn/blog/index.html">博客</a></li><li class="menu-item menu-item-normal"><a href="/dubbo-go-website/zh-cn/community/index.html">社区</a></li><li class="menu-item menu-item-normal"><a href="/dubbo-go-website/zh-cn/blog/download.html">下载</a></li><li class="menu-item menu-item-normal"><a href="https://dubbo.apache.org/zh-cn/index.html">Java</a></li></ul></div></div></header><div class="bar"><div class="bar-body"><img src="/dubbo-go-website/img/docs.png" class="front-img"/><span>文档</span><img src="/dubbo-go-website/img/docs.png" class="back-img"/></div></div><section class="content-section"><div class="sidemenu"><div class="sidemenu-toggle"><img src="https://img.alicdn.com/tfs/TB1E6apXHGYBuNjy0FoXXciBFXa-200-200.png"/></div><ul><li class="menu-item menu-item-level-1"><span>用户指南</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><span>入门<img style="transform:rotate(-90deg)" class="menu-toggle" src="/dubbo-go-website/img/arrow_down.png"/></span><ul><li class="menu-item menu-item-level-3"><a href="/dubbo-go-website/zh-cn/docs/user/preface/architecture.html" target="_self">架构</a></li></ul></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/dubbo-go-website/zh-cn/docs/user/quick-start.html" target="_self">快速启动</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><span>配置<img style="transform:rotate(-90deg)" class="menu-toggle" src="/dubbo-go-website/img/arrow_down.png"/></span><ul><li class="menu-item menu-item-level-3"><a href="/dubbo-go-website/zh-cn/docs/user/configuration/provider.html" target="_self">提供者</a></li></ul></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><span>注册中心参考手册<img style="transform:rotate(-90deg)" class="menu-toggle" src="/dubbo-go-website/img/arrow_down.png"/></span><ul><li class="menu-item menu-item-level-3"><a href="/dubbo-go-website/zh-cn/docs/user/registry/introduction.html" target="_self">介绍</a></li><li class="menu-item menu-item-level-3"><a href="/dubbo-go-website/zh-cn/docs/user/registry/zookeeper.html" target="_self">Zookeeper 注册中心</a></li><li class="menu-item menu-item-level-3"><a href="/dubbo-go-website/zh-cn/docs/user/registry/nacos.html" target="_self">Nacos 注册中心</a></li><li class="menu-item menu-item-level-3"><a href="/dubbo-go-website/zh-cn/docs/user/registry/consul.html" target="_self">Consul 注册中心</a></li><li class="menu-item menu-item-level-3"><a href="/dubbo-go-website/zh-cn/docs/user/registry/etcdv3.html" target="_self">Etcdv3 注册中心</a></li></ul></li></ul></li><li class="menu-item menu-item-level-1"><span>开发者指南</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/dubbo-go-website/zh-cn/docs/developer/design.html" target="_self">框架设计</a></li></ul></li><li class="menu-item menu-item-level-1"><span>源码导读</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/dubbo-go-website/zh-cn/docs/source_code/extension.html" target="_self">拓展点</a></li></ul></li></ul></div><div class="doc-content markdown-body"><h1><a href="https://studygolang.com/articles/29457">快速上手 dubbo-go</a></h1>
+<h2>前言</h2>
+<p>每次技术调研总会发现自己学不动了怎么办？用已有的知识来拓展要学习的新知识就好了~ by LinkinStar</p>
+<p>最近需要调研使用 dubbo，之前完全是 0 基础，对于 dubbo 只存在于听说，今天上手实战一把，告诉你如何快速用 go 上手 dubbo</p>
+<p>PS：以下的学习方式适用于很多新技术</p>
+<h2>基本概念</h2>
+<p>首先学习一个技术首先要看看它的整体架构和基本概念，每个技术都有着自己的名词解释和实现方式，如果文档齐全就简单很多。</p>
+<p><a href="http://dubbo.apache.org/zh-cn/docs/user/preface/background.html">http://dubbo.apache.org/zh-cn/docs/user/preface/background.html</a></p>
+<p>大致浏览了背景、需求、架构之后基本上有一个大致概念</p>
+<p>image.png
+其实整体架构和很多微服务的架构都是类似的，就是有一个注册中心管理所有的服务列表，服务提供方先向注册中心注册，而消费方向注册中心请求服务列表，通过服务列表调用最终的服务。总的来说 dubbo 将整个过程封装在了里面，而作为使用者的我们来说更加关心业务实现，它帮我们做好了治理的工作。</p>
+<p>然后我抓住了几个我想要知道的重点：</p>
+<p>注册中心可替换，官方推荐的是 zk
+如果有变更，注册中心将基于长连接推送变更数据给消费者，注册中心，服务提供者，服务消费者三者之间均为长连接
+基于软负载均衡算法，选一台提供者进行调用，如果调用失败，再选另一台调用
+消费者在本地缓存了提供者列表</p>
+<h2>实际上手</h2>
+<p>官网文档中也给出如果使用 golang 开发，那么有 <a href="https://github.com/apache/dubbo-go">https://github.com/apache/dubbo-go</a> 可以用，那么废话不多说，上手实践一把先。因为你看再多，都比不上实践一把来学的快。</p>
+<h3>环境搭建</h3>
+<p>大多数教程就会跟你说，一个 helloWorld 需要 zookeeper 环境，但是不告诉你如何搭建，因为这对于他们来说太简单了，而我不一样，我是 0 基础，那如何快速搭建一个需要调研项目的环境呢？最好的方式就是 docker。</p>
+<pre><code class="language-yml"><span class="hljs-attr">version:</span> <span class="hljs-string">"3"</span>
+<span class="hljs-attr">services:</span>
+  <span class="hljs-attr">zookeeper:</span>
+    <span class="hljs-attr">image:</span> <span class="hljs-string">zookeeper</span>
+    <span class="hljs-attr">ports:</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-number">2181</span><span class="hljs-string">:2181</span>
+  <span class="hljs-attr">admin:</span>
+    <span class="hljs-attr">image:</span> <span class="hljs-string">apache/dubbo-admin</span>
+    <span class="hljs-attr">depends_on:</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-string">zookeeper</span>
+    <span class="hljs-attr">ports:</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-number">8080</span><span class="hljs-string">:8080</span>
+    <span class="hljs-attr">environment:</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-string">admin.registry.address=zookeeper://zookeeper:2181</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-string">admin.config-center=zookeeper://zookeeper:2181</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-string">admin.metadata-report.address=zookeeper://zookeeper:2181</span>
+</code></pre>
+<pre><code class="language-yml"><span class="hljs-attr">version:</span> <span class="hljs-string">"3"</span>
+<span class="hljs-attr">services:</span>
+  <span class="hljs-attr">zookeeper:</span>
+    <span class="hljs-attr">image:</span> <span class="hljs-string">zookeeper</span>
+    <span class="hljs-attr">ports:</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-number">2181</span><span class="hljs-string">:2181</span>
+  <span class="hljs-attr">admin:</span>
+    <span class="hljs-attr">image:</span> <span class="hljs-string">chenchuxin/dubbo-admin</span>
+    <span class="hljs-attr">depends_on:</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-string">zookeeper</span>
+    <span class="hljs-attr">ports:</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-number">8080</span><span class="hljs-string">:8080</span>
+    <span class="hljs-attr">environment:</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-string">dubbo.registry.address=zookeeper://zookeeper:2181</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-string">dubbo.admin.root.password=root</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-string">dubbo.admin.guest.password=guest</span>
+</code></pre>
+<p>上面两个 docker-compose 文件一个是官方提供的管理工具，一个包含的是个人修改之后的管理工具，记住这里有个用户名密码是 root-root，看你喜欢</p>
+<p>废话不多说，直接创建 docker-compose.yaml 然后 <code>docker-compose up</code> 你就得到了一个环境，棒 👍</p>
+<h3>样例下载</h3>
+<p>有的技术会给出官方的实验样例，dubbo-go 也不例外</p>
+<p><a href="https://github.com/apache/dubbo-samples">https://github.com/apache/dubbo-samples</a></p>
+<p>里面包含了 go 和 java 的样例，有了它你就能快速上手了，把它下载到本地</p>
+<h3>样例运行</h3>
+<p>首先要做的第一步就是把 helloworld 给跑起来，进入 golang 目录，里面有个 <a href="http://README.md">README.md</a> 看一下。然后开搞。</p>
+<p>打开一个终端运行服务方</p>
+<pre><code class="language-sh"><span class="hljs-built_in">export</span> ARCH=mac
+<span class="hljs-built_in">export</span> ENV=dev
+<span class="hljs-built_in">cd</span> helloworld/dubbo/go-server
+sh ./assembly/<span class="hljs-variable">$ARCH</span>/<span class="hljs-variable">$ENV</span>.sh
+<span class="hljs-built_in">cd</span> ./target/linux/user_info_server-0.3.1-20190517-0930-release
+sh ./bin/load.sh start
+</code></pre>
+<p>打开另一个终端运行客户端</p>
+<pre><code class="language-sh"><span class="hljs-built_in">export</span> ARCH=mac
+<span class="hljs-built_in">export</span> ENV=dev
+<span class="hljs-built_in">cd</span> helloworld/dubbo/go-client
+sh ./assembly/<span class="hljs-variable">$ARCH</span>/<span class="hljs-variable">$ENV</span>.sh
+<span class="hljs-built_in">cd</span> ./target/linux/user_info_client-0.3.1-20190517-0921-release
+sh ./bin/load_user_info_client.sh start
+</code></pre>
+<p>启动过程中会出现一些警告，问题不大，如果成功，那么客户端会有一个调用服务端的请求，并在控制台中以白色底色进行打印</p>
+<p>image.png
+java 的服务也有相对应的启动方式，按照 README 中所说明的也可以进行注册和调用，并且 java 和 go 之间是可以互相调用的</p>
+<h3>查看服务</h3>
+<p>因为我们部署的时候有一个 dubbo-admin 用于管理 zk 上注册的服务，我们可以访问本地的 8080 端口看到对应的服务情况</p>
+<p>image.png
+至此你应该已经对于整体的链路调用有一个大致的认识，结合之前官网文档的中的架构图，应该也清晰了。</p>
+<h2>如何使用</h2>
+<p>那么现在你已经运行起来了，那么势必就要来看看具体是如何进行使用的了。</p>
+<h3>服务端</h3>
+<p>服务端，也就是服务提供者；</p>
+<p>位置在：dubbo-samples/golang/helloworld/dubbo/go-server/app</p>
+<pre><code class="language-go"><span class="hljs-comment">// 将服务进行注册</span>
+config.SetProviderService(<span class="hljs-built_in">new</span>(UserProvider))
+<span class="hljs-comment">// 注册对象的hessian序列化</span>
+hessian.RegisterPOJO(&amp;User{})
+</code></pre>
+<p>是不是看起来其实很简单，其实重点就是上面两句代码了
+对于服务本身来说</p>
+<pre><code class="language-go"><span class="hljs-keyword">type</span> UserProvider <span class="hljs-keyword">struct</span> {
+}
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(u *UserProvider)</span> <span class="hljs-title">GetUser</span><span class="hljs-params">(ctx context.Context, req []<span class="hljs-keyword">interface</span>{})</span> <span class="hljs-params">(*User, error)</span></span> {
+    <span class="hljs-built_in">println</span>(<span class="hljs-string">"req:%#v"</span>, req)
+    rsp := User{<span class="hljs-string">"A001"</span>, <span class="hljs-string">"Alex Stocks"</span>, <span class="hljs-number">18</span>, time.Now()}
+    <span class="hljs-built_in">println</span>(<span class="hljs-string">"rsp:%#v"</span>, rsp)
+    <span class="hljs-keyword">return</span> &amp;rsp, <span class="hljs-literal">nil</span>
+}
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(u *UserProvider)</span> <span class="hljs-title">Reference</span><span class="hljs-params">()</span> <span class="hljs-title">string</span></span> {
+    <span class="hljs-keyword">return</span> <span class="hljs-string">"UserProvider"</span>
+}
+</code></pre>
+<p>其实就是需要实现下面那个接口就可以了</p>
+<pre><code class="language-go"><span class="hljs-comment">// rpc service interface</span>
+<span class="hljs-keyword">type</span> RPCService <span class="hljs-keyword">interface</span> {
+    Reference() <span class="hljs-keyword">string</span> <span class="hljs-comment">// rpc service id or reference id</span>
+}
+</code></pre>
+<p>其中有一步骤不要忘记了是 config.Load()，会加载配置文件的相关配置，不然你以为注册中心的地址等等是在哪里配置的呢？</p>
+<p>客户端
+看了服务端，其实客户端也就很简单了</p>
+<pre><code class="language-go">config.SetConsumerService(userProvider)
+hessian.RegisterPOJO(&amp;User{})
+</code></pre>
+<p>其实也是差不多的，也需要注册一个消费服务，并将序列化方式给注册上去</p>
+<pre><code class="language-go">user := &amp;User{}
+err := userProvider.GetUser(context.TODO(), []<span class="hljs-keyword">interface</span>{}{<span class="hljs-string">"A001"</span>}, user)
+</code></pre>
+<p>使用也就很简单了，同样的也需要实现 Reference 接口</p>
+<pre><code class="language-go"><span class="hljs-keyword">type</span> UserProvider <span class="hljs-keyword">struct</span> {
+    GetUser <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(ctx context.Context, req []<span class="hljs-keyword">interface</span>{}, rsp *User)</span> <span class="hljs-title">error</span></span>
+}
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(u *UserProvider)</span> <span class="hljs-title">Reference</span><span class="hljs-params">()</span> <span class="hljs-title">string</span></span> {
+    <span class="hljs-keyword">return</span> <span class="hljs-string">"UserProvider"</span>
+}
+</code></pre>
+<p>回头想想
+当我们看完了代码的上的使用，再回头想想 dubbo 的作用，你就会发现其实 dubbo 帮你做的事情真的屏蔽了很多。</p>
+<ul>
+<li>你不需要关心服务是怎么注册的</li>
+<li>你不需要关心服务是怎么获取的</li>
+<li>你不需要关系服务是怎么调用的</li>
+<li>甚至序列化的过程都是基本透明的</li>
+<li>想对比来说，如果让你自己去是实现微服务，那是不是说，你需要实现服务的拉取，服务的负载均衡，服务的发现，序列化.....</li>
+</ul>
+<p>这下你应该明白了 dubbo 是做什么的也就明白了它为什么会出现了</p>
+<h2>其他能力</h2>
+<p>当你学习了一个技术的基本使用之后，要学习其他的能力，以便在使用的过程中不会出现自己重复造轮子或者说有轮子没用到的情况，<a href="https://github.com/apache/dubbo-samples">https://github.com/apache/dubbo-samples</a> 不止有 helloworld 还要很多别的案例供你参考，你可以继续看看并进行试验。</p>
+<h3>支持扩展</h3>
+<p><a href="https://github.com/apache/dubbo-go">https://github.com/apache/dubbo-go</a></p>
+<p>在 Feature list 中列举了 dubbo-go 所支持的相关功能，比如序列化，比如注册中心，在比如过滤器。</p>
+<p>也就是说，在使用 dubbo-go 的时候相关功能都是插件化的，想用什么就看你自己了，比如注册中心我想用 etcd，比如调用的协议我想换成 grpc 都可以。</p>
+<h2>相关问题</h2>
+<p>对于一个技术调研，那么肯定会有相关问题等着你去发现去考虑。</p>
+<p>下面是我能想到的一些问题：</p>
+<p>当前 dubbo-go 的版本最高在 1.4，所对应的 dubbo 版本应该是 2.6.x，如果调用更高版本的服务是否会有问题
+java 和 go 之间互相调用，各种类型转换之间是否存在问题，是否容易出现无法正确反序列化的问题</p>
+<h2>后续学习</h2>
+<p>那么上面只是说能让你上手 dubbo-go，但是实际使用可能存在距离。为什么这么说呢？如果你在不动里面任何的原理情况下，那么如果遇到问题，你很可能就束手无策了。比如如果线上服务无法正常发现，你应该如何排查？调用过程中出现问题如何定位？</p>
+<p>所以后续你需要做的是：</p>
+<p>看看整体设计架构和思路，明白整条链路调用过程和规则
+学习它的接口设计，为什么别人设计的接口能兼容那么多的注册中心？如果让你来设计你怎么设计呢？
+性能也很重要，网上说性能很不错，为什么呢？什么地方做了优化，负载均衡的算法是怎么样的，你能自定义吗？</p>
+<h2>总结</h2>
+<p>总的来说，对于 dubbo-go 整体的使用上还是非常好上手的，自己想了一下，如果当前项目想要接入的话，主要是服务的暴露、序列化方式、鉴权调整等存在开发工作。</p>
+<p>上面砖头也抛的差不多了，对于你快速上手应该没有问题了，剩下的就要靠你自己了。</p>
+</div></section><footer class="footer-container"><div class="footer-body"><img src="/dubbo-go-website/img/dubbo_gray.png"/><img class="apache" src="/dubbo-go-website/img/apache_logo.png"/><div class="cols-container"><div class="col col-12"><h3></h3><p></p></div><div class="col col-4"><dl><dt>ASF</dt><dd><a href="http://www.apache.org" target="_self">基金会</a></dd><dd><a href="http://www.apache.org/licenses/" target="_self">证书</a></dd><dd><a href="http://www.apache.org/events/current-event" target="_self">事件</a></dd><dd><a href="http://www.apache.org/foundation/sponsorship.html" target="_self">赞助</a></dd><dd><a href="http://www.apache.org/foundation/thanks.html" target="_self">致谢</a></dd></dl></div><div class="col col-4"><dl><dt>文档</dt><dd><a href="/dubbo-go-website/zh-cn/docs/user/quick-start.html" target="_self">快速开始</a></dd><dd><a href="/dubbo-go-website/zh-cn/docs/dev/build.html" target="_self">开发者指南</a></dd><dd><a href="/dubbo-go-website/zh-cn/docs/admin/ops/dubbo-ops.html" target="_self">运维管理</a></dd><dd><a href="https://github.com/dubbogo/dubbo-go-website/issues/new" target="_self">报告文档问题</a></dd><dd><a href="https://github.com/dubbogo/dubbo-go-website" target="_self">编辑此文档</a></dd></dl></div><div class="col col-4"><dl><dt>资源</dt><dd><a href="/dubbo-go-website/zh-cn/blog/index.html" target="_self">博客</a></dd><dd><a href="/dubbo-go-website/zh-cn/community/index.html" target="_self">社区</a></dd><dd><a href="https://www.apache.org/security" target="_self">安全</a></dd></dl></div></div><div class="copyright"><span>Copyright © 2018-2020 The Apache Software Foundation. Apache and the Apache feather logo are trademarks of The Apache Software Foundation.</span></div></div></footer></div></div>
+	<script src="https://f.alicdn.com/react/15.4.1/react-with-addons.min.js"></script>
+	<script src="https://f.alicdn.com/react/15.4.1/react-dom.min.js"></script>
+	<script>
+		window.rootPath = '/dubbo-go-website';
+  </script>
+  <script src="/dubbo-go-website/build/documentation.js"></script>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-112489517-1"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+
+		gtag('config', 'UA-112489517-1');
+	</script>
+</body>
+</html>
