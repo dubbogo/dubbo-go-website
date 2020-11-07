@@ -1,3 +1,9 @@
+---
+title: Dubbo/Dubbo-go 应用零成本接入 MOSN
+keywords: dubbo-go MOSN
+description:介绍 Dubbo/Dubbo-go 应用如何接入 MOSN
+---
+
 # [Dubbo/Dubbo-go 应用零成本接入 MOSN](https://mosn.io/docs/dev/dubbo-integrate/)
 
 ## Dubbo 介绍
@@ -121,9 +127,11 @@ Service 是正常的 dubbo service，所以会自动注册到 zk 中去，不需
 第三步，start server。
 
 第四步，subscribe service。
+
 ```sh
 http --json post localhost:22222/sub registry:='{"type":"zookeeper", "addr" : "127.0.0.1:2181"}' service:='{"interface" : "com.ikurento.user.UserProvider", "methods" :["GetUser"], "group" : "", "version" : ""}' --verbose
 ```
+
 第五步，start client。
 
 在 client 中正确看到返回结果的话，说明请求成功了。
@@ -140,9 +148,11 @@ http --json post localhost:22222/sub registry:='{"type":"zookeeper", "addr" : "1
 第三步，start server
 
 第四步，subscribe service
+
 ```sh
 http --json post localhost:22222/sub registry:='{"type":"zookeeper", "addr" : "127.0.0.1:2181"}' service:='{"interface" : "com.ikurento.user.UserProvider", "methods" :["GetUser"], "group" : "", "version" : ""}' --verbose
 ```
+
 第五步，publish service
 
 http --json post localhost:22222/pub registry:='{"type":"zookeeper", "addr" : "127.0.0.1:2181"}' service:='{"interface" : "com.ikurento.user.UserProvider", "methods" :["GetUser"], "group" : "", "version" : ""}' --verbose
@@ -162,9 +172,11 @@ Client 是正常 client，因此 client 会自己去 subscribe。我们只要正
 第三步，start server
 
 第四步，publish service
+
 ```sh
 http --json post localhost:22222/sub registry:='{"type":"zookeeper", "addr" : "127.0.0.1:2181"}' service:='{"interface" : "com.ikurento.user.UserProvider", "methods" :["GetUser"], "group" : "", "version" : ""}' --verbose
 ```
+
 第五步，start client
 
 此时应该能看到 client 侧的响应。

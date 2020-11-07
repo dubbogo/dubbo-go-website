@@ -1,3 +1,9 @@
+---
+title: dubbo-go K8s 注册中心的设计方案与实现
+keywords: dubbo-go K8s 注册中心
+description: 介绍了dubbo-go对接K8s的注册中心的设计方案与实现
+---
+
 # [dubbo-go K8s 注册中心的设计方案与实现](https://mp.weixin.qq.com/s/j6CIZpMrSk4VO27viUlDrg)
 
 > 随着云原生的推广，越来越多的公司或组织将服务容器化，并将容器化后的服务部署在 K8s 集群中。

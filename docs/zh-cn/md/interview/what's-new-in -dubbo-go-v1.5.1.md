@@ -1,3 +1,9 @@
+---
+title: Dubbo-go v1.5.1 发布，Apache Dubbo 的 Go 实现
+keywords: dubbogo go
+description: dubbo-go的v1.5.0版本介绍
+---
+
 # [Dubbo-go v1.5.1 发布，Apache Dubbo 的 Go 实现](https://www.oschina.net/news/118469/dubbo-go-1-5-1-released)
 
 Dubbo-go 团队近期发布了 Dubbo-go v1.5.1，Dubbo-go 是 Apache Dubbo 项目的 Go 实现。
@@ -8,10 +14,10 @@ Dubbo-go 团队近期发布了 Dubbo-go v1.5.1，Dubbo-go 是 Apache Dubbo 项�
 
 在新模型 release 后，团队发现 Provider 每个 URL 发布元数据都会注册 ServiceInstance，影响性能需要优化。
 
-优化方案是： 去除 ServiceDiscoveryRegistry 中注册 ServiceInstance 的代码，在 config_loader 中的 loadProviderConfig 方法的最后注册 ServiceInstance 具体步骤： 
+优化方案是： 去除 ServiceDiscoveryRegistry 中注册 ServiceInstance 的代码，在 config_loader 中的 loadProviderConfig 方法的最后注册 ServiceInstance 具体步骤：
 
-1、获取所有注册的 Registry，过滤出 ServiceDiscoveryRegistry，拿取所有 ServiceDiscovery。 
-2、创建 ServiceInstance。 
+1、获取所有注册的 Registry，过滤出 ServiceDiscoveryRegistry，拿取所有 ServiceDiscovery。
+2、创建 ServiceInstance。
 3、每个 ServiceDiscovery 注册 ServiceInstance。
 
 保证 Provider 在注册成功之后，才暴露元数据信息。

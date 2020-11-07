@@ -1,3 +1,9 @@
+---
+title: Dubbo-go-hessian2 v1.7.0 发布
+keywords: Dubbo-go-hessian2 v1.7.0
+description: 介绍 dubbo-go-hessian2的v1.7.0版本新功能
+---
+
 # [Dubbo-go-hessian2 v1.7.0 发布](https://www.oschina.net/news/118648/dubbogo-hessian2-1-7-0-released)
 
 Dubbo-go-hessian2 v1.7.0已发布，详见 [https://github.com/apache/dubbo-go-hessian2/releases/tag/v1.7.0，](https://github.com/apache/dubbo-go-hessian2/releases/tag/v1.7.0%EF%BC%8C) 以下对这次更新内容进行详细整理。

@@ -1,3 +1,9 @@
+---
+title: Go 版本入 Dubbo 生态一周年：已和 Spring Cloud、gRPC 互通
+keywords: dubbogo 生态
+description: 介绍dubbogo进入dubbo生态
+---
+
 # [Go 版本入 Dubbo 生态一周年：已和 Spring Cloud、gRPC 互通](https://www.oschina.net/question/4489239_2316774)
 
 去年 5 月，阿里开源的高性能 RPC 框架 Dubbo 从 ASF 毕业并晋升顶级项目，同时，还宣布 Go 语言版本的 Dubbo-go 正式加入 Dubbo 官方生态。

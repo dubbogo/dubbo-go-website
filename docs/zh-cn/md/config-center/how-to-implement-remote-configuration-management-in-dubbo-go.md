@@ -1,3 +1,9 @@
+---
+title: dubbogo 回顾与展望
+keywords: dubbogo 回顾与展望
+description: 介绍dubbo-go项目发展历程和未来规划
+---
+dubbogo 回顾与展望
 # [dubbo-go 中如何实现远程配置管理？](https://blog.csdn.net/weixin_39860915/article/details/104548947)
 
 2020-02-27 20:00:00

@@ -1,3 +1,9 @@
+---
+title: What's new in Dubbo-go-hessian2 v1.6.0
+keywords: Dubbo-go-hessian2 v1.6.0
+description: 介绍 dubbo-go-hessian2的v1.6.0版本新功能
+---
+
 # [What's new in Dubbo-go-hessian2 v1.6.0](https://my.oschina.net/dubbogo/blog/4318016)
 
 发版人：[望哥](https://github.com/wongoo)

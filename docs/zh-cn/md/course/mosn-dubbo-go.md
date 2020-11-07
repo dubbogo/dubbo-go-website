@@ -1,3 +1,9 @@
+---
+title: dubbo mesh : 在 MOSN 中玩转 dubbo-go
+keywords: dubbo mesh 在 MOSN 中玩转 dubbo-go
+description: 在 MOSN 中使用 dubbo-go
+---
+
 # [曹大谈 dubbo mesh : 在 MOSN 中玩转 dubbo-go](https://my.oschina.net/dubbogo/blog/4309475)
 
 ## service mesh 简介

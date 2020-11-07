@@ -1,3 +1,9 @@
+---
+title: Dubbo-go 应用维度注册模型
+keywords: Dubbo-go 应用维度注册模型
+description: 介绍dubbo-go项目的注册模型
+---
+
 # [Dubbo-go 应用维度注册模型](https://xie.infoq.cn/article/a6a7e05f8a0d26c5f9f9bbd85)
 
 **本文作者：邓明(Github flycash)蒋超(Github @Patrick0308)**

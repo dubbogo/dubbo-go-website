@@ -1,3 +1,9 @@
+---
+title: 记一次在 mosn 对 dubbo、dubbo-go-hessian2 的性能优化
+keywords:mosn dubbo dubbo-go-hessian2 性能优化
+description: 在 mosn 对 dubbo、dubbo-go-hessian2 的性能优化过程分析记录和整理
+---
+
 # [记一次在 mosn 对 dubbo、dubbo-go-hessian2 的性能优化](https://gocn.vip/topics/10492)
 
 ### 背景

@@ -1,10 +1,16 @@
+---
+title: dubbo-go 中如何实现路由规则功能
+keywords: dubbo-go 路由规则
+description: 介绍了在 dubbo-go 中如何实现路由规则功能
+---
+
 # [dubbo-go 中如何实现路由规则功能](https://zouyx.github.io/posts/2020/03/30/dubbo-go%20%E4%B8%AD%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E8%B7%AF%E7%94%B1%E8%A7%84%E5%88%99%E5%8A%9F%E8%83%BD.html)
 
 dubbo-go 中如何实现路由规则功能
 
 # Let‘s Go!
 
-* * *
+---
 
 最近在 Apache/dubbo-go（以下简称 dubbo-go ）社区中，路由规则突然成了呼声最高的功能之一。那到底为什么需要路由规则？
 
@@ -20,9 +26,9 @@ dubbo-go 中如何实现路由规则功能
 
 综上所述，可以总结出以下 **目标**
 
-*   支持方便扩展路由规则的配置；
-*   可以方便的管理路由规则配置，如支持本地与远程配置中心管理；
-*   与 Dubbo 现有的配置中心内的路由规则配置文件兼容，降低在新增语言栈的学习及使用成本；
+- 支持方便扩展路由规则的配置；
+- 可以方便的管理路由规则配置，如支持本地与远程配置中心管理；
+- 与 Dubbo 现有的配置中心内的路由规则配置文件兼容，降低在新增语言栈的学习及使用成本；
 
 # 路由规则设计
 
@@ -38,36 +44,32 @@ dubbo-go 中如何实现路由规则功能
 
 1.需要什么功能？
 
-*   通过配置信息生成路由规则，包括：读取并解析本地配置文件，读取并解析配置中心的配置。以责任链模式串联起来。
-*   通过路由规则，匹配本地信息与远端服务信息，过滤出可以调用的远端节点，再进行负载均衡。
+- 通过配置信息生成路由规则，包括：读取并解析本地配置文件，读取并解析配置中心的配置。以责任链模式串联起来。
+- 通过路由规则，匹配本地信息与远端服务信息，过滤出可以调用的远端节点，再进行负载均衡。
 
-2.如何设计接口？
+  2.如何设计接口？
 
 通过第一点，我们能设计出以下接口来实现所需的功能。
 
-*   路由规则接口：用于路由规则过滤出可以调用的远端节点。
-    
-*   路由规则责任链接口：允许执行多个路由规则。
-    
-*   配置信息生成路由规则接口：解析内部配置信息（common.URL）生成对应的路由规则。
-    
-*   配置文件生成路由规则接口：解析配置文件生成对应的路由规则。
-    
+- 路由规则接口：用于路由规则过滤出可以调用的远端节点。
+- 路由规则责任链接口：允许执行多个路由规则。
+- 配置信息生成路由规则接口：解析内部配置信息（common.URL）生成对应的路由规则。
+- 配置文件生成路由规则接口：解析配置文件生成对应的路由规则。
 
-3.如何实现本地与远程路由规则配置加载？
+  3.如何实现本地与远程路由规则配置加载？
 
-*   本地路由规则配置：在原配置加载阶段，新增读取路由配置文件。使用 `FIleRouterFactory` 解析后，生成对应路由规则，放置到内存中备用。
-*   远程路由规则配置：在 zookeeper 注册并监听静态资源目录后。读取静态资源，筛选符合路由规则配置信息，通过 `RouterFactory` 生成对应路由规则，放置到内存中备用。
+- 本地路由规则配置：在原配置加载阶段，新增读取路由配置文件。使用 `FIleRouterFactory` 解析后，生成对应路由规则，放置到内存中备用。
+- 远程路由规则配置：在 zookeeper 注册并监听静态资源目录后。读取静态资源，筛选符合路由规则配置信息，通过 `RouterFactory` 生成对应路由规则，放置到内存中备用。
 
 ## Router
 
 匹配及过滤远程实例的路由规则。 ![router.png](../../pic/routing-rule/how-to-implement-routing-rule-in-dubbo-go-b.png) 目前已有实现类包括：
 
-*   listenableRouter:
-*   AppRouter：
-*   ConditionRouter：
-*   HealthCheckRouter:
-*   FileConditionRouter:
+- listenableRouter:
+- AppRouter：
+- ConditionRouter：
+- HealthCheckRouter:
+- FileConditionRouter:
 
 ## RouterChain
 
@@ -111,8 +113,8 @@ dubbo-go 中第一个支持的路由规则，允许用户通过配置文件及�
 
 以 Provider 为维度，通过将某一个或多个服务的提供者划分到同一个分组，约束流量只在指定分组中流转，从而实现流量隔离的目的，可以作为蓝绿发布、灰度发布等场景的能力基础。
 
-*   静态打标：根据配置文件所配置的标签，固定给 Provider 设置标签。
-*   动态打标：基于健康检查路由，根据服务不同时刻，不同状态，动态在 Provider 设置适合的标签。
+- 静态打标：根据配置文件所配置的标签，固定给 Provider 设置标签。
+- 动态打标：基于健康检查路由，根据服务不同时刻，不同状态，动态在 Provider 设置适合的标签。
 
 ## 分析
 
@@ -150,15 +152,15 @@ dubbo-go 中第一个支持的路由规则，允许用户通过配置文件及�
 
 以下为必须实现的方法，以下方法用于获取过滤服务端节点配置。
 
-*   Route: 根据配置，调用节点与被调用节点，过滤出可调用节点。
-*   Priority: 路由规则优先级，需要是个正整数。
-*   URL: 通过路由规则转换出来的 dubbo 内部协议。
+- Route: 根据配置，调用节点与被调用节点，过滤出可调用节点。
+- Priority: 路由规则优先级，需要是个正整数。
+- URL: 通过路由规则转换出来的 dubbo 内部协议。
 
 更多实现参考：
 
 路由规则：[https://github.com/apache/dubbo-go/tree/master/cluster/router/condition](https://github.com/apache/dubbo-go/tree/master/cluster/router/condition)
 
-其中包含监听配置中心实现：[https://github.com/apache/dubbo-go/blob/master/cluster/router/condition/listenable\_router.go](https://github.com/apache/dubbo-go/blob/master/cluster/router/condition/listenable_router.go)
+其中包含监听配置中心实现：[https://github.com/apache/dubbo-go/blob/master/cluster/router/condition/listenable_router.go](https://github.com/apache/dubbo-go/blob/master/cluster/router/condition/listenable_router.go)
 
 # 使用方法
 
@@ -174,7 +176,7 @@ dubbo-go 中第一个支持的路由规则，允许用户通过配置文件及�
 _ "github.com/apache/dubbo-go/cluster/router/condition"
 ```
 
-仅仅引用依赖包还不直接使用，还需要配置指定的配置文件： **_router\_config.yml_** ，内容如下:
+仅仅引用依赖包还不直接使用，还需要配置指定的配置文件： **_router_config.yml_** ，内容如下:
 
 ```plain
 # dubbo router yaml configure file

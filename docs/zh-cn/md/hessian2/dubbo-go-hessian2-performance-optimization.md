@@ -1,6 +1,12 @@
+---
+title: 记一次对 dubbo-go-hessian2 的性能优化
+keywords: dubbo-go-hessian2 性能优化
+description: 对 dubbo-go-hessian2 的性能优化的过程复盘记录
+---
+
 # 记一次对 dubbo-go-hessian2 的性能优化
 
-2020年05月02日
+2020 年 05 月 02 日
 
 目录
 
@@ -34,7 +40,7 @@ type Mix struct {
 m := Mix{A: int('a'), B: `hello`}
 m.CD = []float64{1, 2, 3}
 // 再加一层，使得数据显得复杂一些
-m.D = map[string]interface{}{`floats`: m.CD, `A`: m.A, `m`: m} 
+m.D = map[string]interface{}{`floats`: m.CD, `A`: m.A, `m`: m}
 ```
 
 > 看起来这个结构体跟真实环境里可能不太一样，但是用来分析瓶颈应该是足够了。
@@ -55,7 +61,7 @@ func BenchmarkDecode(b *testing.B) {
 }
 ```
 
-> go test -benchmem -run=^$ github.com/apache/dubbo-go-hessian2 -bench "^B" -vet=off -v
+> go test -benchmem -run=^\$ github.com/apache/dubbo-go-hessian2 -bench "^B" -vet=off -v
 
 得到下面结果：
 
@@ -165,8 +171,8 @@ if !ok {
 看结果，着实出乎意料。想起来以前看 Java 代码时经常碰到这样的代码：
 
 ```go
-if ( logLevel == `info` ) { 
-    log.Info(...) 
+if ( logLevel == `info` ) {
+    log.Info(...)
 }
 ```
 
@@ -217,10 +223,10 @@ ok      github.com/apache/dubbo-go-hessian2 28.680s
 
 最后，我们来总结一下本文主要的优化步骤：
 
-*   利用火焰图 快速定位消耗 CPU 较高的模块；
-*   利用缓存机制，快速消除重复的计算；
-*   利用 CallTree、MethodList 等多种工具分析小段代码的精确消耗；
-*   遵循二八定律，以最小的成本做出一个效果显著的收益。
+- 利用火焰图 快速定位消耗 CPU 较高的模块；
+- 利用缓存机制，快速消除重复的计算；
+- 利用 CallTree、MethodList 等多种工具分析小段代码的精确消耗；
+- 遵循二八定律，以最小的成本做出一个效果显著的收益。
 
 ### 欢迎加入 dubbo-go 社区
 

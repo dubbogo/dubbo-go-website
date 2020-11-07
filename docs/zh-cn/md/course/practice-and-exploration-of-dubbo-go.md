@@ -1,3 +1,9 @@
+---
+title: 涂鸦智能 dubbo-go 亿级流量的实践与探索
+keywords: 涂鸦智能 dubbo-go 亿级流量 实践与探索
+description: 涂鸦智能使用 dubbo-go 的一些实践与探索
+---
+
 # [涂鸦智能 dubbo-go 亿级流量的实践与探索](https://my.oschina.net/dubbogo/blog/4306343)
 
 dubbo 是一个基于 Java 开发的高性能的轻量级 RPC 框架，dubbo 提供了丰富的服务治理功能和优秀的扩展能力。而 dubbo-go 在 java 与 golang 之间提供统一的服务化能力与标准，是涂鸦智能目前最需要解决的主要问题。本文分为实践和快速接入两部分，分享在涂鸦智能的 [dubbo-go](http://github.com/apache/dubbo-go) 实战经验，意在帮助用户快速接入 dubbo-go RPC 框架，希望能让大家少走些弯路。
@@ -89,31 +95,27 @@ Generic Filter 将用户请求的结构体参数转化为统一格式的 map（�
 
 ```json
 {
-    "key": "POST:/hello/{uid}/add",
-    "interfaceName": "com.tuya.hello.service.template.IUserServer",
-    "methodName": "addUser",
-    "parameterTypes": [
-        "com.tuya.gateway.Context",
-        "java.lang.String",
-        "com.tuya.hello.User"
-    ],
-    "parameterNames": [
-        "context",
-        "uid",
-        "userInfo"
-    ],
-    "updateTimestamp": "1234567890",
-    "permissionDO": {},
-    "voMap": {
-        "userInfo": {
-            "name": "java.lang.String",
-            "sex": "java.lang.String",
-            "age": "java.lang.Integer"
-        }
-    },
-    "parameterNameHumpToLine": true,
-    "resultFiledHumpToLine": false,
-    "protocolName": "dubbo"
+  "key": "POST:/hello/{uid}/add",
+  "interfaceName": "com.tuya.hello.service.template.IUserServer",
+  "methodName": "addUser",
+  "parameterTypes": [
+    "com.tuya.gateway.Context",
+    "java.lang.String",
+    "com.tuya.hello.User"
+  ],
+  "parameterNames": ["context", "uid", "userInfo"],
+  "updateTimestamp": "1234567890",
+  "permissionDO": {},
+  "voMap": {
+    "userInfo": {
+      "name": "java.lang.String",
+      "sex": "java.lang.String",
+      "age": "java.lang.Integer"
+    }
+  },
+  "parameterNameHumpToLine": true,
+  "resultFiledHumpToLine": false,
+  "protocolName": "dubbo"
 }
 ```
 

@@ -1,3 +1,9 @@
+---
+title: dubbo-go 的开发、设计与功能介绍
+keywords: dubbo-go 介绍 设计与功能
+description: 介绍dubbo-go项目的组成和相关原理
+---
+
 # [dubbo-go 的开发、设计与功能介绍](https://www.infoq.cn/article/7JIDIi7pfwDDk47EpaXZ)
 
 ## dubbo-go 的前世今生
