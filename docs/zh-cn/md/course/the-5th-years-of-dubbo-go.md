@@ -1,7 +1,7 @@
 ---
 title: 写在 Dubbo go 的第五年
 keywords: Dubbogo 五年
-description: 在 Dubbo go 的五年发展史
+description: 介绍 Dubbo go 的五年发展史
 ---
 
 # [写在 Dubbo go 的第五年](https://my.oschina.net/u/3874284/blog/4577120)

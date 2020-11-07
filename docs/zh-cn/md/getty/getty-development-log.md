@@ -1,7 +1,7 @@
 ---
 title: getty 开发日志
 keywords: getty 开发日志
-description: 介绍getty 的开发过程
+description: 介绍 getty 的开发过程
 ---
 
 ## [getty 开发日志](http://alexstocks.github.io/html/getty.html)
