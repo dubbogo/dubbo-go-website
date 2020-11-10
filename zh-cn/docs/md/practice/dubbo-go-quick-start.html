@@ -4,23 +4,23 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-	<meta name="keywords" content="dubbo-go-quick-start" />
-	<meta name="description" content="dubbo-go-quick-start" />
+	<meta name="keywords" content="dubbogo 快速开始" />
+	<meta name="description" content="介绍dubbo-go快速开始的过程" />
 	<!-- 网页标签标题 -->
-	<title>dubbo-go-quick-start</title>
+	<title>快速开始</title>
 	<link rel="shortcut icon" href="/dubbo-go-website/img/dubbo.ico"/>
 	<link rel="stylesheet" href="/dubbo-go-website/build/documentation.css" />
 </head>
 <body>
 	<div id="root"><div class="documentation-page" data-reactroot=""><header class="header-container header-container-normal"><div class="header-body"><a href="/dubbo-go-website/zh-cn/index.html"><img class="logo" src="/dubbo-go-website/img/dubbo_colorful.png"/></a><div class="search search-normal"><span class="icon-search"></span></div><span class="language-switch language-switch-normal">En</span><div class="header-menu"><img class="header-menu-toggle" src="/dubbo-go-website/img/menu_gray.png"/><ul><li class="menu-item menu-item-normal"><a href="/dubbo-go-website/zh-cn/index.html">首页</a></li><li class="menu-item menu-item-normal menu-item-normal-active"><a href="/dubbo-go-website/zh-cn/docs/user/quick-start.html">文档</a></li><li class="menu-item menu-item-normal"><a href="/dubbo-go-website/zh-cn/blog/index.html">博客</a></li><li class="menu-item menu-item-normal"><a href="/dubbo-go-website/zh-cn/community/index.html">社区</a></li><li class="menu-item menu-item-normal"><a href="/dubbo-go-website/zh-cn/blog/download.html">下载</a></li><li class="menu-item menu-item-normal"><a href="https://dubbo.apache.org/zh-cn/index.html">Java</a></li></ul></div></div></header><div class="bar"><div class="bar-body"><img src="/dubbo-go-website/img/docs.png" class="front-img"/><span>文档</span><img src="/dubbo-go-website/img/docs.png" class="back-img"/></div></div><section class="content-section"><div class="sidemenu"><div class="sidemenu-toggle"><img src="https://img.alicdn.com/tfs/TB1E6apXHGYBuNjy0FoXXciBFXa-200-200.png"/></div><ul><li class="menu-item menu-item-level-1"><span>用户指南</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><span>入门<img style="transform:rotate(-90deg)" class="menu-toggle" src="/dubbo-go-website/img/arrow_down.png"/></span><ul><li class="menu-item menu-item-level-3"><a href="/dubbo-go-website/zh-cn/docs/user/preface/architecture.html" target="_self">架构</a></li></ul></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/dubbo-go-website/zh-cn/docs/user/quick-start.html" target="_self">快速启动</a></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><span>配置<img style="transform:rotate(-90deg)" class="menu-toggle" src="/dubbo-go-website/img/arrow_down.png"/></span><ul><li class="menu-item menu-item-level-3"><a href="/dubbo-go-website/zh-cn/docs/user/configuration/provider.html" target="_self">提供者</a></li></ul></li><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><span>注册中心参考手册<img style="transform:rotate(-90deg)" class="menu-toggle" src="/dubbo-go-website/img/arrow_down.png"/></span><ul><li class="menu-item menu-item-level-3"><a href="/dubbo-go-website/zh-cn/docs/user/registry/introduction.html" target="_self">介绍</a></li><li class="menu-item menu-item-level-3"><a href="/dubbo-go-website/zh-cn/docs/user/registry/zookeeper.html" target="_self">Zookeeper 注册中心</a></li><li class="menu-item menu-item-level-3"><a href="/dubbo-go-website/zh-cn/docs/user/registry/nacos.html" target="_self">Nacos 注册中心</a></li><li class="menu-item menu-item-level-3"><a href="/dubbo-go-website/zh-cn/docs/user/registry/consul.html" target="_self">Consul 注册中心</a></li><li class="menu-item menu-item-level-3"><a href="/dubbo-go-website/zh-cn/docs/user/registry/etcdv3.html" target="_self">Etcdv3 注册中心</a></li></ul></li></ul></li><li class="menu-item menu-item-level-1"><span>开发者指南</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/dubbo-go-website/zh-cn/docs/developer/design.html" target="_self">框架设计</a></li></ul></li><li class="menu-item menu-item-level-1"><span>源码导读</span><ul><li style="height:36px;overflow:hidden" class="menu-item menu-item-level-2"><a href="/dubbo-go-website/zh-cn/docs/source_code/extension.html" target="_self">拓展点</a></li></ul></li></ul></div><div class="doc-content markdown-body"><h1><a href="https://dubbogo.github.io/dubbo-go-website/zh-cn/docs/user/quick-start.html">快速开始</a></h1>
-<p>通过一个 <code>hellowworld</code> 例子带领大家快速上手Dubbo-go框架。</p>
+<p>通过一个 <code>hellowworld</code> 例子带领大家快速上手 Dubbo-go 框架。</p>
 <p>协议：Dubbo<br>
 编码：Hessian2<br>
 注册中心：Zookeeper</p>
 <h2>环境</h2>
 <ul>
-<li>Go编程环境</li>
-<li>启动zookeeper服务，也可以使用远程实例</li>
+<li>Go 编程环境</li>
+<li>启动 zookeeper 服务，也可以使用远程实例</li>
 </ul>
 <h2>从服务端开始</h2>
 <h3>第一步：编写 <code>Provider</code> 结构体和提供服务的方法</h3>
@@ -28,7 +28,7 @@
 <p><a href="https://github.com/dubbogo/dubbo-samples/blob/master/golang/helloworld/dubbo/go-server/app/user.go">https://github.com/dubbogo/dubbo-samples/blob/master/golang/helloworld/dubbo/go-server/app/user.go</a></p>
 </blockquote>
 <ol>
-<li>编写需要被编码的结构体，由于使用 <code>Hessian2</code> 作为编码协议，<code>User</code> 需要实现 <code>JavaClassName</code> 方法，它的返回值在dubbo中对应User类的类名。</li>
+<li>编写需要被编码的结构体，由于使用 <code>Hessian2</code> 作为编码协议，<code>User</code> 需要实现 <code>JavaClassName</code> 方法，它的返回值在 dubbo 中对应 User 类的类名。</li>
 </ol>
 <pre><code class="language-go"><span class="hljs-keyword">type</span> User <span class="hljs-keyword">struct</span> {
 	Id   <span class="hljs-keyword">string</span>
@@ -42,7 +42,7 @@
 }
 </code></pre>
 <ol start="2">
-<li>编写业务逻辑，<code>UserProvider</code> 相当于dubbo中的一个服务实现。需要实现 <code>Reference</code> 方法，返回值是这个服务的唯一标识，对应dubbo的 <code>beans</code> 和 <code>path</code> 字段。</li>
+<li>编写业务逻辑，<code>UserProvider</code> 相当于 dubbo 中的一个服务实现。需要实现 <code>Reference</code> 方法，返回值是这个服务的唯一标识，对应 dubbo 的 <code>beans</code> 和 <code>path</code> 字段。</li>
 </ol>
 <pre><code class="language-go"><span class="hljs-keyword">type</span> UserProvider <span class="hljs-keyword">struct</span> {
 }
@@ -72,7 +72,7 @@
 <p><a href="https://github.com/dubbogo/dubbo-samples/blob/master/golang/helloworld/dubbo/go-server/app/server.go">https://github.com/dubbogo/dubbo-samples/blob/master/golang/helloworld/dubbo/go-server/app/server.go</a></p>
 </blockquote>
 <ol>
-<li>引入必需的dubbo-go包</li>
+<li>引入必需的 dubbo-go 包</li>
 </ol>
 <pre><code class="language-go"><span class="hljs-keyword">import</span> (
 	hessian <span class="hljs-string">"github.com/apache/dubbo-go-hessian2"</span>
@@ -100,12 +100,8 @@
 </ol>
 <p>主要编辑以下部分：</p>
 <ul>
-<li>
-<p><code>registries</code> 结点下需要配置zk的数量和地址</p>
-</li>
-<li>
-<p><code>services</code> 结点下配置服务的具体信息，需要配置 <code>interface</code> 配置，修改为对应服务的接口名，服务的key对应第一步中 <code>Provider</code> 的 <code>Reference</code> 返回值</p>
-</li>
+<li><code>registries</code> 结点下需要配置 zk 的数量和地址</li>
+<li><code>services</code> 结点下配置服务的具体信息，需要配置 <code>interface</code> 配置，修改为对应服务的接口名，服务的 key 对应第一步中 <code>Provider</code> 的 <code>Reference</code> 返回值</li>
 </ul>
 <ol start="2">
 <li>把上面的两个配置文件分别配置为环境变量</li>
@@ -119,12 +115,8 @@ export APP_LOG_CONF_FILE="xxx"
 <p><a href="https://github.com/dubbogo/dubbo-samples/blob/master/golang/helloworld/dubbo/go-client/app/user.go">https://github.com/dubbogo/dubbo-samples/blob/master/golang/helloworld/dubbo/go-client/app/user.go</a></p>
 </blockquote>
 <ol>
-<li>
-<p>参考服务端第一步的第一点。</p>
-</li>
-<li>
-<p>与服务端不同的是，提供服务的方法作为结构体的参数，不需要编写具体业务逻辑。另外，<code>Provider</code> 不对应dubbo中的接口，而是对应一个实现。</p>
-</li>
+<li>参考服务端第一步的第一点。</li>
+<li>与服务端不同的是，提供服务的方法作为结构体的参数，不需要编写具体业务逻辑。另外，<code>Provider</code> 不对应 dubbo 中的接口，而是对应一个实现。</li>
 </ol>
 <pre><code class="language-go"><span class="hljs-keyword">type</span> UserProvider <span class="hljs-keyword">struct</span> {
 	GetUser <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(ctx context.Context, req []<span class="hljs-keyword">interface</span>{}, rsp *User)</span> <span class="hljs-title">error</span></span>
@@ -147,7 +139,7 @@ export APP_LOG_CONF_FILE="xxx"
 <p><a href="https://github.com/dubbogo/dubbo-samples/blob/master/golang/helloworld/dubbo/go-client/app/client.go">https://github.com/dubbogo/dubbo-samples/blob/master/golang/helloworld/dubbo/go-client/app/client.go</a></p>
 </blockquote>
 <ol>
-<li>引入必需的dubbo-go包</li>
+<li>引入必需的 dubbo-go 包</li>
 </ol>
 <pre><code class="language-go"><span class="hljs-keyword">import</span> (
 	hessian <span class="hljs-string">"github.com/apache/dubbo-go-hessian2"</span>
@@ -187,15 +179,11 @@ export APP_LOG_CONF_FILE="xxx"
 </ol>
 <p>主要编辑以下部分：</p>
 <ul>
-<li>
-<p><code>registries</code> 结点下需要配置zk的数量和地址</p>
-</li>
-<li>
-<p><code>references</code> 结点下配置服务的具体信息，需要配置 <code>interface</code> 配置，修改为对应服务的接口名，服务的key对应第一步中 <code>Provider</code> 的 <code>Reference</code> 返回值</p>
-</li>
+<li><code>registries</code> 结点下需要配置 zk 的数量和地址</li>
+<li><code>references</code> 结点下配置服务的具体信息，需要配置 <code>interface</code> 配置，修改为对应服务的接口名，服务的 key 对应第一步中 <code>Provider</code> 的 <code>Reference</code> 返回值</li>
 </ul>
 <ol start="2">
-<li>把上面的两个配置文件费别配置为环境变量，为防止log的环境变量和服务端的log环境变量冲突，建议所有的环境变量不要做全局配置，在当前起效即可。</li>
+<li>把上面的两个配置文件费别配置为环境变量，为防止 log 的环境变量和服务端的 log 环境变量冲突，建议所有的环境变量不要做全局配置，在当前起效即可。</li>
 </ol>
 <pre><code class="language-shell">export CONF_CONSUMER_FILE_PATH="xxx"
 export APP_LOG_CONF_FILE="xxx"

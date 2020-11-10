@@ -4,10 +4,10 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-	<meta name="keywords" content="practice-and-exploration-of-dubbo-go" />
-	<meta name="description" content="practice-and-exploration-of-dubbo-go" />
+	<meta name="keywords" content="涂鸦智能 dubbo-go 亿级流量 实践与探索" />
+	<meta name="description" content="涂鸦智能使用 dubbo-go 的一些实践与探索" />
 	<!-- 网页标签标题 -->
-	<title>practice-and-exploration-of-dubbo-go</title>
+	<title>涂鸦智能 dubbo-go 亿级流量的实践与探索</title>
 	<link rel="shortcut icon" href="/dubbo-go-website/img/dubbo.ico"/>
 	<link rel="stylesheet" href="/dubbo-go-website/build/documentation.css" />
 </head>
@@ -81,31 +81,27 @@
 <img src="../../pic/course/practice-and-exploration-of-dubbo-go-3.png" alt="1.png"></p>
 <p>最终获得的 dubbo 元数据如下:</p>
 <pre><code class="language-json">{
-    <span class="hljs-attr">"key"</span>: <span class="hljs-string">"POST:/hello/{uid}/add"</span>,
-    <span class="hljs-attr">"interfaceName"</span>: <span class="hljs-string">"com.tuya.hello.service.template.IUserServer"</span>,
-    <span class="hljs-attr">"methodName"</span>: <span class="hljs-string">"addUser"</span>,
-    <span class="hljs-attr">"parameterTypes"</span>: [
-        <span class="hljs-string">"com.tuya.gateway.Context"</span>,
-        <span class="hljs-string">"java.lang.String"</span>,
-        <span class="hljs-string">"com.tuya.hello.User"</span>
-    ],
-    <span class="hljs-attr">"parameterNames"</span>: [
-        <span class="hljs-string">"context"</span>,
-        <span class="hljs-string">"uid"</span>,
-        <span class="hljs-string">"userInfo"</span>
-    ],
-    <span class="hljs-attr">"updateTimestamp"</span>: <span class="hljs-string">"1234567890"</span>,
-    <span class="hljs-attr">"permissionDO"</span>: {},
-    <span class="hljs-attr">"voMap"</span>: {
-        <span class="hljs-attr">"userInfo"</span>: {
-            <span class="hljs-attr">"name"</span>: <span class="hljs-string">"java.lang.String"</span>,
-            <span class="hljs-attr">"sex"</span>: <span class="hljs-string">"java.lang.String"</span>,
-            <span class="hljs-attr">"age"</span>: <span class="hljs-string">"java.lang.Integer"</span>
-        }
-    },
-    <span class="hljs-attr">"parameterNameHumpToLine"</span>: <span class="hljs-literal">true</span>,
-    <span class="hljs-attr">"resultFiledHumpToLine"</span>: <span class="hljs-literal">false</span>,
-    <span class="hljs-attr">"protocolName"</span>: <span class="hljs-string">"dubbo"</span>
+  <span class="hljs-attr">"key"</span>: <span class="hljs-string">"POST:/hello/{uid}/add"</span>,
+  <span class="hljs-attr">"interfaceName"</span>: <span class="hljs-string">"com.tuya.hello.service.template.IUserServer"</span>,
+  <span class="hljs-attr">"methodName"</span>: <span class="hljs-string">"addUser"</span>,
+  <span class="hljs-attr">"parameterTypes"</span>: [
+    <span class="hljs-string">"com.tuya.gateway.Context"</span>,
+    <span class="hljs-string">"java.lang.String"</span>,
+    <span class="hljs-string">"com.tuya.hello.User"</span>
+  ],
+  <span class="hljs-attr">"parameterNames"</span>: [<span class="hljs-string">"context"</span>, <span class="hljs-string">"uid"</span>, <span class="hljs-string">"userInfo"</span>],
+  <span class="hljs-attr">"updateTimestamp"</span>: <span class="hljs-string">"1234567890"</span>,
+  <span class="hljs-attr">"permissionDO"</span>: {},
+  <span class="hljs-attr">"voMap"</span>: {
+    <span class="hljs-attr">"userInfo"</span>: {
+      <span class="hljs-attr">"name"</span>: <span class="hljs-string">"java.lang.String"</span>,
+      <span class="hljs-attr">"sex"</span>: <span class="hljs-string">"java.lang.String"</span>,
+      <span class="hljs-attr">"age"</span>: <span class="hljs-string">"java.lang.Integer"</span>
+    }
+  },
+  <span class="hljs-attr">"parameterNameHumpToLine"</span>: <span class="hljs-literal">true</span>,
+  <span class="hljs-attr">"resultFiledHumpToLine"</span>: <span class="hljs-literal">false</span>,
+  <span class="hljs-attr">"protocolName"</span>: <span class="hljs-string">"dubbo"</span>
 }
 </code></pre>
 <p>Gateway 从元数据配置中心订阅到以上信息，就能把一个 API 请求匹配到一个 dubbo 接口。再从 API 请求中抓取参数作为入参。这样功能就完成了流量闭环。</p>

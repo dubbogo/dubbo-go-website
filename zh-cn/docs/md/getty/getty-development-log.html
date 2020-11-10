@@ -4,10 +4,10 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-	<meta name="keywords" content="getty-development-log" />
-	<meta name="description" content="getty-development-log" />
+	<meta name="keywords" content="getty 开发日志" />
+	<meta name="description" content="介绍 getty 的开发过程" />
 	<!-- 网页标签标题 -->
-	<title>getty-development-log</title>
+	<title>getty 开发日志</title>
 	<link rel="shortcut icon" href="/dubbo-go-website/img/dubbo.ico"/>
 	<link rel="stylesheet" href="/dubbo-go-website/build/documentation.css" />
 </head>
@@ -17,27 +17,27 @@
 <p><em>written by Alex Stocks on 2018/03/19，版权所有，无授权不得转载</em></p>
 <h3>0 说明</h3>
 <hr>
-<p><a href="https://github.com/alexstocks/getty">getty</a>是一个go语言实现的网络层引擎，可以处理TCP/UDP/websocket三种网络协议。</p>
-<p>2016年6月我在上海做一个即时通讯项目时，接口层的底层网络驱动是当时的同事<a href="https://github.com/sanbit">sanbit</a>写的，原始网络层实现了TCP Server，其命名规范学习了著名的netty。当时这个引擎比较简洁，随着我对这个项目的改进这个网络层引擎也就随之进化了（添加了TCP Client、抽象出了 TCP connection 和 TCP session），至2016年8月份（又添加了websocket）其与原始实现已经大异其趣了，征得原作者和相关领导同意后就放到了github上。</p>
-<p>将近两年的时间我不间断地对其进行改进，年齿渐增但记忆速衰，觉得有必要记录下一些开发过程中遇到的问题以及解决方法，以备将来回忆之参考。</p>
+<p><a href="https://github.com/alexstocks/getty">getty</a>是一个 go 语言实现的网络层引擎，可以处理 TCP/UDP/websocket 三种网络协议。</p>
+<p>2016 年 6 月我在上海做一个即时通讯项目时，接口层的底层网络驱动是  当时的同事<a href="https://github.com/sanbit">sanbit</a>写的， 原始网络层实现了 TCP Server，其命名规范学习了著名的 netty。当时这个引擎比较简洁，随着我对这个项目的改进这个网络层引擎也就随之进化了（添加了 TCP Client、抽象出了 TCP connection 和 TCP session），至 2016 年 8 月份（又添加了 websocket）其与原始实现已经大异其趣了，征得原作者和  相关领导同意后就放到了 github 上。</p>
+<p>将近两年的时间我不间断地对其进行改进，年齿渐增但记忆速衰，觉得有必要记录下一些开发过程中遇到的问题  以及解决方法，以备将来回忆之参考。</p>
 <h3>1 UDP connection</h3>
 <hr>
-<p>2018年3月5日 起给 getty 添加了UDP支持。</p>
+<p>2018 年 3 月 5 日 起给 getty 添加了 UDP 支持。</p>
 <h4>1.1 UDP connect</h4>
 <hr>
-<p>UDP自身分为unconnected UDP和connected UDP两种，connected UDP的底层原理见下图。</p>
+<p>UDP 自身分为 unconnected UDP 和 connected UDP 两种，connected UDP 的底层原理见下图。</p>
 <p><img src="../../pic/getty/getty_connected_udp_socket.gif" alt=""></p>
-<p>当一端的UDP endpoint调用connect之后，os就会在内部的routing table上把udp socket和另一个endpoint的地址关联起来，在发起connect的udp endpoint端建立起一个单向的连接四元组：发出的datagram packet只能发往这个endpoint（不管sendto的时候是否指定了地址）且只能接收这个endpoint发来的udp datagram packet（如图???发来的包会被OS丢弃）。</p>
-<p>UDP endpoint发起connect后，OS并不会进行TCP式的三次握手，操作系统共仅仅记录下UDP socket的peer udp endpoint 地址后就理解返回，仅仅会核查对端地址是否存在网络中。</p>
-<p>至于另一个udp endpoint是否为connected udp则无关紧要，所以称udp connection是单向的连接。如果connect的对端不存在或者对端端口没有进程监听，则发包后对端会返回ICMP “port unreachable” 错误。</p>
-<p>如果一个POSIX系统的进程发起UDP write时没有指定peer UDP address，则会收到ENOTCONN错误，而非EDESTADDRREQ。</p>
+<p>当一端的 UDP endpoint 调用 connect 之后，os 就会在内部的 routing table 上把 udp socket 和另一个 endpoint 的地址关联起来，在发起 connect 的 udp endpoint 端建立起一个单向的连接四元组：发出的 datagram packet 只能发往这个 endpoint（不管 sendto 的时候是否指定了地址）且只能接收这个 endpoint 发来的 udp datagram packet（如图???发来的包会被 OS 丢弃）。</p>
+<p>UDP endpoint 发起 connect 后，OS 并不会进行 TCP 式的三次握手，操作系统共仅仅记录下 UDP socket 的 peer udp endpoint 地址后就理解返回，仅仅会核查对端地址是否存在网络中。</p>
+<p>至于另一个 udp endpoint 是否为 connected udp 则无关紧要，所以称 udp connection 是单向的连接。如果 connect 的对端不存在或者对端端口没有进程监听，则发包后对端会返回 ICMP “port unreachable” 错误。</p>
+<p>如果一个 POSIX 系统的进程  发起 UDP write 时没有指定 peer UDP address，则会收到 ENOTCONN 错误，而非 EDESTADDRREQ。</p>
 <p><img src="../../pic/getty/getty_dns_udp.gif" alt=""></p>
-<p>一般发起connect的为 UDP client，典型的场景是DNS系统，DNS client根据/etc/resolv.conf里面指定的DNS server进行connect动作。</p>
-<p>至于 UDP server 发起connect的情形有 TFTP，UDP client 和 UDP server 需要进行长时间的通信， client 和 server 都需要调用 connect 成为 connected UDP。</p>
+<p>一般发起 connect 的为 UDP client，典型的场景是 DNS 系统，DNS client 根据/etc/resolv.conf 里面指定的 DNS server 进行 connect 动作。</p>
+<p>至于 UDP server 发起 connect 的情形有 TFTP，UDP client 和 UDP server 需要进行长时间的通信， client 和 server 都需要调用 connect 成为 connected UDP。</p>
 <p>如果一个 connected UDP 需要更换 peer endpoint address，只需要重新 connect 即可。</p>
 <h4>1.2 connected UDP 的性能</h4>
 <hr>
-<p>connected UDP 的优势详见参考文档1。假设有两个 datagram 需要发送，unconnected UDP 的进行 write 时发送过程如下：</p>
+<p>connected UDP 的优势详见参考文档 1。假设  有两个 datagram 需要发送，unconnected UDP 的进行 write 时发送过程如下：</p>
 <pre><code class="language-none">* Connect the socket
 * Output the first datagram
 * Unconnect the socket
@@ -45,18 +45,18 @@
 * Output the second datagram
 * Unconnect the socket
 </code></pre>
-<p>每发送一个包都需要进行 connect，操作系统到 routine table cache 中判断本次目的地地址是否与上次一致，如果不一致还需要修改 routine table。</p>
+<p>每发送一个包都需要进行 connect，操作系统到 routine table cache 中判断本次目的地地址是否与上次一致，如果不一致  还需要修改 routine table。</p>
 <p>connected UDP 的两次发送过程如下：</p>
 <pre><code class="language-none">* Connect the socket
 * Output first datagram
 * Output second datagram
 </code></pre>
-<p>这个 case 下，内核只在第一次设定下虚拟链接的 peer address，后面进行连续发送即可。所以 connected UDP 的发送过程减少了 1/3 的等待时间。</p>
-<p>2017年5月7日 我曾用 <a href="https://github.com/alexStocks/python-practice/blob/master/tcp_udp_http_ws/udp/client.py">python 程序</a> 对二者之间的性能做过测试，如果 client 和 server 都部署在本机，测试结果显示发送 100 000 量的 UDP datagram packet 时，connected UDP 比 unconnected UDP 少用了 2 / 13 的时间。</p>
+<p>这个 case 下，内核只在第一次设定下虚拟链接的 peer address，后面进行连续发送即可。所以 connected UDP 的发送  过程减少了 1/3 的等待时间。</p>
+<p>2017 年 5 月 7 日  我曾  用 <a href="https://github.com/alexStocks/python-practice/blob/master/tcp_udp_http_ws/udp/client.py">python 程序</a> 对二者之间的性能做过测试，如果 client 和 server 都部署在本机，测试结果显示发送 100 000 量的 UDP datagram packet 时，connected UDP 比 unconnected UDP 少用了 2 / 13 的时间。</p>
 <p>这个测试的另一个结论是：不管是 connected UDP 还是 unconnected UDP，如果启用了 SetTimeout，则会增大发送延迟。</p>
 <h4>1.3 Go UDP</h4>
 <hr>
-<p>Go 语言 UDP 编程也对 connected UDP 和 unconnected UDP 进行了明确区分，参考文档2 详细地列明了如何使用相关 API，根据这篇文档个人也写一个 <a href="https://github.com/alexstocks/go-practice/blob/master/udp-tcp-http/udp/connected-udp.go">程序</a> 测试这些 API，测试结论如下：</p>
+<p>Go 语言 UDP 编程也对 connected UDP 和 unconnected UDP 进行了明确区分，参考文档 2 详细地列明了如何使用相关 API，根据这篇文档个人也写一个 <a href="https://github.com/alexstocks/go-practice/blob/master/udp-tcp-http/udp/connected-udp.go">程序</a> 测试这些 API，测试结论如下：</p>
 <pre><code class="language-none">* 1 connected UDP 读写方法是 Read 和 Write；
 * 2 unconnected UDP 读写方法是 ReadFromUDP 和 WriteToUDP（以及 ReadFrom 和 WriteTo)；
 * 3 unconnected UDP 可以调用 Read，只是无法获取 peer addr；
@@ -74,7 +74,7 @@
 echo_clie 31729 alex    9u  IPv4 0xa5d288135c97569d      0t0  UDP localhost:63410-&gt;localhost:10000
 </code></pre>
 <p>然后当 net.UDPConn 进行 read 动作的时候，会得到错误 “read: connection refused”。</p>
-<p>于是模仿C语言中对 TCP client connect 成功与否判断方法，对 <a href="https://github.com/alexstocks/getty/blob/master/client.go#L141">dialUDP</a> 改进如下：</p>
+<p>于是模仿 C 语言中对 TCP client connect 成功与否判断方法，对 <a href="https://github.com/alexstocks/getty/blob/master/client.go#L141">dialUDP</a> 改进如下：</p>
 <pre><code class="language-none">* 1 net.DialUDP 成功之后，判断其是否是自连接，是则退出；
 * 2 connected UDP 向对端发送一个无用的 datagram packet【”ping”字符串，对端会因其非正确 datagram 而丢弃】，失败则退出；
 * 3 connected UDP 发起读操作，如果对端返回 “read: connection refused” 则退出，否则就判断为 connect 成功。
@@ -88,13 +88,13 @@ echo_clie 31729 alex    9u  IPv4 0xa5d288135c97569d      0t0  UDP localhost:6341
 <p>根据 panic 信息提示查到 <a href="https://github.com/gorilla/websocket/blob/master/conn.go#L1018">gorilla/websocket/conn.go:ReadMsg</a> 函数调用 <a href="https://github.com/gorilla/websocket/blob/master/conn.go#L928">gorilla/websocket/conn.go:NextReader</a> 后就立即 panic 退出了。panic 的 <code>表层原因</code> 到是很容易查明：</p>
 <ul>
 <li>1 <a href="https://github.com/gorilla/websocket/blob/master/conn.go#L768">gorrilla/websocket:Conn::advanceFrame</a> 遇到读超时错误（io timeout）;</li>
-<li>2 <a href="https://github.com/gorilla/websocket/blob/master/conn.go#L941">gorrilla/websocket:ConnConn.readErr</a>记录这个error；</li>
-<li>3 <a href="https://github.com/gorilla/websocket/blob/master/conn.go#L959">gorilla/websocket/conn.go:Conn::NextReader</a>开始读取之前则<a href="https://github.com/gorilla/websocket/blob/master/conn.go#L938">检查这个错误</a>，如以前发生过错误则不再读取 websocket frame，并对<a href="https://github.com/gorilla/websocket/blob/master/conn.go#L957">gorrilla/websocket:ConnConn.readErr累积计数</a>；</li>
-<li>4 <a href="https://github.com/gorilla/websocket/blob/master/conn.go#L958">当gorrilla/websocket:ConnConn.readErr数值大于 1000</a> 的时候，程序就会panic 退出。</li>
+<li>2 <a href="https://github.com/gorilla/websocket/blob/master/conn.go#L941">gorrilla/websocket:ConnConn.readErr</a>记录这个 error；</li>
+<li>3 <a href="https://github.com/gorilla/websocket/blob/master/conn.go#L959">gorilla/websocket/conn.go:Conn::NextReader</a>开始读取之前则<a href="https://github.com/gorilla/websocket/blob/master/conn.go#L938">检查这个错误</a>，如以前发生过错误则不再读取 websocket frame，并对<a href="https://github.com/gorilla/websocket/blob/master/conn.go#L957">gorrilla/websocket:ConnConn.readErr 累积计数</a>；</li>
+<li>4 <a href="https://github.com/gorilla/websocket/blob/master/conn.go#L958">当 gorrilla/websocket:ConnConn.readErr 数值大于 1000</a> 的时候，程序就会 panic 退出。</li>
 </ul>
 <p>但是为何发生读超时错误则毫无头绪。</p>
-<p>2018/03/07 日测试 TCP compression 的时候发现启动 compression 后，程序 CPU 也会很快跑到 100%，进一步追查后发现函数 <a href="https://github.com/alexstocks/getty/blob/master/conn.go#L228">getty/conn.go:gettyTCPConn::read</a> 里面的 log 有很多 “io timeout” error。当时查到这个错误很疑惑，因为我已经在 TCP read 之前进行了超时设置【SetReadDeadline】，难道启动 compression 会导致超时设置失效使得socket成了非阻塞的socket？</p>
-<p>于是在 <a href="https://github.com/alexstocks/getty/blob/master/conn.go#L228">getty/conn.go:gettyTCPConn::read</a> 中添加了一个逻辑：启用 TCP compression 的时不再设置超时时间【默认情况下tcp connection是永久阻塞的】，CPU 100% 的问题很快就得到了解决。</p>
+<p>2018/03/07 日测试 TCP compression 的时候发现启动 compression 后，程序 CPU 也会很快跑到 100%，进一步追查后发现函数 <a href="https://github.com/alexstocks/getty/blob/master/conn.go#L228">getty/conn.go:gettyTCPConn::read</a> 里面的 log 有很多 “io timeout” error。当时查到这个错误很疑惑，因为我已经在 TCP read 之前进行了超时设置【SetReadDeadline】，难道启动 compression 会导致超时设置失效使得 socket 成了非阻塞的 socket？</p>
+<p>于是在 <a href="https://github.com/alexstocks/getty/blob/master/conn.go#L228">getty/conn.go:gettyTCPConn::read</a> 中添加了一个逻辑：启用 TCP compression 的时不再设置超时时间【默认情况下 tcp connection 是永久阻塞的】，CPU 100% 的问题很快就得到了解决。</p>
 <p>至于为何 <code>启用 TCP compression 会导致 SetDeadline 失效使得socket成了非阻塞的socket</code>，囿于个人能力和精力，待将来追查出结果后再在此补充之。</p>
 <h4>2.2 Websocket compression</h4>
 <hr>
@@ -126,7 +126,7 @@ echo_clie 31729 alex    9u  IPv4 0xa5d288135c97569d      0t0  UDP localhost:6341
 <p>1:N 类型的 Gr Pool 最易实现，个人 2017 年在项目 <a href="https://github.com/AlexStocks/kafka-connect-elasticsearch">kafka-connect-elasticsearch</a> 中实现过此类型的 <a href="https://github.com/AlexStocks/kafka-connect-elasticsearch/blob/master/app/worker.go">Gr Pool</a>：作为消费者从 kafka 读取数据然后放入消息队列，然后各个 worker gr 从此队列中取出任务进行消费处理。</p>
 <p>向 <a href="https://github.com/dubbogo/getty">dubbogo/getty</a> 中添加 gr pool 时也曾实现过这个版本的 <a href="https://github.com/dubbogo/getty/pull/6/commits/4b32c61e65858b3eea9d88d8f1c154ab730c32f1">gr pool</a>。这种模型的 gr pool 整个 pool 只创建一个 chan， 所有 gr 去读取这一个 chan，其缺点是：队列读写模型是 一写多读，因为 go channel 的低效率【整体使用一个 mutex lock】造成竞争激烈，当然其网络包处理顺序更无从保证。</p>
 <p><a href="https://github.com/dubbogo/getty">dubbogo/getty</a> 初始版本的 <a href="https://github.com/dubbogo/getty/pull/6/files/c4d06e2a329758a6c65c46abe464a90a3002e428#diff-9922b38d89e2ff9f820f2ce62f254162">gr pool</a> 模型为 1:1，每个 gr 多有自己的 chan，其读写模型是一写一读，其优点是可保证网络包处理顺序性，<br>
-如读取 kafka 消息时候，按照 kafka message 的 key 的 hash 值以取余方式【hash(message key) % N】将其投递到某个 task queue，则同一 key 的消息都可以保证处理有序。但 <a href="http://alexstocks.github.io/html/10">望哥</a> 指出了这种模型的缺陷：每个task处理要有时间，此方案会造成某个 gr 的 chan 里面有 task 堵塞，就算其他 gr 闲着，也没办法处理之【任务处理“饥饿”】。</p>
+如读取 kafka 消息时候，按照 kafka message 的 key 的 hash 值以取余方式【hash(message key) % N】将其投递到某个 task queue，则同一 key 的消息都可以保证处理有序。但 <a href="http://alexstocks.github.io/html/10">望哥</a> 指出了这种模型的缺陷：每个 task 处理要有时间，此方案会造成某个 gr 的 chan 里面有 task 堵塞，就算其他 gr 闲着，也没办法处理之【任务处理“饥饿”】。</p>
 <p><a href="https://github.com/wenweihu86">wenwei86</a> 给出了更进一步的 1:1 模型的改进方案：每个 gr 一个 chan，如果 gr 发现自己的 chan 没有请求，就去找别的 chan，发送方也尽量发往消费快的协程。这个方案类似于 go runtime 内部的 MPG 调度算法，但是对我个人来说算法和实现均太复杂，故而没有采用。</p>
 <p><a href="https://github.com/dubbogo/getty">dubbogo/getty</a> 目前采用了 M:N 模型版本的 <a href="https://github.com/dubbogo/getty/pull/6/commits/1991056b300ba9804de0554dbb49b5eb04560c4b">gr pool</a>，每个 task queue 被 N/M 个 gr 消费，这种模型的优点是兼顾处理效率和锁压力平衡，可以做到总体层面的任务处理均衡。此版本下 Task 派发采用 RoundRobin 方式。</p>
 <h2>总结</h2>
@@ -138,7 +138,7 @@ echo_clie 31729 alex    9u  IPv4 0xa5d288135c97569d      0t0  UDP localhost:6341
 <hr>
 <ul>
 <li>1 <a href="http://www.masterraghu.com/subjects/np/introduction/unix_network_programming_v1.3/ch08lev1sec11.html">connect Function with UDP</a></li>
-<li>2 <a href="http://colobu.com/2016/10/19/Go-UDP-Programming/">深入Go UDP编程</a></li>
+<li>2 <a href="http://colobu.com/2016/10/19/Go-UDP-Programming/">深入 Go UDP 编程</a></li>
 </ul>
 </div></section><footer class="footer-container"><div class="footer-body"><img src="/dubbo-go-website/img/dubbo_gray.png"/><img class="apache" src="/dubbo-go-website/img/apache_logo.png"/><div class="cols-container"><div class="col col-12"><h3></h3><p></p></div><div class="col col-4"><dl><dt>ASF</dt><dd><a href="http://www.apache.org" target="_self">基金会</a></dd><dd><a href="http://www.apache.org/licenses/" target="_self">证书</a></dd><dd><a href="http://www.apache.org/events/current-event" target="_self">事件</a></dd><dd><a href="http://www.apache.org/foundation/sponsorship.html" target="_self">赞助</a></dd><dd><a href="http://www.apache.org/foundation/thanks.html" target="_self">致谢</a></dd></dl></div><div class="col col-4"><dl><dt>文档</dt><dd><a href="/dubbo-go-website/zh-cn/docs/user/quick-start.html" target="_self">快速开始</a></dd><dd><a href="/dubbo-go-website/zh-cn/docs/dev/build.html" target="_self">开发者指南</a></dd><dd><a href="/dubbo-go-website/zh-cn/docs/admin/ops/dubbo-ops.html" target="_self">运维管理</a></dd><dd><a href="https://github.com/dubbogo/dubbo-go-website/issues/new" target="_self">报告文档问题</a></dd><dd><a href="https://github.com/dubbogo/dubbo-go-website" target="_self">编辑此文档</a></dd></dl></div><div class="col col-4"><dl><dt>资源</dt><dd><a href="/dubbo-go-website/zh-cn/blog/index.html" target="_self">博客</a></dd><dd><a href="/dubbo-go-website/zh-cn/community/index.html" target="_self">社区</a></dd><dd><a href="https://www.apache.org/security" target="_self">安全</a></dd></dl></div></div><div class="copyright"><span>Copyright © 2018-2020 The Apache Software Foundation. Apache and the Apache feather logo are trademarks of The Apache Software Foundation.</span></div></div></footer></div></div>
 	<script src="https://f.alicdn.com/react/15.4.1/react-with-addons.min.js"></script>

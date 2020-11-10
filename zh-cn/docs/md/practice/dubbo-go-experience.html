@@ -4,10 +4,10 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-	<meta name="keywords" content="dubbo-go-experience" />
-	<meta name="description" content="dubbo-go-experience" />
+	<meta name="keywords" content="dubbo-go 接入" />
+	<meta name="description" content="dubbo-go的接入过程记录" />
 	<!-- 网页标签标题 -->
-	<title>dubbo-go-experience</title>
+	<title>dubbo-go 踩坑记</title>
 	<link rel="shortcut icon" href="/dubbo-go-website/img/dubbo.ico"/>
 	<link rel="stylesheet" href="/dubbo-go-website/build/documentation.css" />
 </head>
@@ -37,33 +37,33 @@
 <h3>配置</h3>
 <p>由于我是接入客户端，所以我这边只配置了 <em>ConsumerConfig</em> 。</p>
 <pre><code class="language-yaml"><span class="hljs-attr">dubbo:</span>
-    <span class="hljs-comment"># client</span>
-    <span class="hljs-attr">request_timeout:</span> <span class="hljs-string">"3s"</span>
-    <span class="hljs-comment"># connect timeout</span>
-    <span class="hljs-attr">connect_timeout:</span> <span class="hljs-string">"3s"</span>
-    <span class="hljs-attr">check:</span> <span class="hljs-literal">true</span>
-    <span class="hljs-attr">application:</span>
-        <span class="hljs-attr">organization:</span> <span class="hljs-string">"dfire.com"</span>
-        <span class="hljs-attr">name:</span> <span class="hljs-string">"soa.sso.ITokenService"</span>
-        <span class="hljs-attr">module:</span> <span class="hljs-string">"dubbogo token service client"</span>
-        <span class="hljs-attr">version:</span> <span class="hljs-string">"1.0.0"</span>
-        <span class="hljs-attr">owner:</span> <span class="hljs-string">"congbai"</span>
-    <span class="hljs-attr">registries:</span>
-        <span class="hljs-attr">"hangzhouzk":</span>
-            <span class="hljs-attr">protocol:</span> <span class="hljs-string">"zookeeper"</span>
-            <span class="hljs-attr">timeout:</span> <span class="hljs-string">"3s"</span>
-            <span class="hljs-attr">address:</span> <span class="hljs-string">"zk1.2dfire-daily.com:2181"</span>
-            <span class="hljs-attr">username:</span> <span class="hljs-string">""</span>
-            <span class="hljs-attr">password:</span> <span class="hljs-string">""</span>
-    <span class="hljs-attr">references:</span>
-        <span class="hljs-attr">"ITokenService":</span>
-            <span class="hljs-attr">registry:</span> <span class="hljs-string">"hangzhouzk"</span>
-            <span class="hljs-attr">protocol:</span> <span class="hljs-string">"dubbo"</span>
-            <span class="hljs-attr">interface:</span> <span class="hljs-string">"com.dfire.soa.sso.ITokenService"</span>
-            <span class="hljs-attr">version:</span> <span class="hljs-string">"1.0.0"</span>
-            <span class="hljs-attr">methods:</span>
-                <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">"validate"</span>
-            <span class="hljs-attr">retries:</span> <span class="hljs-string">"3"</span>
+  <span class="hljs-comment"># client</span>
+  <span class="hljs-attr">request_timeout:</span> <span class="hljs-string">"3s"</span>
+  <span class="hljs-comment"># connect timeout</span>
+  <span class="hljs-attr">connect_timeout:</span> <span class="hljs-string">"3s"</span>
+  <span class="hljs-attr">check:</span> <span class="hljs-literal">true</span>
+  <span class="hljs-attr">application:</span>
+    <span class="hljs-attr">organization:</span> <span class="hljs-string">"dfire.com"</span>
+    <span class="hljs-attr">name:</span> <span class="hljs-string">"soa.sso.ITokenService"</span>
+    <span class="hljs-attr">module:</span> <span class="hljs-string">"dubbogo token service client"</span>
+    <span class="hljs-attr">version:</span> <span class="hljs-string">"1.0.0"</span>
+    <span class="hljs-attr">owner:</span> <span class="hljs-string">"congbai"</span>
+  <span class="hljs-attr">registries:</span>
+    <span class="hljs-attr">"hangzhouzk":</span>
+      <span class="hljs-attr">protocol:</span> <span class="hljs-string">"zookeeper"</span>
+      <span class="hljs-attr">timeout:</span> <span class="hljs-string">"3s"</span>
+      <span class="hljs-attr">address:</span> <span class="hljs-string">"zk1.2dfire-daily.com:2181"</span>
+      <span class="hljs-attr">username:</span> <span class="hljs-string">""</span>
+      <span class="hljs-attr">password:</span> <span class="hljs-string">""</span>
+  <span class="hljs-attr">references:</span>
+    <span class="hljs-attr">"ITokenService":</span>
+      <span class="hljs-attr">registry:</span> <span class="hljs-string">"hangzhouzk"</span>
+      <span class="hljs-attr">protocol:</span> <span class="hljs-string">"dubbo"</span>
+      <span class="hljs-attr">interface:</span> <span class="hljs-string">"com.dfire.soa.sso.ITokenService"</span>
+      <span class="hljs-attr">version:</span> <span class="hljs-string">"1.0.0"</span>
+      <span class="hljs-attr">methods:</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">"validate"</span>
+      <span class="hljs-attr">retries:</span> <span class="hljs-string">"3"</span>
 </code></pre>
 <p>我这里是把 <em>dubbo-go</em> 作为第三方库来用，所以我没使用官方 <a href="https://github.com/dubbogo/dubbo-samples/golang">dubbo-samples</a> 那样在 <em>init</em> 函数中读入配置。</p>
 <p>配置代码如下：</p>

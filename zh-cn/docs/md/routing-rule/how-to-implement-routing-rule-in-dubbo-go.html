@@ -4,10 +4,10 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-	<meta name="keywords" content="how-to-implement-routing-rule-in-dubbo-go" />
-	<meta name="description" content="how-to-implement-routing-rule-in-dubbo-go" />
+	<meta name="keywords" content="dubbo-go 路由规则" />
+	<meta name="description" content="介绍了在 dubbo-go 中如何实现路由规则功能" />
 	<!-- 网页标签标题 -->
-	<title>how-to-implement-routing-rule-in-dubbo-go</title>
+	<title>dubbo-go 中如何实现路由规则功能</title>
 	<link rel="shortcut icon" href="/dubbo-go-website/img/dubbo.ico"/>
 	<link rel="stylesheet" href="/dubbo-go-website/build/documentation.css" />
 </head>
@@ -36,10 +36,14 @@
 <p>除此之外，还有几个问题是需要优先考虑：</p>
 <p>1.需要什么功能？</p>
 <ul>
-<li>通过配置信息生成路由规则，包括：读取并解析本地配置文件，读取并解析配置中心的配置。以责任链模式串联起来。</li>
-<li>通过路由规则，匹配本地信息与远端服务信息，过滤出可以调用的远端节点，再进行负载均衡。</li>
-</ul>
+<li>
+<p>通过配置信息生成路由规则，包括：读取并解析本地配置文件，读取并解析配置中心的配置。以责任链模式串联起来。</p>
+</li>
+<li>
+<p>通过路由规则，匹配本地信息与远端服务信息，过滤出可以调用的远端节点，再进行负载均衡。</p>
 <p>2.如何设计接口？</p>
+</li>
+</ul>
 <p>通过第一点，我们能设计出以下接口来实现所需的功能。</p>
 <ul>
 <li>
@@ -53,12 +57,14 @@
 </li>
 <li>
 <p>配置文件生成路由规则接口：解析配置文件生成对应的路由规则。</p>
-</li>
-</ul>
 <p>3.如何实现本地与远程路由规则配置加载？</p>
-<ul>
-<li>本地路由规则配置：在原配置加载阶段，新增读取路由配置文件。使用 <code>FIleRouterFactory</code> 解析后，生成对应路由规则，放置到内存中备用。</li>
-<li>远程路由规则配置：在 zookeeper 注册并监听静态资源目录后。读取静态资源，筛选符合路由规则配置信息，通过 <code>RouterFactory</code> 生成对应路由规则，放置到内存中备用。</li>
+</li>
+<li>
+<p>本地路由规则配置：在原配置加载阶段，新增读取路由配置文件。使用 <code>FIleRouterFactory</code> 解析后，生成对应路由规则，放置到内存中备用。</p>
+</li>
+<li>
+<p>远程路由规则配置：在 zookeeper 注册并监听静态资源目录后。读取静态资源，筛选符合路由规则配置信息，通过 <code>RouterFactory</code> 生成对应路由规则，放置到内存中备用。</p>
+</li>
 </ul>
 <h2>Router</h2>
 <p>匹配及过滤远程实例的路由规则。 <img src="../../pic/routing-rule/how-to-implement-routing-rule-in-dubbo-go-b.png" alt="router.png"> 目前已有实现类包括：</p>
