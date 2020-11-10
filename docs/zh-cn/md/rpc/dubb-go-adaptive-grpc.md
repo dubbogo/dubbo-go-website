@@ -1,6 +1,12 @@
+---
+title: 无缝衔接 gRPC 与 dubbo-go
+keywords: gRPC dubbo-go
+description: 介绍了如何无缝衔接 gRPC 与 dubbo-go
+---
+
 # [无缝衔接 gRPC 与 dubbo-go](https://developer.aliyun.com/article/742946)
 
-[中间件小哥](https://developer.aliyun.com/profile/g6g63f3lanvck) 2020-01-19 1530浏览量
+[中间件小哥](https://developer.aliyun.com/profile/g6g63f3lanvck) 2020-01-19 1530 浏览量
 
 **简介：**
 
@@ -10,9 +16,9 @@
 
 ## gRPC
 
-先来简单介绍一下 gRPC 。它是 Google 推出来的一个 RPC 框架。gRPC是通过 IDL ( Interface Definition Language )——接口定义语言——编译成不同语言的客户端来实现的。可以说是RPC理论的一个非常非常标准的实现。
+先来简单介绍一下 gRPC 。它是 Google 推出来的一个 RPC 框架。gRPC 是通过 IDL ( Interface Definition Language )——接口定义语言——编译成不同语言的客户端来实现的。可以说是 RPC 理论的一个非常非常标准的实现。
 
-因而 gRPC 天然就支持多语言。这几年，它几乎成为了跨语言 RPC 框架的标准实现方式了，很多优秀的rpc框架，如 Spring Cloud 和 dubbo ，都支持 gRPC 。
+因而 gRPC 天然就支持多语言。这几年，它几乎成为了跨语言 RPC 框架的标准实现方式了，很多优秀的 rpc 框架，如 Spring Cloud 和 dubbo ，都支持 gRPC 。
 
 server 端
 
@@ -27,7 +33,7 @@ server 端
 
 ![2](../../pic/rpc/dubb-go-adaptive-grpc-b.png "2")
 
-也就是说，如果我们在 dubbo-go 里面拿到这个 \_Greeter\_serviceDesc ，就可以实现这个 server 的注册。因此，可以看到，在 dubbo-go 里面，要解决的一个关键问题就是如何拿到这个 serviceDesc 。
+也就是说，如果我们在 dubbo-go 里面拿到这个 \_Greeter_serviceDesc ，就可以实现这个 server 的注册。因此，可以看到，在 dubbo-go 里面，要解决的一个关键问题就是如何拿到这个 serviceDesc 。
 
 ## Client 端
 
@@ -36,7 +42,7 @@ Client 端的用法是：
 
 这个东西要复杂一点：  
 1、创建连接：conn, err := grpc.Dial(address)  
-2、创建client：c := pb.NewGreeterClient(conn)  
+2、创建 client：c := pb.NewGreeterClient(conn)  
 3、调用方法：r, err := c.SayHello(ctx, &pb.HelloRequest{Name: name})
 
 第一个问题其实挺好解决的，毕竟我们可以从用户的配置里面读出 address ；
@@ -71,7 +77,7 @@ Client 端的用法是：
 
 我们直接进去看看在 gRPC 小节里面提到的要点是如何实现的。
 
-### server端
+### server 端
 
 ![8](../../pic/rpc/dubb-go-adaptive-grpc-h.png "8")
 
@@ -87,7 +93,7 @@ Client 端的用法是：
 
 我会在后面给大家揭晓这个谜底。
 
-## Client端
+## Client 端
 
 dubbo-go 设计了自身的 Client ，作为对 gRPC 里面 Client 的一种模拟与封装：  
 ![10](../../pic/rpc/dubb-go-adaptive-grpc-i.png "10")
@@ -106,7 +112,7 @@ dubbo-go 设计了自身的 Client ，作为对 gRPC 里面 Client 的一种模�
 
 前面提到过 ds, ok := service.(DubboGrpcService) 这一句，面临的问题是如何让 protobuf 编译生成的代码能够实现 DubboGrpcService 接口呢？
 
-有些小伙伴可能也注意到，在我贴出来的一些代码里面，反射操作会根据名字来获取method实例，比如NewClient方法里面的method := reflect.ValueOf(impl).MethodByName("GetDubboStub")这一句。这一句的impl，即指服务的实现，也是 protobuf 里面编译出来的，怎么让 protobuf 编译出来的代码里面含有这个 GetDubboStub 方法呢？
+有些小伙伴可能也注意到，在我贴出来的一些代码里面，反射操作会根据名字来获取 method 实例，比如 NewClient 方法里面的 method := reflect.ValueOf(impl).MethodByName("GetDubboStub")这一句。这一句的 impl，即指服务的实现，也是 protobuf 里面编译出来的，怎么让 protobuf 编译出来的代码里面含有这个 GetDubboStub 方法呢？
 
 到这里，答案已经呼之欲出了：修改 protobuf 编译生成代码的逻辑！
 

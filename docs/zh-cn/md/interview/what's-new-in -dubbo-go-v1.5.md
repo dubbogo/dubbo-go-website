@@ -1,3 +1,9 @@
+---
+title: Dubbo-go 发布 1.5 版，朝云原生迈出关键一步
+keywords: dubbogo go
+description: dubbo-go的v1.5.0版本介绍 打通云原生
+---
+
 # [Dubbo-go 发布 1.5 版，朝云原生迈出关键一步](https://mp.weixin.qq.com/s/zqRmQ3gsdKj47cO22Dwczw)
 
 ## 引语

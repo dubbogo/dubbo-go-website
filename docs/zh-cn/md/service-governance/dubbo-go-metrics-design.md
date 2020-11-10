@@ -1,3 +1,9 @@
+---
+title: eBay 邓明：dubbo-go 中 metrics 的设计
+keywords: dubbo-go metrics
+description: 介绍了dubbo-go 中 metrics 的设计
+---
+
 # [eBay 邓明：dubbo-go 中 metrics 的设计](https://mp.weixin.qq.com/s/_ibXd2z1RqjOJwk7jMAwig)
 
 发布于：2020 年 4 月 22 日 17:15

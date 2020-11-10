@@ -1,3 +1,9 @@
+---
+title: dubbo-go 中 REST 协议实现
+keywords: dubbo-go REST协议
+description: 介绍dubbo-go 中 REST 协议实现
+---
+
 # [dubbo-go 中 REST 协议实现](https://mp.weixin.qq.com/s/9ngGYnkdcu14GkaPBjOBLg)
 
 在社区小伙伴们的努力下，Apache/dubbo-go 在 v1.4.0 中支持 REST 协议了。

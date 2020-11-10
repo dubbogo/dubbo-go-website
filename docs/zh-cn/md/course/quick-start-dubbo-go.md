@@ -1,3 +1,9 @@
+---
+title: 快速上手 dubbo-go
+keywords: 快速上手 dubbo-go
+description: dubbo-go 快速接入方式介绍
+---
+
 # [快速上手 dubbo-go](https://studygolang.com/articles/29457)
 
 ## 前言
@@ -89,6 +95,7 @@ https://github.com/apache/dubbo-samples
 首先要做的第一步就是把 helloworld 给跑起来，进入 golang 目录，里面有个 README.md 看一下。然后开搞。
 
 打开一个终端运行服务方
+
 ```sh
 export ARCH=mac
 export ENV=dev
@@ -97,6 +104,7 @@ sh ./assembly/$ARCH/$ENV.sh
 cd ./target/linux/user_info_server-0.3.1-20190517-0930-release
 sh ./bin/load.sh start
 ```
+
 打开另一个终端运行客户端
 
 ```sh
@@ -107,6 +115,7 @@ sh ./assembly/$ARCH/$ENV.sh
 cd ./target/linux/user_info_client-0.3.1-20190517-0921-release
 sh ./bin/load_user_info_client.sh start
 ```
+
 启动过程中会出现一些警告，问题不大，如果成功，那么客户端会有一个调用服务端的请求，并在控制台中以白色底色进行打印
 
 image.png
@@ -224,7 +233,6 @@ https://github.com/apache/dubbo-go
 
 当前 dubbo-go 的版本最高在 1.4，所对应的 dubbo 版本应该是 2.6.x，如果调用更高版本的服务是否会有问题
 java 和 go 之间互相调用，各种类型转换之间是否存在问题，是否容易出现无法正确反序列化的问题
-
 
 ## 后续学习
 

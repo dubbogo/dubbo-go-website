@@ -1,3 +1,9 @@
+---
+title: dubbo-go 踩坑记
+keywords: dubbo-go 接入
+description: dubbo-go的接入过程记录
+---
+
 # [dubbo-go 踩坑记](https://dubbogo.github.io/dubbo-go-website/zh-cn/blog/dubbo-go-experience.html)
 
 ## 扯淡
@@ -39,33 +45,33 @@
 
 ```yaml
 dubbo:
-    # client
-    request_timeout: "3s"
-    # connect timeout
-    connect_timeout: "3s"
-    check: true
-    application:
-        organization: "dfire.com"
-        name: "soa.sso.ITokenService"
-        module: "dubbogo token service client"
-        version: "1.0.0"
-        owner: "congbai"
-    registries:
-        "hangzhouzk":
-            protocol: "zookeeper"
-            timeout: "3s"
-            address: "zk1.2dfire-daily.com:2181"
-            username: ""
-            password: ""
-    references:
-        "ITokenService":
-            registry: "hangzhouzk"
-            protocol: "dubbo"
-            interface: "com.dfire.soa.sso.ITokenService"
-            version: "1.0.0"
-            methods:
-                - name: "validate"
-            retries: "3"
+  # client
+  request_timeout: "3s"
+  # connect timeout
+  connect_timeout: "3s"
+  check: true
+  application:
+    organization: "dfire.com"
+    name: "soa.sso.ITokenService"
+    module: "dubbogo token service client"
+    version: "1.0.0"
+    owner: "congbai"
+  registries:
+    "hangzhouzk":
+      protocol: "zookeeper"
+      timeout: "3s"
+      address: "zk1.2dfire-daily.com:2181"
+      username: ""
+      password: ""
+  references:
+    "ITokenService":
+      registry: "hangzhouzk"
+      protocol: "dubbo"
+      interface: "com.dfire.soa.sso.ITokenService"
+      version: "1.0.0"
+      methods:
+        - name: "validate"
+      retries: "3"
 ```
 
 我这里是把 _dubbo-go_ 作为第三方库来用，所以我没使用官方 [dubbo-samples](https://github.com/dubbogo/dubbo-samples/golang) 那样在 _init_ 函数中读入配置。

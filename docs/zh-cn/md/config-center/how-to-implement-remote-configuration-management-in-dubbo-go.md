@@ -1,3 +1,9 @@
+---
+title: dubbo-go 中如何实现远程配置管理
+keywords: dubbogo 远程配置管理
+description: 介绍dubbo-go 中如何实现远程配置管理
+---
+
 # [dubbo-go 中如何实现远程配置管理？](https://blog.csdn.net/weixin_39860915/article/details/104548947)
 
 2020-02-27 20:00:00

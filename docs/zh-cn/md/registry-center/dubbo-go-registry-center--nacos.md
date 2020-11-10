@@ -1,3 +1,9 @@
+---
+title: 解构 Dubbo-go 的核心注册引擎 Nacos
+keywords: Dubbo-go 注册引擎 Nacos
+description: 介绍dubbo-go项目核心注册引擎 Nacos
+---
+
 # [解构 Dubbo-go 的核心注册引擎 Nacos](https://my.oschina.net/dubbogo/blog/4608576)
 
 近几年，随着Go语言社区逐渐发展和壮大，越来越多的公司开始尝试采用Go搭建微服务体系，也涌现了一批Go的微服务框架，如go-micro、go-kit、Dubbo-go等，跟微服务治理相关的组件也逐渐开始在Go生态发力，如Sentinel、Hystrix等都推出了Go语言版本，而作为微服务框架的核心引擎--注册中心，也是必不可缺少的组件，市面已经有多款注册中心支持Go语言，应该如何选择呢？我们可以对目前主流的支持Go语言的注册中心做个对比。
