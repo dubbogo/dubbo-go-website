@@ -1,10 +1,10 @@
 ---
-title: 都已经十岁的 Apache Dubbo，还能再乘风破浪吗
-keywords: 都已经十岁的 Apache Dubbo，还能再乘风破浪吗
+title: Dubbo从Apach毕业一周年系列文章 | Dubbo 3.0展望
+keywords: Dubbo从Apach毕业一周年系列文章 | Dubbo 3.0展望
 description: 介绍 dubbo 项目和 dubbogo 项目发展历程和未来规划
 ---
 
-# [都已经十岁的 Apache Dubbo，还能再乘风破浪吗？](https://my.oschina.net/u/3874284/blog/4338792)
+# [Dubbo从Apach毕业一周年系列文章 | Dubbo 3.0展望](https://my.oschina.net/u/3874284/blog/4338792)
 
 纵观中国开源历史，你真的没法找到第二个像 Dubbo 一样自带争议和讨论热度的开源项目。
 

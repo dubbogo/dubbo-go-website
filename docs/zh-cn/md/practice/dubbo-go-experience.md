@@ -1,10 +1,10 @@
 ---
-title: dubbo-go 踩坑记
-keywords: dubbo-go 接入
+title: dubbo-go 踩坑记：dubbo方法名映射tag使用
+keywords: dubbo-go 踩坑记：dubbo方法名映射tag使用
 description: dubbo-go的接入过程记录
 ---
 
-# [dubbo-go 踩坑记](https://dubbogo.github.io/dubbo-go-website/zh-cn/blog/dubbo-go-experience.html)
+# [dubbo-go 踩坑记：dubbo方法名映射tag使用](https://dubbogo.github.io/dubbo-go-website/zh-cn/blog/dubbo-go-experience.html)
 
 ## 扯淡
 

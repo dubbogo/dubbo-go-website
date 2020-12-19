@@ -1,10 +1,10 @@
 ---
-title: dubbo-go 中如何实现路由规则功能
-keywords: dubbo-go 路由规则
+title: eBay 邓明：dubbo-go 中如何实现路由规则功能
+keywords: eBay 邓明：dubbo-go 中如何实现路由规则功能
 description: 介绍了在 dubbo-go 中如何实现路由规则功能
 ---
 
-# [dubbo-go 中如何实现路由规则功能](https://zouyx.github.io/posts/2020/03/30/dubbo-go%20%E4%B8%AD%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E8%B7%AF%E7%94%B1%E8%A7%84%E5%88%99%E5%8A%9F%E8%83%BD.html)
+# [eBay 邓明：dubbo-go 中如何实现路由规则功能](https://zouyx.github.io/posts/2020/03/30/dubbo-go%20%E4%B8%AD%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E8%B7%AF%E7%94%B1%E8%A7%84%E5%88%99%E5%8A%9F%E8%83%BD.html)
 
 dubbo-go 中如何实现路由规则功能
 
