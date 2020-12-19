@@ -180,3 +180,7 @@ http --json post localhost:22222/sub registry:='{"type":"zookeeper", "addr" : "1
 第五步，start client
 
 此时应该能看到 client 侧的响应。
+
+## 本文作者
+
+曹春晖，开源 MOSN committer，@cch123，蚂蚁金服系统部技术专家，主攻 Service Mesh 方向。个人技术网站 xargin.com，和他人合著《Go 语言高级编程》。

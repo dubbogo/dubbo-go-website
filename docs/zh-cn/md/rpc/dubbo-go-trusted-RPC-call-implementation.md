@@ -1,10 +1,10 @@
 ---
-title: dubbo-go 可信 RPC 调用实现
-keywords: dubbogo 可信RPC
+title: 爱奇艺郑泽超：dubbo-go 可信 RPC 调用实现
+keywords: 爱奇艺郑泽超：dubbo-go 可信 RPC 调用实现
 description: 介绍 dubbo-go 可信 RPC 调用实现
 ---
 
-# [dubbo-go 可信 RPC 调用实现](https://mp.weixin.qq.com/s/30CjBKheCZClKaZCw1DRZA)
+# [爱奇艺郑泽超：dubbo-go 可信 RPC 调用实现](https://mp.weixin.qq.com/s/30CjBKheCZClKaZCw1DRZA)
 
 Apache Dubbo/Dubbo-Go 作为阿里巴巴开源的一款服务治理框架，因其适应 Java/Go 开发者面向接口的编程习惯、完全透明的调用方式、优越的性能以及强大的扩展性等优点，在国内使用非常广泛。除此之外，Dubbo 开源版本原生集成了很多开箱即用的服务治理功能，包括链路追踪，路由、负载均衡、服务注册发现、监控、认证等。
 
