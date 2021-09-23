@@ -41,7 +41,7 @@ Dubbo-go 站点由[docsite](https://github.com/txd-team/docsite)提供支持。
 ```
 ---
 title: 标题
-keywords: 关键词1,关键词3,关键词3
+keywords: 关键词1,关键词2,关键词3
 description: 描述
 ---
 ```
